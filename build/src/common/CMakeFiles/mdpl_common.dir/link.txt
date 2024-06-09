@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmdpl_common.a CMakeFiles/mdpl_common.dir/file_access.cpp.o
+/usr/bin/ranlib libmdpl_common.a

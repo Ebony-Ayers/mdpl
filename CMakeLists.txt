@@ -61,11 +61,16 @@ if(ENABLE_PCH)
   target_precompile_headers(
     ${project_options_library}
     INTERFACE
-    <iostream>)
+    src/pch.hpp)
 endif()
 
+add_subdirectory(src/common)
+target_link_libraries(mdpl_common PRIVATE ${project_options_library})
 add_subdirectory(src/compiler)
 target_link_libraries(mdpl_compiler PRIVATE ${project_options_library})
+target_link_libraries(mdpl_compiler PUBLIC mdpl_common)
+add_subdirectory(vendor/cargs)
+target_link_libraries(mdpl_compiler PUBLIC cargs)
 
 #Speeds up compilation
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)

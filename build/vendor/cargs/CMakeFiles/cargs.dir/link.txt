@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcargs.a CMakeFiles/cargs.dir/src/cargs.c.o
+/usr/bin/ranlib libcargs.a
