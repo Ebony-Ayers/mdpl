@@ -1,0 +1,4 @@
+[submodule "vendor/cargs"]
+	path = vendor/cargs
+	url = https://github.com/likle/cargs
+	branch = stable
