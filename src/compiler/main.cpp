@@ -40,6 +40,7 @@ int main(int argc, char** argv)
 				printf("\t%s,\n", cliOptions.files[i]);
 			}
 			printf("]\n");
+			printf("optimisation level = %d\n", cliOptions.optimisationLevel);
 		}
 	}
 	catch(const std::exception&)

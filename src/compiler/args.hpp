@@ -23,6 +23,14 @@ namespace mdpl
 			None = 0x0000000000000000,
 			All =  0xFFFFFFFFFFFFFFFF,
 		};
+		enum class OptimisationLevel
+		{
+			None,
+			O1,
+			O2,
+			O3,
+			Small
+		};
 		//a structure representing the command line arguments
 		struct CLIOptions
 		{
@@ -31,6 +39,7 @@ namespace mdpl
 			Warnings warnings;
 			std::vector<const char*> includeDirs;
 			std::vector<const char*> files;
+			OptimisationLevel optimisationLevel;
 			bool hasHelp;
 		};
 
@@ -77,6 +86,13 @@ namespace mdpl
 				.access_name = "include",
 				.value_name = "DIR",
 				.description = "Add a directory to the include path"
+			},
+			{
+				.identifier = 'O',
+				.access_letters = "O",
+				.access_name = nullptr,
+				.value_name = "LEVEL",
+				.description = "Optimisation level. Options are 1, 2, 3, and small"
 			},
 			{
 				.identifier = 'h',

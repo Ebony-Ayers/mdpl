@@ -12,6 +12,7 @@ namespace mdpl
 			cliOptions->warnings = Warnings::All;
 			cliOptions->includeDirs = std::vector<const char*>();
 			cliOptions->files = std::vector<const char*>();
+			cliOptions->optimisationLevel = OptimisationLevel::None;
 			cliOptions->hasHelp = false;
 
 			//run cargs as described on the github
@@ -65,6 +66,45 @@ namespace mdpl
 							cliOptions->includeDirs.push_back(dir);
 						}
 						break;
+					case 'O':
+						{
+							if(cliOptions->optimisationLevel != OptimisationLevel::None)
+							{
+								printf("Argument error: cannot specify optimisation level twice.\n");
+								return 1;
+							}
+							const char* level = cag_option_get_value(&context);
+							if(level != nullptr)
+							{
+								if(strcmp(level, "1") == 0)
+								{
+									cliOptions->optimisationLevel = OptimisationLevel::O1;
+								}
+								else if(strcmp(level, "2") == 0)
+								{
+									cliOptions->optimisationLevel = OptimisationLevel::O2;
+								}
+								else if(strcmp(level, "3") == 0)
+								{
+									cliOptions->optimisationLevel = OptimisationLevel::O3;
+								}
+								else if(strcmp(level, "small") == 0)
+								{
+									cliOptions->optimisationLevel = OptimisationLevel::Small;
+								}
+								else
+								{
+									printf("Argument error: optimisation level %s is unrecognised.\n", level);
+									return 1;
+								}
+							}
+							else
+							{
+								printf("Argument error: no optimisation level specified for argument -O.\n");
+								return 1;
+							}
+							break;
+						}
 					case 'h':
 						{
 							cliOptions->hasHelp = true;
