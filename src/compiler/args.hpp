@@ -104,6 +104,10 @@ namespace mdpl
 
 		//function to pass the argus
 		int passArgs(CLIOptions* cliOptions, const int& argc, char** argv);
+		//function to check for invalid arguments
+		int checkArgs(CLIOptions* cliOptions);
+		//function to fill in any missing arguments with default ones
+		int defaultArgs(CLIOptions* cliOptions, RAIIBuffer<char>* outputName);
 
 		//internal function to handle error checking with reguard to setting the mode
 		int setMode(CLIOptions* cliOptions, const Operation& mode);

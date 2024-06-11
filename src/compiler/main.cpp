@@ -9,6 +9,9 @@ int main(int argc, char** argv)
 	{
 		mdpl::args::CLIOptions cliOptions;
 		MDPL_RETERR(mdpl::args::passArgs(&cliOptions, argc, argv));
+		MDPL_RETERR(mdpl::args::checkArgs(&cliOptions));
+		mdpl::RAIIBuffer<char> outputName;
+		MDPL_RETERR(mdpl::args::defaultArgs(&cliOptions));
 
 		if(cliOptions.hasHelp)
 		{

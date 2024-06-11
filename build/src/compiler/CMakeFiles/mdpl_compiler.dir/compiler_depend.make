@@ -3,6 +3,7 @@
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
@@ -171,6 +172,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch: src/compiler/CMakeF
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
@@ -287,11 +289,13 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/c++/14.1.1/bits/exception.h:
 
-/usr/include/c++/14.1.1/bits/version.h:
-
 /usr/include/c++/14.1.1/compare:
 
 /usr/include/bits/types/struct_timeval.h:
+
+/usr/include/c++/14.1.1/bits/cxxabi_init_exception.h:
+
+/usr/include/c++/14.1.1/bits/memory_resource.h:
 
 /usr/include/c++/14.1.1/bit:
 
@@ -329,17 +333,13 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/bits/types/time_t.h:
 
-/usr/include/c++/14.1.1/cstddef:
-
-/usr/include/c++/14.1.1/bits/utility.h:
-
 src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/bits/uintn-identity.h:
 
-/usr/include/c++/14.1.1/bits/refwrap.h:
+/usr/include/bits/typesizes.h:
 
-/usr/include/c++/14.1.1/new:
+/usr/include/c++/14.1.1/bits/max_size_type.h:
 
 /usr/include/bits/getopt_posix.h:
 
@@ -353,17 +353,13 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/bits/types/__fpos64_t.h:
 
-/usr/include/c++/14.1.1/exception:
-
-/usr/include/c++/14.1.1/bits/functexcept.h:
-
-/home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp:
-
 /usr/include/c++/14.1.1/bits/concept_check.h:
 
 /usr/include/bits/getopt_core.h:
 
 /usr/include/bits/types.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp:
 
 /usr/include/c++/14.1.1/bits/stl_iterator_base_types.h:
 
@@ -375,11 +371,27 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/c++/14.1.1/bits/iterator_concepts.h:
 
-/usr/include/bits/posix_opt.h:
+/usr/include/bits/types/clockid_t.h:
 
 /usr/include/bits/atomic_wide_counter.h:
 
-/usr/include/bits/types/clockid_t.h:
+/usr/include/bits/posix_opt.h:
+
+/usr/include/c++/14.1.1/bits/refwrap.h:
+
+/usr/include/c++/14.1.1/new:
+
+/usr/include/c++/14.1.1/exception:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp:
+
+/usr/include/c++/14.1.1/bits/functexcept.h:
+
+/usr/include/c++/14.1.1/bits/version.h:
+
+/usr/include/c++/14.1.1/bits/utility.h:
+
+/usr/include/c++/14.1.1/cstddef:
 
 /usr/include/c++/14.1.1/bits/exception_defines.h:
 
@@ -415,10 +427,6 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/bits/floatn.h:
 
-/usr/include/c++/14.1.1/bits/memory_resource.h:
-
-/usr/include/c++/14.1.1/bits/cxxabi_init_exception.h:
-
 /usr/include/c++/14.1.1/bits/stl_vector.h:
 
 /usr/include/c++/14.1.1/bits/memoryfwd.h:
@@ -428,10 +436,6 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 /usr/include/bits/endian.h:
 
 /usr/include/c++/14.1.1/bits/hash_bytes.h:
-
-/usr/include/bits/typesizes.h:
-
-/usr/include/c++/14.1.1/bits/max_size_type.h:
 
 /usr/include/c++/14.1.1/debug/assertions.h:
 

@@ -1,0 +1,39 @@
+namespace example
+public
+{
+    fn add(int32 a, int32 b) -> (int32 c)
+    fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
+    sub incremenet(int32 ref a) -> ()
+}
+
+protected
+{
+    //functons in the ptotected block are only accessible in the same namespace
+}
+
+code
+{
+    fn add(int32 a, int32 b) -> (int32 c)
+    {
+        c = a + b
+        ret err::sucess;
+    }
+    fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
+    {
+        if b == 0               //if and while must be followed by a {}
+        {
+            ret err::div0
+        }
+        while a >= b
+        {
+            a -= b
+            c += 1
+        }
+        rem = a
+        ret err::sucess
+    }
+    sub increment(int32 ref a) -> ()
+    {
+        a += 1
+    }
+}

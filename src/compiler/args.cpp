@@ -135,6 +135,55 @@ namespace mdpl
 			return 0;
 		}
 
+		int checkArgs(CLIOptions* cliOptions)
+		{
+			if((cliOptions->op == Operation::Compile) || (cliOptions->op == Operation::Link))
+			{
+				if(cliOptions->files.size() == 0)
+				{
+					printf("Argument error: must specify at least one file to build or link.\n");
+					return 1;
+				}
+			}
+			if(cliOptions->op == Operation::Build)
+			{
+				if(cliOptions->outputName != nullptr)
+				{
+					printf("Argument error: cannot speficy an output when building a project.\n");
+					return 1;
+				}
+				if(cliOptions->files.size() > 1)
+				{
+					printf("Argument error: you can only specify one project at a time to build.\n");
+					return 1;
+				}
+			}
+			return 0;
+		}
+
+		int defaultArgs(CLIOptions* cliOptions, RAIIBuffer<char>* outputName)
+		{
+			if(cliOptions->op == Operation::None)
+			{
+				cliOptions->op = Operation::Build;
+			}
+			if(cliOptions->outputName == nullptr)
+			{
+				if((cliOptions->op == Operation::Compile) || (cliOptions->op == Operation::Link))
+				{
+					//we do not need to check if the the size of files is non zero as if that is true an error would already have been triggerd
+					
+					
+					cliOptions->outputName = reinterpret_cast<const char*>(outputName);
+				}
+			}
+			if(cliOptions->optimisationLevel == OptimisationLevel::None)
+			{
+				cliOptions->optimisationLevel = OptimisationLevel::O1;
+			}
+			return 0;
+		}
+
 		//check if the mode has not been set before and if not set it
 		int setMode(CLIOptions* cliOptions, const Operation& mode)
 		{
