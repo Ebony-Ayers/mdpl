@@ -92,9 +92,11 @@ src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx.gch: src/common/CMakeFiles/m
 src/common/CMakeFiles/mdpl_common.dir/file_access.cpp.o: src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.cpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
   /usr/include/bits/confname.h \
   /usr/include/bits/environments.h \
@@ -107,8 +109,16 @@ src/common/CMakeFiles/mdpl_common.dir/file_access.cpp.o: src/common/CMakeFiles/m
   /usr/include/features.h \
   /usr/include/linux/close_range.h \
   /usr/include/stdc-predef.h \
+  /usr/include/string.h \
   /usr/include/unistd.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
+
+src/common/CMakeFiles/mdpl_common.dir/str_functions.cpp.o: src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.cpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
+  /usr/include/stdc-predef.h \
+  /usr/include/string.h
 
 
 /usr/include/unistd.h:
@@ -123,7 +133,11 @@ src/common/CMakeFiles/mdpl_common.dir/file_access.cpp.o: src/common/CMakeFiles/m
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp:
 
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp:
+
 /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl:
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp:
 
@@ -272,6 +286,8 @@ src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx.cxx:
 /usr/include/endian.h:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.cpp:
 
 /usr/include/c++/14.1.1/typeinfo:
 

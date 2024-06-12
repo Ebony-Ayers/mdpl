@@ -160,12 +160,12 @@ vendor/cargs/clean: vendor/cargs/CMakeFiles/cargs.dir/clean
 src/common/CMakeFiles/mdpl_common.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=3,4,5 "Built target mdpl_common"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=3,4,5,6 "Built target mdpl_common"
 .PHONY : src/common/CMakeFiles/mdpl_common.dir/all
 
 # Build rule for subdir invocation for target.
 src/common/CMakeFiles/mdpl_common.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/common/CMakeFiles/mdpl_common.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 0
 .PHONY : src/common/CMakeFiles/mdpl_common.dir/rule
@@ -187,12 +187,12 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/all: src/common/CMakeFiles/mdpl_common
 src/compiler/CMakeFiles/mdpl_compiler.dir/all: vendor/cargs/CMakeFiles/cargs.dir/all
 	$(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=6,7,8,9 "Built target mdpl_compiler"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=7,8,9,10,11,12 "Built target mdpl_compiler"
 .PHONY : src/compiler/CMakeFiles/mdpl_compiler.dir/all
 
 # Build rule for subdir invocation for target.
 src/compiler/CMakeFiles/mdpl_compiler.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 12
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/compiler/CMakeFiles/mdpl_compiler.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles 0
 .PHONY : src/compiler/CMakeFiles/mdpl_compiler.dir/rule

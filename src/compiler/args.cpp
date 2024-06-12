@@ -14,6 +14,7 @@ namespace mdpl
 			cliOptions->files = std::vector<const char*>();
 			cliOptions->optimisationLevel = OptimisationLevel::None;
 			cliOptions->hasHelp = false;
+			cliOptions->isCompilerDebug = false;
 
 			//run cargs as described on the github
 			//this loop will get any arguments starting with a -
@@ -110,6 +111,10 @@ namespace mdpl
 							cliOptions->hasHelp = true;
 						}
 						break;
+					case '~':
+						{
+							cliOptions->isCompilerDebug = true;
+						}
 					case '?':
 						{ cag_option_print_error(&context, stdout); }
 						break;
@@ -161,7 +166,7 @@ namespace mdpl
 			return 0;
 		}
 
-		int defaultArgs(CLIOptions* cliOptions, RAIIBuffer<char>* outputName)
+		int defaultArgs(CLIOptions* cliOptions, common::RAIIBuffer<char>* outputName)
 		{
 			if(cliOptions->op == Operation::None)
 			{
@@ -173,14 +178,55 @@ namespace mdpl
 				{
 					//we do not need to check if the the size of files is non zero as if that is true an error would already have been triggerd
 					
-					
-					cliOptions->outputName = reinterpret_cast<const char*>(outputName);
+					//if no output file has been specified we will replace the extention of the input
+					const char* fileExtension = common::reverseStrChr(cliOptions->files[0], '.');
+					const size_t fileNameLength = fileExtension - cliOptions->files[0];
+					//outputName is currently a unallocated pointer so we need to alocate it
+					if(cliOptions->op == Operation::Compile) { MDPL_RETERR(outputName->allocate(fileNameLength + 3)); }
+					else                                     { MDPL_RETERR(outputName->allocate(fileNameLength)); }
+					//copy the file name sans the extension
+					memcpy(outputName->getBuff(), cliOptions->files[0], fileNameLength);
+					//copy the extension and the null terminating character
+					if(cliOptions->op == Operation::Compile) { memcpy(outputName->getBuff() + fileNameLength, ".o", 3); }
+					else                                     { *(outputName->getBuff() + fileNameLength) = '\0'; }
+					//set the output name in the struct
+					cliOptions->outputName = outputName->getBuff();
 				}
 			}
 			if(cliOptions->optimisationLevel == OptimisationLevel::None)
 			{
 				cliOptions->optimisationLevel = OptimisationLevel::O1;
 			}
+			return 0;
+		}
+
+		int debugPrintCLIOptionsStruct(CLIOptions* cliOptions)
+		{
+			printf("cliOptions = \n{\n");
+			printf("\tmode = %d\n", cliOptions->op);
+			if(cliOptions->outputName != nullptr)
+			{
+				printf("\toutput name = %s\n", cliOptions->outputName);
+			}
+			else
+			{
+				printf("\toutput name = nullptr\n");
+			}
+			printf("\twarnings = %lu\n", cliOptions->warnings);
+			printf("\tinclude dirs = [\n");
+			for(size_t i = 0; i < cliOptions->includeDirs.size(); i++)
+			{
+				printf("\t\t%s,\n", cliOptions->includeDirs[i]);
+			}
+			printf("\t]\n");
+			printf("\tfiles dirs = [\n");
+			for(size_t i = 0; i < cliOptions->files.size(); i++)
+			{
+				printf("\t\t%s,\n", cliOptions->files[i]);
+			}
+			printf("\t]\n");
+			printf("\toptimisation level = %d\n", cliOptions->optimisationLevel);
+			printf("}\n");
 			return 0;
 		}
 

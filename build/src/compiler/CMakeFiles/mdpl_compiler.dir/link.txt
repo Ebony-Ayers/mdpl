@@ -1,1 +1,1 @@
-/usr/bin/g++ -g CMakeFiles/mdpl_compiler.dir/args.cpp.o CMakeFiles/mdpl_compiler.dir/main.cpp.o -o mdpl  ../common/libmdpl_common.a ../../vendor/cargs/libcargs.a
+/usr/bin/c++ -g CMakeFiles/mdpl_compiler.dir/args.cpp.o CMakeFiles/mdpl_compiler.dir/compile.cpp.o CMakeFiles/mdpl_compiler.dir/link.cpp.o CMakeFiles/mdpl_compiler.dir/main.cpp.o -o mdpl  ../common/libmdpl_common.a ../../vendor/cargs/libcargs.a

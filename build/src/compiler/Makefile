@@ -214,6 +214,54 @@ cmake_pch.hxx.s:
 	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.s
 .PHONY : cmake_pch.hxx.s
 
+compile.o: compile.cpp.o
+.PHONY : compile.o
+
+# target to build an object file
+compile.cpp.o:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o
+.PHONY : compile.cpp.o
+
+compile.i: compile.cpp.i
+.PHONY : compile.i
+
+# target to preprocess a source file
+compile.cpp.i:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.i
+.PHONY : compile.cpp.i
+
+compile.s: compile.cpp.s
+.PHONY : compile.s
+
+# target to generate assembly for a file
+compile.cpp.s:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.s
+.PHONY : compile.cpp.s
+
+link.o: link.cpp.o
+.PHONY : link.o
+
+# target to build an object file
+link.cpp.o:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o
+.PHONY : link.cpp.o
+
+link.i: link.cpp.i
+.PHONY : link.i
+
+# target to preprocess a source file
+link.cpp.i:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.i
+.PHONY : link.cpp.i
+
+link.s: link.cpp.s
+.PHONY : link.s
+
+# target to generate assembly for a file
+link.cpp.s:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/compiler/CMakeFiles/mdpl_compiler.dir/build.make src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.s
+.PHONY : link.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -257,6 +305,12 @@ help:
 	@echo "... cmake_pch.hxx.gch"
 	@echo "... cmake_pch.hxx.i"
 	@echo "... cmake_pch.hxx.s"
+	@echo "... compile.o"
+	@echo "... compile.i"
+	@echo "... compile.s"
+	@echo "... link.o"
+	@echo "... link.i"
+	@echo "... link.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

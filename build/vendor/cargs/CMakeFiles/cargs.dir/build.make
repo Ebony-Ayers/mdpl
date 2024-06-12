@@ -73,15 +73,15 @@ vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o: vendor/cargs/CMakeFiles/cargs.d
 vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o: /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c
 vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o: vendor/cargs/CMakeFiles/cargs.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o -MF CMakeFiles/cargs.dir/src/cargs.c.o.d -o CMakeFiles/cargs.dir/src/cargs.c.o -c /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.o -MF CMakeFiles/cargs.dir/src/cargs.c.o.d -o CMakeFiles/cargs.dir/src/cargs.c.o -c /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c
 
 vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cargs.dir/src/cargs.c.i"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c > CMakeFiles/cargs.dir/src/cargs.c.i
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c > CMakeFiles/cargs.dir/src/cargs.c.i
 
 vendor/cargs/CMakeFiles/cargs.dir/src/cargs.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cargs.dir/src/cargs.c.s"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c -o CMakeFiles/cargs.dir/src/cargs.c.s
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/vendor/cargs && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/src/cargs.c -o CMakeFiles/cargs.dir/src/cargs.c.s
 
 # Object files for target cargs
 cargs_OBJECTS = \

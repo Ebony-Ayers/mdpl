@@ -1,5 +1,7 @@
 set(compiler_source_files
   args.cpp
+  compile.cpp
+  link.cpp
   main.cpp
 )
 

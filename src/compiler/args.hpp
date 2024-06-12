@@ -41,6 +41,7 @@ namespace mdpl
 			std::vector<const char*> files;
 			OptimisationLevel optimisationLevel;
 			bool hasHelp;
+			bool isCompilerDebug;
 		};
 
 		//cli argument specification as per cargs documentation
@@ -99,7 +100,15 @@ namespace mdpl
 				.access_letters = "h",
 				.access_name = "help",
 				.value_name = nullptr,
-				.description = "Shows the command help"}
+				.description = "Shows the command help"
+			},
+			{
+				.identifier = '~',
+				.access_letters  = nullptr,
+				.access_name = "debug-compiler",
+				.value_name = nullptr,
+				.description = "Display debug information for the compiler itself"
+			}
 		};
 
 		//function to pass the argus
@@ -107,7 +116,9 @@ namespace mdpl
 		//function to check for invalid arguments
 		int checkArgs(CLIOptions* cliOptions);
 		//function to fill in any missing arguments with default ones
-		int defaultArgs(CLIOptions* cliOptions, RAIIBuffer<char>* outputName);
+		int defaultArgs(CLIOptions* cliOptions, common::RAIIBuffer<char>* outputName);
+		
+		int debugPrintCLIOptionsStruct(CLIOptions* cliOptions);
 
 		//internal function to handle error checking with reguard to setting the mode
 		int setMode(CLIOptions* cliOptions, const Operation& mode);

@@ -74,15 +74,15 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch: src/compiler/CMakeF
 src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx
 src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch: src/compiler/CMakeFiles/mdpl_compiler.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch -MF CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch.d -o CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch -c /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch -MF CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch.d -o CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch -c /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.i"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx > CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.i
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx > CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.i
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.s"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx -o CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.s
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx -o CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.s
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/flags.make
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp
@@ -90,35 +90,69 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/md
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o -MF CMakeFiles/mdpl_compiler.dir/args.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/args.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o -MF CMakeFiles/mdpl_compiler.dir/args.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/args.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mdpl_compiler.dir/args.cpp.i"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp > CMakeFiles/mdpl_compiler.dir/args.cpp.i
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp > CMakeFiles/mdpl_compiler.dir/args.cpp.i
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mdpl_compiler.dir/args.cpp.s"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp -o CMakeFiles/mdpl_compiler.dir/args.cpp.s
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp -o CMakeFiles/mdpl_compiler.dir/args.cpp.s
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/flags.make
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o -MF CMakeFiles/mdpl_compiler.dir/compile.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/compile.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mdpl_compiler.dir/compile.cpp.i"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp > CMakeFiles/mdpl_compiler.dir/compile.cpp.i
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mdpl_compiler.dir/compile.cpp.s"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp -o CMakeFiles/mdpl_compiler.dir/compile.cpp.s
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/flags.make
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o -MF CMakeFiles/mdpl_compiler.dir/link.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/link.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mdpl_compiler.dir/link.cpp.i"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp > CMakeFiles/mdpl_compiler.dir/link.cpp.i
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mdpl_compiler.dir/link.cpp.s"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp -o CMakeFiles/mdpl_compiler.dir/link.cpp.s
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/flags.make
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o -MF CMakeFiles/mdpl_compiler.dir/main.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/main.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o"
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/ccache /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -MD -MT src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o -MF CMakeFiles/mdpl_compiler.dir/main.cpp.o.d -o CMakeFiles/mdpl_compiler.dir/main.cpp.o -c /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mdpl_compiler.dir/main.cpp.i"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp > CMakeFiles/mdpl_compiler.dir/main.cpp.i
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -E /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp > CMakeFiles/mdpl_compiler.dir/main.cpp.i
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mdpl_compiler.dir/main.cpp.s"
-	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp -o CMakeFiles/mdpl_compiler.dir/main.cpp.s
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx -S /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp -o CMakeFiles/mdpl_compiler.dir/main.cpp.s
 
 # Object files for target mdpl_compiler
 mdpl_compiler_OBJECTS = \
 "CMakeFiles/mdpl_compiler.dir/args.cpp.o" \
+"CMakeFiles/mdpl_compiler.dir/compile.cpp.o" \
+"CMakeFiles/mdpl_compiler.dir/link.cpp.o" \
 "CMakeFiles/mdpl_compiler.dir/main.cpp.o"
 
 # External object files for target mdpl_compiler
@@ -126,12 +160,14 @@ mdpl_compiler_EXTERNAL_OBJECTS =
 
 src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch
 src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o
+src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o
+src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o
 src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o
 src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/build.make
 src/compiler/mdpl: src/common/libmdpl_common.a
 src/compiler/mdpl: vendor/cargs/libcargs.a
 src/compiler/mdpl: src/compiler/CMakeFiles/mdpl_compiler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable mdpl"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ebony/git/Ebony-Ayers/mdpl/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable mdpl"
 	cd /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mdpl_compiler.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

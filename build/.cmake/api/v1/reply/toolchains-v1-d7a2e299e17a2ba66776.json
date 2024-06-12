@@ -6,7 +6,7 @@
 			"compiler" : 
 			{
 				"implicit" : {},
-				"path" : "/usr/bin/gcc"
+				"path" : "/usr/bin/cc"
 			},
 			"language" : "C"
 		},
@@ -44,7 +44,7 @@
 						"gcc"
 					]
 				},
-				"path" : "/usr/bin/g++",
+				"path" : "/usr/bin/c++",
 				"version" : "14.1.1"
 			},
 			"language" : "CXX",

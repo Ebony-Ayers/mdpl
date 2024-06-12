@@ -1,9 +1,8 @@
 {
-	"archive" : {},
 	"artifacts" : 
 	[
 		{
-			"path" : "src/common/libmdpl_common.a"
+			"path" : "src/compiler/mdpl"
 		}
 	],
 	"backtrace" : 1,
@@ -11,16 +10,16 @@
 	{
 		"commands" : 
 		[
-			"add_library",
+			"add_executable",
+			"target_link_libraries",
 			"add_compile_options",
-			"include",
-			"target_link_libraries"
+			"include"
 		],
 		"files" : 
 		[
-			"src/common/CMakeLists.txt",
-			"cmake/StandardProjectSettings.cmake",
-			"CMakeLists.txt"
+			"src/compiler/CMakeLists.txt",
+			"CMakeLists.txt",
+			"cmake/StandardProjectSettings.cmake"
 		],
 		"nodes" : 
 		[
@@ -30,32 +29,44 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 6,
+				"line" : 8,
 				"parent" : 0
 			},
 			{
-				"file" : 2
-			},
-			{
-				"command" : 2,
-				"file" : 2,
-				"line" : 12,
-				"parent" : 2
-			},
-			{
-				"file" : 1,
-				"parent" : 3
+				"file" : 1
 			},
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 38,
-				"parent" : 4
+				"line" : 71,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 73,
+				"parent" : 2
 			},
 			{
 				"command" : 3,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 2
+			},
+			{
 				"file" : 2,
-				"line" : 68,
+				"parent" : 5
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 38,
+				"parent" : 6
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 70,
 				"parent" : 2
 			}
 		]
@@ -69,87 +80,94 @@
 					"fragment" : "-g -std=gnu++20"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 7,
 					"fragment" : "-fdiagnostics-color=always"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wall"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wextra"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wshadow"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wnon-virtual-dtor"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wold-style-cast"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wcast-align"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wunused"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Woverloaded-virtual"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wpedantic"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wconversion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wsign-conversion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wnull-dereference"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wdouble-promotion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wformat=2"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wmisleading-indentation"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wduplicated-cond"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wduplicated-branches"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wlogical-op"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wuseless-cast"
 				},
 				{
-					"fragment" : "-Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx"
+					"fragment" : "-Winvalid-pch -x c++-header -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 4,
+					"path" : "/home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include"
 				}
 			],
 			"language" : "CXX",
@@ -157,14 +175,14 @@
 			{
 				"backtraces" : 
 				[
-					6
+					8
 				],
 				"standard" : "20"
 			},
 			"precompileHeaders" : 
 			[
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"header" : "/home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp"
 				}
 			],
@@ -180,87 +198,94 @@
 					"fragment" : "-g -std=gnu++20"
 				},
 				{
-					"backtrace" : 5,
+					"backtrace" : 7,
 					"fragment" : "-fdiagnostics-color=always"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wall"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wextra"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wshadow"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wnon-virtual-dtor"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wold-style-cast"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wcast-align"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wunused"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Woverloaded-virtual"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wpedantic"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wconversion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wsign-conversion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wnull-dereference"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wdouble-promotion"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wformat=2"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wmisleading-indentation"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wduplicated-cond"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wduplicated-branches"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wlogical-op"
 				},
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"fragment" : "-Wuseless-cast"
 				},
 				{
-					"fragment" : "-Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx"
+					"fragment" : "-Winvalid-pch -include /home/ebony/git/Ebony-Ayers/mdpl/build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 4,
+					"path" : "/home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include"
 				}
 			],
 			"language" : "CXX",
@@ -268,31 +293,69 @@
 			{
 				"backtraces" : 
 				[
-					6
+					8
 				],
 				"standard" : "20"
 			},
 			"precompileHeaders" : 
 			[
 				{
-					"backtrace" : 6,
+					"backtrace" : 8,
 					"header" : "/home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp"
 				}
 			],
 			"sourceIndexes" : 
 			[
 				1,
-				2
+				2,
+				3,
+				4
 			]
 		}
 	],
-	"id" : "mdpl_common::@af79f3804eddddbfa7f1",
-	"name" : "mdpl_common",
-	"nameOnDisk" : "libmdpl_common.a",
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "mdpl_common::@af79f3804eddddbfa7f1"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "cargs::@5ee8dd680e2ae7966579"
+		}
+	],
+	"id" : "mdpl_compiler::@8c227c9ce08cbb09e9a7",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "../common/libmdpl_common.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "../../vendor/cargs/libcargs.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "mdpl_compiler",
+	"nameOnDisk" : "mdpl",
 	"paths" : 
 	{
-		"build" : "src/common",
-		"source" : "src/common"
+		"build" : "src/compiler",
+		"source" : "src/compiler"
 	},
 	"sourceGroups" : 
 	[
@@ -302,14 +365,16 @@
 			[
 				0,
 				1,
-				2
+				2,
+				3,
+				4
 			]
 		},
 		{
 			"name" : "Precompile Header File",
 			"sourceIndexes" : 
 			[
-				3
+				5
 			]
 		}
 	],
@@ -318,26 +383,38 @@
 		{
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
-			"path" : "build/src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx.cxx",
+			"path" : "build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "src/common/file_access.cpp",
+			"path" : "src/compiler/args.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "src/common/buffer.cpp",
+			"path" : "src/compiler/compile.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/compiler/link.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/compiler/main.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
-			"path" : "build/src/common/CMakeFiles/mdpl_common.dir/cmake_pch.hxx",
+			"path" : "build/src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx",
 			"sourceGroupIndex" : 1
 		}
 	],
-	"type" : "STATIC_LIBRARY"
+	"type" : "EXECUTABLE"
 }

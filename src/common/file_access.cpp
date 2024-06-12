@@ -2,54 +2,57 @@
 
 namespace mdpl
 {
-	//check that the file exists and the user has the required permissions then open it
-	RAIIFile::RAIIFile(const char* filename, const char* mode)
-	: m_file(nullptr)
+	namespace common
 	{
-		if(access(filename, F_OK) != 0)
+		//check that the file exists and the user has the required permissions then open it
+		RAIIFile::RAIIFile(const char* filename, const char* mode)
+		: m_file(nullptr)
 		{
-			printf("Error: the file %s does not exist.\n", filename);
-			throw std::exception();
-		}
-		else
-		{
-			if(strcmp(mode, "r") == 0 || strcmp(mode, "r+") == 0)
+			if(access(filename, F_OK) != 0)
 			{
-				if(access(filename, R_OK) != 0)
-				{
-					printf("Error: you do not have read access to %s.\n", filename);
-					throw std::exception();
-				}
+				printf("Error: the file %s does not exist.\n", filename);
+				throw std::exception();
 			}
 			else
 			{
-				if(strcmp(mode, "w") == 0 || strcmp(mode, "w+") == 0 || strcmp(mode, "a") == 0 || strcmp(mode, "a+") == 0)
+				if(strcmp(mode, "r") == 0 || strcmp(mode, "r+") == 0)
 				{
-					if(access(filename, W_OK) != 0)
+					if(access(filename, R_OK) != 0)
 					{
-						printf("Error: you do not have write access to %s.\n", filename);
+						printf("Error: you do not have read access to %s.\n", filename);
 						throw std::exception();
 					}
 				}
 				else
 				{
-					this->m_file = fopen(filename, mode);
+					if(strcmp(mode, "w") == 0 || strcmp(mode, "w+") == 0 || strcmp(mode, "a") == 0 || strcmp(mode, "a+") == 0)
+					{
+						if(access(filename, W_OK) != 0)
+						{
+							printf("Error: you do not have write access to %s.\n", filename);
+							throw std::exception();
+						}
+					}
+					else
+					{
+						this->m_file = fopen(filename, mode);
+					}
 				}
 			}
 		}
-	}
-	//close the file
-	RAIIFile::~RAIIFile()
-	{
-		if(this->m_file != nullptr)
+		//close the file
+		RAIIFile::~RAIIFile()
 		{
-			fclose(this->m_file);
+			if(this->m_file != nullptr)
+			{
+				fclose(this->m_file);
+			}
 		}
-	}
 
-	//implicit cast
-	RAIIFile::operator FILE*() const
-	{
-		return this->m_file;
+		//implicit cast
+		RAIIFile::operator FILE*() const
+		{
+			return this->m_file;
+		}
 	}
 }

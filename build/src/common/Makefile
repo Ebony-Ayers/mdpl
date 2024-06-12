@@ -214,6 +214,30 @@ file_access.cpp.s:
 	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/file_access.cpp.s
 .PHONY : file_access.cpp.s
 
+str_functions.o: str_functions.cpp.o
+.PHONY : str_functions.o
+
+# target to build an object file
+str_functions.cpp.o:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/str_functions.cpp.o
+.PHONY : str_functions.cpp.o
+
+str_functions.i: str_functions.cpp.i
+.PHONY : str_functions.i
+
+# target to preprocess a source file
+str_functions.cpp.i:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/str_functions.cpp.i
+.PHONY : str_functions.cpp.i
+
+str_functions.s: str_functions.cpp.s
+.PHONY : str_functions.s
+
+# target to generate assembly for a file
+str_functions.cpp.s:
+	cd /home/ebony/git/Ebony-Ayers/mdpl/build && $(MAKE) $(MAKESILENT) -f src/common/CMakeFiles/mdpl_common.dir/build.make src/common/CMakeFiles/mdpl_common.dir/str_functions.cpp.s
+.PHONY : str_functions.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -233,6 +257,9 @@ help:
 	@echo "... file_access.o"
 	@echo "... file_access.i"
 	@echo "... file_access.s"
+	@echo "... str_functions.o"
+	@echo "... str_functions.i"
+	@echo "... str_functions.s"
 .PHONY : help
 
 

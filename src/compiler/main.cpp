@@ -1,17 +1,20 @@
 #include "../pch.hpp"
 #include "args.hpp"
 #include "../common/mdpl_common.hpp"
+#include "compile.hpp"
+#include "link.hpp"
 
 int main(int argc, char** argv)
 {
 	//catch all uncaught exceptions and return exit failure so stack unwinding takes place
 	try
 	{
+		//process the cli arguments
 		mdpl::args::CLIOptions cliOptions;
 		MDPL_RETERR(mdpl::args::passArgs(&cliOptions, argc, argv));
 		MDPL_RETERR(mdpl::args::checkArgs(&cliOptions));
-		mdpl::RAIIBuffer<char> outputName;
-		MDPL_RETERR(mdpl::args::defaultArgs(&cliOptions));
+		mdpl::common::RAIIBuffer<char> outputName;
+		MDPL_RETERR(mdpl::args::defaultArgs(&cliOptions, &outputName));
 
 		if(cliOptions.hasHelp)
 		{
@@ -20,30 +23,18 @@ int main(int argc, char** argv)
 			cag_option_print(mdpl::args::options, CAG_ARRAY_SIZE(mdpl::args::options), stdout);
 		}
 		else
+		{
+			if(cliOptions.isCompilerDebug) { MDPL_RETERR(mdpl::args::debugPrintCLIOptionsStruct(&cliOptions)); }
+
+			if(cliOptions.op == mdpl::args::Operation::Compile)
 			{
-			printf("mode = %d\n", cliOptions.op);
-			if(cliOptions.outputName != nullptr)
-			{
-				printf("output name = %s\n", cliOptions.outputName);
+				mdpl::compiler::compile(&cliOptions);
 			}
-			else
+			else if(cliOptions.op == mdpl::args::Operation::Link)
 			{
-				printf("output name = nullptr\n");
+				mdpl::linker::link(&cliOptions);
 			}
-			printf("warnings = %ul\n", cliOptions.warnings);
-			printf("include dirs = [\n");
-			for(size_t i = 0; i < cliOptions.includeDirs.size(); i++)
-			{
-				printf("\t%s,\n", cliOptions.includeDirs[i]);
-			}
-			printf("]\n");
-			printf("files dirs = [\n");
-			for(size_t i = 0; i < cliOptions.files.size(); i++)
-			{
-				printf("\t%s,\n", cliOptions.files[i]);
-			}
-			printf("]\n");
-			printf("optimisation level = %d\n", cliOptions.optimisationLevel);
+			//TODO: implement build mode
 		}
 	}
 	catch(const std::exception&)

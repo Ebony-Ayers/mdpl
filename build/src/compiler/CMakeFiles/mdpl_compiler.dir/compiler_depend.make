@@ -4,8 +4,10 @@
 src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.hpp \
@@ -78,6 +80,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/args.cpp.o: src/compiler/CMakeFiles/md
   /usr/include/linux/close_range.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdio.h \
+  /usr/include/string.h \
   /usr/include/unistd.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
@@ -170,14 +173,190 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.gch: src/compiler/CMakeF
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdarg.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
 
-src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
+src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include/cargs.h \
+  /usr/include/bits/confname.h \
+  /usr/include/bits/environments.h \
+  /usr/include/bits/getopt_core.h \
+  /usr/include/bits/getopt_posix.h \
+  /usr/include/bits/posix_opt.h \
+  /usr/include/bits/types.h \
+  /usr/include/bits/unistd_ext.h \
+  /usr/include/bits/wordsize.h \
+  /usr/include/c++/14.1.1/backward/binders.h \
+  /usr/include/c++/14.1.1/bit \
+  /usr/include/c++/14.1.1/bits/alloc_traits.h \
+  /usr/include/c++/14.1.1/bits/allocator.h \
+  /usr/include/c++/14.1.1/bits/concept_check.h \
+  /usr/include/c++/14.1.1/bits/cpp_type_traits.h \
+  /usr/include/c++/14.1.1/bits/exception_defines.h \
+  /usr/include/c++/14.1.1/bits/functexcept.h \
+  /usr/include/c++/14.1.1/bits/functional_hash.h \
+  /usr/include/c++/14.1.1/bits/hash_bytes.h \
+  /usr/include/c++/14.1.1/bits/invoke.h \
+  /usr/include/c++/14.1.1/bits/iterator_concepts.h \
+  /usr/include/c++/14.1.1/bits/max_size_type.h \
+  /usr/include/c++/14.1.1/bits/memory_resource.h \
+  /usr/include/c++/14.1.1/bits/memoryfwd.h \
+  /usr/include/c++/14.1.1/bits/move.h \
+  /usr/include/c++/14.1.1/bits/new_allocator.h \
+  /usr/include/c++/14.1.1/bits/predefined_ops.h \
+  /usr/include/c++/14.1.1/bits/ptr_traits.h \
+  /usr/include/c++/14.1.1/bits/range_access.h \
+  /usr/include/c++/14.1.1/bits/ranges_base.h \
+  /usr/include/c++/14.1.1/bits/ranges_cmp.h \
+  /usr/include/c++/14.1.1/bits/ranges_util.h \
+  /usr/include/c++/14.1.1/bits/refwrap.h \
+  /usr/include/c++/14.1.1/bits/requires_hosted.h \
+  /usr/include/c++/14.1.1/bits/stl_algobase.h \
+  /usr/include/c++/14.1.1/bits/stl_bvector.h \
+  /usr/include/c++/14.1.1/bits/stl_construct.h \
+  /usr/include/c++/14.1.1/bits/stl_function.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator_base_types.h \
+  /usr/include/c++/14.1.1/bits/stl_pair.h \
+  /usr/include/c++/14.1.1/bits/stl_uninitialized.h \
+  /usr/include/c++/14.1.1/bits/stl_vector.h \
+  /usr/include/c++/14.1.1/bits/uses_allocator.h \
+  /usr/include/c++/14.1.1/bits/uses_allocator_args.h \
+  /usr/include/c++/14.1.1/bits/utility.h \
+  /usr/include/c++/14.1.1/bits/vector.tcc \
+  /usr/include/c++/14.1.1/bits/version.h \
+  /usr/include/c++/14.1.1/compare \
+  /usr/include/c++/14.1.1/concepts \
+  /usr/include/c++/14.1.1/cstddef \
+  /usr/include/c++/14.1.1/debug/assertions.h \
+  /usr/include/c++/14.1.1/debug/debug.h \
+  /usr/include/c++/14.1.1/ext/alloc_traits.h \
+  /usr/include/c++/14.1.1/ext/numeric_traits.h \
+  /usr/include/c++/14.1.1/ext/type_traits.h \
+  /usr/include/c++/14.1.1/initializer_list \
+  /usr/include/c++/14.1.1/new \
+  /usr/include/c++/14.1.1/numbers \
+  /usr/include/c++/14.1.1/tuple \
+  /usr/include/c++/14.1.1/type_traits \
+  /usr/include/c++/14.1.1/vector \
+  /usr/include/c++/14.1.1/x86_64-pc-linux-gnu/bits/c++allocator.h \
+  /usr/include/c++/14.1.1/x86_64-pc-linux-gnu/bits/c++config.h \
+  /usr/include/features.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/stdc-predef.h \
+  /usr/include/stdio.h \
+  /usr/include/string.h \
+  /usr/include/unistd.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include/cargs.h \
+  /usr/include/bits/confname.h \
+  /usr/include/bits/environments.h \
+  /usr/include/bits/getopt_core.h \
+  /usr/include/bits/getopt_posix.h \
+  /usr/include/bits/posix_opt.h \
+  /usr/include/bits/types.h \
+  /usr/include/bits/unistd_ext.h \
+  /usr/include/bits/wordsize.h \
+  /usr/include/c++/14.1.1/backward/binders.h \
+  /usr/include/c++/14.1.1/bit \
+  /usr/include/c++/14.1.1/bits/alloc_traits.h \
+  /usr/include/c++/14.1.1/bits/allocator.h \
+  /usr/include/c++/14.1.1/bits/concept_check.h \
+  /usr/include/c++/14.1.1/bits/cpp_type_traits.h \
+  /usr/include/c++/14.1.1/bits/exception_defines.h \
+  /usr/include/c++/14.1.1/bits/functexcept.h \
+  /usr/include/c++/14.1.1/bits/functional_hash.h \
+  /usr/include/c++/14.1.1/bits/hash_bytes.h \
+  /usr/include/c++/14.1.1/bits/invoke.h \
+  /usr/include/c++/14.1.1/bits/iterator_concepts.h \
+  /usr/include/c++/14.1.1/bits/max_size_type.h \
+  /usr/include/c++/14.1.1/bits/memory_resource.h \
+  /usr/include/c++/14.1.1/bits/memoryfwd.h \
+  /usr/include/c++/14.1.1/bits/move.h \
+  /usr/include/c++/14.1.1/bits/new_allocator.h \
+  /usr/include/c++/14.1.1/bits/predefined_ops.h \
+  /usr/include/c++/14.1.1/bits/ptr_traits.h \
+  /usr/include/c++/14.1.1/bits/range_access.h \
+  /usr/include/c++/14.1.1/bits/ranges_base.h \
+  /usr/include/c++/14.1.1/bits/ranges_cmp.h \
+  /usr/include/c++/14.1.1/bits/ranges_util.h \
+  /usr/include/c++/14.1.1/bits/refwrap.h \
+  /usr/include/c++/14.1.1/bits/requires_hosted.h \
+  /usr/include/c++/14.1.1/bits/stl_algobase.h \
+  /usr/include/c++/14.1.1/bits/stl_bvector.h \
+  /usr/include/c++/14.1.1/bits/stl_construct.h \
+  /usr/include/c++/14.1.1/bits/stl_function.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/14.1.1/bits/stl_iterator_base_types.h \
+  /usr/include/c++/14.1.1/bits/stl_pair.h \
+  /usr/include/c++/14.1.1/bits/stl_uninitialized.h \
+  /usr/include/c++/14.1.1/bits/stl_vector.h \
+  /usr/include/c++/14.1.1/bits/uses_allocator.h \
+  /usr/include/c++/14.1.1/bits/uses_allocator_args.h \
+  /usr/include/c++/14.1.1/bits/utility.h \
+  /usr/include/c++/14.1.1/bits/vector.tcc \
+  /usr/include/c++/14.1.1/bits/version.h \
+  /usr/include/c++/14.1.1/compare \
+  /usr/include/c++/14.1.1/concepts \
+  /usr/include/c++/14.1.1/cstddef \
+  /usr/include/c++/14.1.1/debug/assertions.h \
+  /usr/include/c++/14.1.1/debug/debug.h \
+  /usr/include/c++/14.1.1/ext/alloc_traits.h \
+  /usr/include/c++/14.1.1/ext/numeric_traits.h \
+  /usr/include/c++/14.1.1/ext/type_traits.h \
+  /usr/include/c++/14.1.1/initializer_list \
+  /usr/include/c++/14.1.1/new \
+  /usr/include/c++/14.1.1/numbers \
+  /usr/include/c++/14.1.1/tuple \
+  /usr/include/c++/14.1.1/type_traits \
+  /usr/include/c++/14.1.1/vector \
+  /usr/include/c++/14.1.1/x86_64-pc-linux-gnu/bits/c++allocator.h \
+  /usr/include/c++/14.1.1/x86_64-pc-linux-gnu/bits/c++config.h \
+  /usr/include/features.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/stdc-predef.h \
+  /usr/include/stdio.h \
+  /usr/include/string.h \
+  /usr/include/unistd.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
+
+src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/file_access.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/mdpl_common.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/common/system_headers.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.hpp \
+  /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.hpp \
   /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp \
   /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include/cargs.h \
   /usr/include/bits/confname.h \
@@ -248,12 +427,17 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
   /usr/include/linux/close_range.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdio.h \
+  /usr/include/string.h \
   /usr/include/unistd.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
 
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.hpp:
 
 /usr/include/sys/types.h:
 
@@ -263,15 +447,17 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/strings.h:
 
-/usr/include/string.h:
-
 /usr/include/stdlib.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.cpp:
 
 /usr/include/linux/errno.h:
 
 /usr/include/gnu/stubs-64.h:
 
 /usr/include/features-time64.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.hpp:
 
 /usr/include/errno.h:
 
@@ -289,9 +475,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/c++/14.1.1/bits/exception.h:
 
-/usr/include/c++/14.1.1/compare:
-
-/usr/include/bits/types/struct_timeval.h:
+/usr/include/bits/waitflags.h:
 
 /usr/include/c++/14.1.1/bits/cxxabi_init_exception.h:
 
@@ -333,15 +517,13 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/bits/types/time_t.h:
 
-src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/str_functions.hpp:
 
-/usr/include/bits/uintn-identity.h:
+src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/bits/typesizes.h:
 
 /usr/include/c++/14.1.1/bits/max_size_type.h:
-
-/usr/include/bits/getopt_posix.h:
 
 /usr/include/bits/confname.h:
 
@@ -355,6 +537,20 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/c++/14.1.1/bits/concept_check.h:
 
+/usr/include/c++/14.1.1/bits/iterator_concepts.h:
+
+/usr/include/bits/types/clockid_t.h:
+
+/usr/include/c++/14.1.1/stdlib.h:
+
+/usr/include/bits/struct_mutex.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp:
+
+/usr/include/bits/uintn-identity.h:
+
+/home/ebony/git/Ebony-Ayers/mdpl/src/common/buffer.inl:
+
 /usr/include/bits/getopt_core.h:
 
 /usr/include/bits/types.h:
@@ -363,15 +559,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/c++/14.1.1/bits/stl_iterator_base_types.h:
 
-/home/ebony/git/Ebony-Ayers/mdpl/src/compiler/args.cpp:
-
-/usr/include/c++/14.1.1/stdlib.h:
-
-/usr/include/bits/struct_mutex.h:
-
-/usr/include/c++/14.1.1/bits/iterator_concepts.h:
-
-/usr/include/bits/types/clockid_t.h:
+/usr/include/bits/getopt_posix.h:
 
 /usr/include/bits/atomic_wide_counter.h:
 
@@ -435,7 +623,15 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 
 /usr/include/bits/endian.h:
 
+/usr/include/bits/waitstatus.h:
+
+/usr/include/bits/timesize.h:
+
 /usr/include/c++/14.1.1/bits/hash_bytes.h:
+
+/usr/include/c++/14.1.1/compare:
+
+/usr/include/bits/types/struct_timeval.h:
 
 /usr/include/c++/14.1.1/debug/assertions.h:
 
@@ -476,6 +672,12 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 /usr/include/stdio.h:
 
 /usr/include/bits/types/timer_t.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/stdlib-float.h:
+
+/usr/include/bits/time64.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h:
 
@@ -519,10 +721,6 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx:
 
 /usr/include/bits/thread-shared-types.h:
 
-/usr/include/bits/stdlib-float.h:
-
-/usr/include/bits/time64.h:
-
 /home/ebony/git/Ebony-Ayers/mdpl/vendor/cargs/include/cargs.h:
 
 /usr/include/bits/types/FILE.h:
@@ -533,9 +731,9 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx:
 
 /usr/include/bits/types/__locale_t.h:
 
-/usr/include/bits/stdio_lim.h:
-
 /usr/include/c++/14.1.1/bits/stl_uninitialized.h:
+
+/usr/include/bits/stdio_lim.h:
 
 /usr/include/bits/types/__mbstate_t.h:
 
@@ -552,9 +750,3 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx.cxx:
 /usr/include/bits/types/locale_t.h:
 
 /usr/include/bits/types/struct_timespec.h:
-
-/usr/include/bits/waitflags.h:
-
-/usr/include/bits/timesize.h:
-
-/usr/include/bits/waitstatus.h:

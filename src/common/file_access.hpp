@@ -6,19 +6,22 @@
 
 namespace mdpl
 {
-	//simple RAII file which will implicity convert to FILE* for c functions
-	class RAIIFile
+	namespace common
 	{
-		public:
-			//mode has the same options as fopen()
-			RAIIFile(const char* filename, const char* mode);
-			~RAIIFile();
+		//simple RAII file which will implicity convert to FILE* for c functions
+		class RAIIFile
+		{
+			public:
+				//mode has the same options as fopen()
+				RAIIFile(const char* filename, const char* mode);
+				~RAIIFile();
 
-			operator FILE*() const;
-		
-		private:
-			FILE* m_file;
-	};
+				operator FILE*() const;
+			
+			private:
+				FILE* m_file;
+		};
+	}
 }
 
 #endif //FILE_ACCESS_HEADER_GUARD
