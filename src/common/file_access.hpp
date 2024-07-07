@@ -17,6 +17,7 @@ namespace mdpl
 				~RAIIFile();
 
 				operator FILE*() const;
+				FILE* getFile() const;
 			
 			private:
 				FILE* m_file;

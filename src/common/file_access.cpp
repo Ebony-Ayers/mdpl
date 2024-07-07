@@ -22,6 +22,15 @@ namespace mdpl
 						printf("Error: you do not have read access to %s.\n", filename);
 						throw std::exception();
 					}
+					else
+					{
+						this->m_file = fopen(filename, mode);
+						if(this->m_file == nullptr)
+						{
+							printf("Error: could not open file %s.\n", filename);
+							throw std::exception();
+						}
+					}
 				}
 				else
 				{
@@ -36,6 +45,11 @@ namespace mdpl
 					else
 					{
 						this->m_file = fopen(filename, mode);
+						if(this->m_file == nullptr)
+						{
+							printf("Error: could not open file %s.\n", filename);
+							throw std::exception();
+						}
 					}
 				}
 			}
@@ -51,6 +65,10 @@ namespace mdpl
 
 		//implicit cast
 		RAIIFile::operator FILE*() const
+		{
+			return this->m_file;
+		}
+		FILE* RAIIFile::getFile() const
 		{
 			return this->m_file;
 		}

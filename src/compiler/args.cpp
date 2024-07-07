@@ -115,6 +115,7 @@ namespace mdpl
 						{
 							cliOptions->isCompilerDebug = true;
 						}
+						break;
 					case '?':
 						{ cag_option_print_error(&context, stdout); }
 						break;
@@ -180,7 +181,7 @@ namespace mdpl
 					
 					//if no output file has been specified we will replace the extention of the input
 					const char* fileExtension = common::reverseStrChr(cliOptions->files[0], '.');
-					const size_t fileNameLength = fileExtension - cliOptions->files[0];
+					const size_t fileNameLength = static_cast<size_t>(fileExtension - cliOptions->files[0]);
 					//outputName is currently a unallocated pointer so we need to alocate it
 					if(cliOptions->op == Operation::Compile) { MDPL_RETERR(outputName->allocate(fileNameLength + 3)); }
 					else                                     { MDPL_RETERR(outputName->allocate(fileNameLength)); }
@@ -203,7 +204,7 @@ namespace mdpl
 		int debugPrintCLIOptionsStruct(CLIOptions* cliOptions)
 		{
 			printf("cliOptions = \n{\n");
-			printf("\tmode = %d\n", cliOptions->op);
+			printf("\tmode = %d\n", static_cast<typename std::underlying_type<Operation>::type>(cliOptions->op));
 			if(cliOptions->outputName != nullptr)
 			{
 				printf("\toutput name = %s\n", cliOptions->outputName);
@@ -212,7 +213,7 @@ namespace mdpl
 			{
 				printf("\toutput name = nullptr\n");
 			}
-			printf("\twarnings = %lu\n", cliOptions->warnings);
+			printf("\twarnings = %lu\n", static_cast<typename std::underlying_type<Warnings>::type>(cliOptions->warnings));
 			printf("\tinclude dirs = [\n");
 			for(size_t i = 0; i < cliOptions->includeDirs.size(); i++)
 			{
@@ -225,7 +226,7 @@ namespace mdpl
 				printf("\t\t%s,\n", cliOptions->files[i]);
 			}
 			printf("\t]\n");
-			printf("\toptimisation level = %d\n", cliOptions->optimisationLevel);
+			printf("\toptimisation level = %d\n", static_cast<typename std::underlying_type<OptimisationLevel>::type>(cliOptions->optimisationLevel));
 			printf("}\n");
 			return 0;
 		}

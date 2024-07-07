@@ -12,6 +12,8 @@ namespace mdpl
         {
             public:
                 RAIIBuffer();
+                RAIIBuffer(RAIIBuffer& other) = delete;
+                RAIIBuffer(RAIIBuffer&& other) = delete;
                 ~RAIIBuffer();
 
                 operator T*() const;

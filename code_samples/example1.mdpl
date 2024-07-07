@@ -4,6 +4,8 @@ public
     fn add(int32 a, int32 b) -> (int32 c)
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
     sub incremenet(int32 ref a) -> ()
+
+    global string str = "Hello world"
 }
 
 protected
@@ -36,4 +38,8 @@ code
     {
         a += 1
     }
+    /*
+    //block comment containing a line comment
+    */
+    //line comment /* with a block comment
 }
