@@ -190,9 +190,14 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles
   /usr/include/bits/environments.h \
   /usr/include/bits/getopt_core.h \
   /usr/include/bits/getopt_posix.h \
+  /usr/include/bits/libc-header-start.h \
   /usr/include/bits/posix_opt.h \
+  /usr/include/bits/stdint-intn.h \
+  /usr/include/bits/stdint-least.h \
+  /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/types.h \
   /usr/include/bits/unistd_ext.h \
+  /usr/include/bits/wchar.h \
   /usr/include/bits/wordsize.h \
   /usr/include/c++/14.1.1/backward/binders.h \
   /usr/include/c++/14.1.1/bit \
@@ -237,6 +242,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles
   /usr/include/c++/14.1.1/compare \
   /usr/include/c++/14.1.1/concepts \
   /usr/include/c++/14.1.1/cstddef \
+  /usr/include/c++/14.1.1/cstdint \
   /usr/include/c++/14.1.1/debug/assertions.h \
   /usr/include/c++/14.1.1/debug/debug.h \
   /usr/include/c++/14.1.1/ext/alloc_traits.h \
@@ -253,11 +259,13 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/compile.cpp.o: src/compiler/CMakeFiles
   /usr/include/features.h \
   /usr/include/linux/close_range.h \
   /usr/include/stdc-predef.h \
+  /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/string.h \
   /usr/include/unistd.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdint.h
 
 src/compiler/CMakeFiles/mdpl_compiler.dir/link.cpp.o: src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx \
   /home/ebony/git/Ebony-Ayers/mdpl/src/pch.hpp \
@@ -363,9 +371,14 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
   /usr/include/bits/environments.h \
   /usr/include/bits/getopt_core.h \
   /usr/include/bits/getopt_posix.h \
+  /usr/include/bits/libc-header-start.h \
   /usr/include/bits/posix_opt.h \
+  /usr/include/bits/stdint-intn.h \
+  /usr/include/bits/stdint-least.h \
+  /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/types.h \
   /usr/include/bits/unistd_ext.h \
+  /usr/include/bits/wchar.h \
   /usr/include/bits/wordsize.h \
   /usr/include/c++/14.1.1/backward/binders.h \
   /usr/include/c++/14.1.1/bit \
@@ -410,6 +423,7 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
   /usr/include/c++/14.1.1/compare \
   /usr/include/c++/14.1.1/concepts \
   /usr/include/c++/14.1.1/cstddef \
+  /usr/include/c++/14.1.1/cstdint \
   /usr/include/c++/14.1.1/debug/assertions.h \
   /usr/include/c++/14.1.1/debug/debug.h \
   /usr/include/c++/14.1.1/ext/alloc_traits.h \
@@ -426,16 +440,24 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
   /usr/include/features.h \
   /usr/include/linux/close_range.h \
   /usr/include/stdc-predef.h \
+  /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/string.h \
   /usr/include/unistd.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdint.h
 
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/main.cpp:
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/link.cpp:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/stdint-uintn.h:
 
 /home/ebony/git/Ebony-Ayers/mdpl/src/compiler/compile.hpp:
 
@@ -469,11 +491,15 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/main.cpp.o: src/compiler/CMakeFiles/md
 
 /usr/include/c++/14.1.1/pstl/pstl_config.h:
 
+/usr/include/bits/stdint-least.h:
+
 /usr/include/c++/14.1.1/cstdlib:
 
 /usr/include/c++/14.1.1/bits/nested_exception.h:
 
 /usr/include/c++/14.1.1/bits/exception.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdint.h:
 
 /usr/include/bits/waitflags.h:
 
@@ -582,6 +608,8 @@ src/compiler/CMakeFiles/mdpl_compiler.dir/cmake_pch.hxx:
 /usr/include/c++/14.1.1/cstddef:
 
 /usr/include/c++/14.1.1/bits/exception_defines.h:
+
+/usr/include/c++/14.1.1/cstdint:
 
 /usr/include/bits/types/struct_FILE.h:
 

@@ -339,12 +339,12 @@
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "../common/libmdpl_common.a",
+				"fragment" : "src/common/libmdpl_common.a",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 4,
-				"fragment" : "../../vendor/cargs/libcargs.a",
+				"fragment" : "vendor/cargs/libcargs.a",
 				"role" : "libraries"
 			}
 		],

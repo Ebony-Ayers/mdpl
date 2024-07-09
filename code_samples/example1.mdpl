@@ -5,7 +5,7 @@ public
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
     sub incremenet(int32 ref a) -> ()
 
-    global string str = "Hello world"
+    string str = "Hello world"
 }
 
 protected

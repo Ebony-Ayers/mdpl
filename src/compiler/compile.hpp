@@ -5,6 +5,8 @@
 #include "../common/mdpl_common.hpp"
 #include "args.hpp"
 
+#include <cstdint>
+
 namespace mdpl
 {
     namespace compiler
@@ -14,6 +16,7 @@ namespace mdpl
         struct FlatToken
         {
             const char* str;
+            int lineNum;
         };
         struct HierarchicalToken
         {
@@ -48,7 +51,7 @@ namespace mdpl
 
             //symbols are : ! @ # $ % ^ & * ( ) - = _ + ~ ` [ ] { } ; : ' " , . < > / ?
             //note : ', @, #, $, %, and ~ are unused but reserved for consistancy and future use
-            const char* isSymbol(const char* s);
+            bool isSymbol(const char& c);
             const char posibleSymbols[] = {'!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '{', '}', '~'};
             const size_t posibleSymbolsLength = sizeof(posibleSymbols) / sizeof(char);
         }
