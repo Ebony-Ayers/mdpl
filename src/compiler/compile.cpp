@@ -17,7 +17,6 @@ namespace mdpl
                 fseek(fileHandle, 0, SEEK_END);
                 size_t fileSize = static_cast<size_t>(ftell(fileHandle));
                 fseek(fileHandle, 0, SEEK_SET);
-                printf("fsize = %d\n", fileSize);
 
                 //read the source file into memory
                 common::RAIIBuffer<char> buff;
@@ -48,6 +47,13 @@ namespace mdpl
                 MDPL_RETERR(getNumFlatTokens(&buff, fileSize, &numFlatTokens));
                 mdpl::common::RAIIBuffer<FlatToken> flatTokens;
                 MDPL_RETERR(createTokenList(&buff, fileSize, &flatTokens, numFlatTokens));
+                //step 6: convert the token list into a token tree
+                mdpl::common::RAIIBuffer<HierarchicalToken> hierarchicalTokens;
+                hierarchicalTokens.allocate(numFlatTokens);
+                MDPL_RETERR(catagoriseTokens(&flatTokens, numFlatTokens, &hierarchicalTokens));
+                MDPL_RETERR(linkTokens(&flatTokens, numFlatTokens, &hierarchicalTokens));
+                size_t numHierarchicalTokens;
+                MDPL_RETERR(mergeDoubleSymbols(&flatTokens, numFlatTokens, &hierarchicalTokens, &numHierarchicalTokens));
 
                 printf("\n================================================\n\nStatic strings:\n");
                 for(size_t j = 0; j < staticStringsLength; j++)
@@ -419,6 +425,75 @@ namespace mdpl
             return 0;
         }
 
+        int catagoriseTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree)
+        {
+            for(size_t i = 0; i < numTokens; i++)
+            {
+                FlatToken token = tokenList->getBuff()[i];
+                if(reinterpret_cast<uint64_t>(token.str) < 128)
+                {
+                    HierarchicalToken newToken;
+                    newToken.type = HierarchicalTokenType::Symbol;
+                    newToken.value = token.str;
+                    newToken.lineNum = token.lineNum;
+                    tokenTree->getBuff()[i] = newToken;
+                }
+                else
+                {
+                    size_t keywordIndex = internal::clasifyKeyword(token.str);
+                    if(keywordIndex == 0)
+                    {
+                        HierarchicalToken newToken;
+                        newToken.type = HierarchicalTokenType::Uncatagorised;
+                        newToken.value = token.str;
+                        newToken.lineNum = token.lineNum;
+                        tokenTree->getBuff()[i] = newToken;
+                    }
+                    else
+                    {
+                        HierarchicalToken newToken;
+                        newToken.type = HierarchicalTokenType::Keyword;
+                        newToken.value = reinterpret_cast<const char*>(keywordIndex);
+                        newToken.lineNum = token.lineNum;
+                        tokenTree->getBuff()[i] = newToken;
+                    }
+                }
+            }
+            return 0;
+        }
+        int linkTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree)
+        {
+            tokenTree->getBuff()[0].prev = nullptr;
+            tokenTree->getBuff()[0].next = &(tokenTree->getBuff()[1]);
+            for(size_t i = 1; i < numTokens - 1; i++)
+            {
+                tokenTree->getBuff()[i].prev = &(tokenTree->getBuff()[i-1]);
+                tokenTree->getBuff()[i].next = &(tokenTree->getBuff()[i+1]);
+            }
+            tokenTree->getBuff()[numTokens-1].prev = &(tokenTree->getBuff()[numTokens-2]);
+            tokenTree->getBuff()[numTokens-1].next = nullptr;
+            return 0;
+        }
+        int mergeDoubleSymbols(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree, size_t* tokenTreeLength)
+        {
+            for(size_t i = 0; i < numTokens - 1; i++)
+            {
+                if((tokenTree->getBuff()[i].type == HierarchicalTokenType::Symbol) && (tokenTree->getBuff()[i+1].type == HierarchicalTokenType::Symbol))
+                {
+                    const char a = static_cast<char>(reinterpret_cast<uint64_t>(tokenTree->getBuff()[i].value));
+                    const char b = static_cast<char>(reinterpret_cast<uint64_t>(tokenTree->getBuff()[i+1].value));
+                    if(internal::isDoubleSymbol(a, b))
+                    {
+                        tokenTree->getBuff()[i].type = HierarchicalTokenType::DoubleSymbol;
+                        //TODO: somehow convert two characters into a useable format
+                        tokenTree->getBuff()[i].next = tokenTree->getBuff()[i+1].next;
+                        i++;
+                    }
+                }
+            }
+            return 0;
+        }
+
         namespace internal
         {
             int copyStringLiteral(mdpl::common::RAIIBuffer<char>* dst, const char* src)
@@ -453,6 +528,44 @@ namespace mdpl
                     }
                 }
                 return false;
+            }
+
+            size_t clasifyKeyword(const char* s)
+            {
+                for(size_t i = 1; i < posibleKeywordsLength; i++)
+                {
+                    if(strcmp(s, posibleKeywords[i]) == 0)
+                    {
+                        return i;
+                    }
+                }
+                return 0;
+            }
+
+            bool isDoubleSymbol(const char& a, const char& b)
+            {
+                if(b == '=')
+                {
+                    for(size_t i = 0; i < symbolsThatCombineWithEqualsLength; i++)
+                    {
+                        if(a == symbolsThatCombineWithEquals[i])
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if((a == '-') && (b == '>'))
+                {
+                    return true;
+                }
+                else if((a == ':') && (b == ':'))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
     }

@@ -18,9 +18,24 @@ namespace mdpl
             const char* str;
             int lineNum;
         };
+        enum class HierarchicalTokenType
+        {
+            Symbol,
+            DoubleSymbol,
+            Keyword,
+            Type,
+            Variable,
+            Function,
+            Uncatagorised
+        };
         struct HierarchicalToken
         {
-            //
+            HierarchicalTokenType type;
+            const char* value;
+            HierarchicalToken* next;
+            HierarchicalToken* prev;
+            HierarchicalToken* inside;
+            int lineNum;
         };
         
         //step 1: clean up bad characters
@@ -38,8 +53,9 @@ namespace mdpl
         int getNumFlatTokens(common::RAIIBuffer<char>* buff, const size_t& bufferLength, size_t* numTokens);
         int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<FlatToken>* tokenList, const size_t& tokenListSize);
         //step 6: convert the token list into a token tree
-        int getNumHierarchicalToken(common::RAIIBuffer<FlatToken>* tokenList, const size_t& tokenListSize);
-        int createTokenTree(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree, const size_t& tokenTreeSize);
+        int catagoriseTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree);
+        int linkTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree);
+        int mergeDoubleSymbols(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree, size_t* tokenTreeLength);
         //step 7: check for invalid syntax
         int syntaxChecker(common::RAIIBuffer<HierarchicalToken>* tokenTree, const size_t& tokenTreeSize);
         //step 8: convert the token tree into a syntax tree
@@ -49,11 +65,65 @@ namespace mdpl
             //copy the contence inside the literal with out the quotes
             int copyStringLiteral(mdpl::common::RAIIBuffer<char>* dst, const char* src);
 
-            //symbols are : ! @ # $ % ^ & * ( ) - = _ + ~ ` [ ] { } ; : ' " , . < > / ?
+            //symbols are : ! @ # $ % ^ & * ( ) - = + ~ ` [ ] { } ; : ' " , . < > / ?
             //note : ', @, #, $, %, and ~ are unused but reserved for consistancy and future use
             bool isSymbol(const char& c);
-            const char posibleSymbols[] = {'!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '{', '}', '~'};
+            const char posibleSymbols[] = {'!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '`', '{', '}', '~'};
             const size_t posibleSymbolsLength = sizeof(posibleSymbols) / sizeof(char);
+
+            size_t clasifyKeyword(const char* s);
+            //the first keyword is empty to signify that a index of 0 represnets not a keyword
+            const char* const posibleKeywords[] = {
+                "",
+                "namespace",
+                "public",
+                "protected",
+                "code",
+                "fn",
+                "sub",
+                "ref",
+                "generic",
+                "prop",
+                "if",
+                "elif",
+                "else",
+                "for",
+                "while",
+                "continue",
+                "break",
+                "switch",
+                "case",
+                "struct",
+                "enum",
+                "typedef",
+                "and",
+                "or",
+                "not",
+            };
+            const size_t posibleKeywordsLength = sizeof(posibleKeywords) / sizeof(const char* const);
+            const char* const buildInTypes[] = {
+                "",
+                "int8",
+                "int16",
+                "int32",
+                "int64",
+                "uint8",
+                "uint16",
+                "uint32",
+                "uint64",
+                "float16",
+                "float32",
+                "float64",
+                "string",
+                "bool",
+                "error"
+            };
+            const size_t buildInTypesLength = sizeof(buildInTypes) / sizeof(const char* const);
+
+            //symbol pairs operator and =, ->, ::
+            bool isDoubleSymbol(const char& a, const char& b);
+            const char symbolsThatCombineWithEquals[] = {'!', '#', '$', '%', '&', '*', '+', '-', '/', '<', '=', '>', '@', '^', '~'};
+            const size_t symbolsThatCombineWithEqualsLength = sizeof(symbolsThatCombineWithEquals) / sizeof(char);
         }
 
     }
