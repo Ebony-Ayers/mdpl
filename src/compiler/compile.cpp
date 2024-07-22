@@ -45,15 +45,10 @@ namespace mdpl
                 //step 5: create the token list
                 size_t numFlatTokens;
                 MDPL_RETERR(getNumFlatTokens(&buff, fileSize, &numFlatTokens));
-                mdpl::common::RAIIBuffer<FlatToken> flatTokens;
+                mdpl::common::RAIIBuffer<SourceToken> flatTokens;
                 MDPL_RETERR(createTokenList(&buff, fileSize, &flatTokens, numFlatTokens));
                 //step 6: convert the token list into a token tree
-                mdpl::common::RAIIBuffer<HierarchicalToken> hierarchicalTokens;
-                hierarchicalTokens.allocate(numFlatTokens);
-                MDPL_RETERR(catagoriseTokens(&flatTokens, numFlatTokens, &hierarchicalTokens));
-                MDPL_RETERR(linkTokens(&flatTokens, numFlatTokens, &hierarchicalTokens));
-                size_t numHierarchicalTokens;
-                MDPL_RETERR(mergeDoubleSymbols(&flatTokens, numFlatTokens, &hierarchicalTokens, &numHierarchicalTokens));
+                MDPL_RETERR(validateDoubleSymbols(&flatTokens, numFlatTokens, fileName));
 
                 printf("\n================================================\n\nStatic strings:\n");
                 for(size_t j = 0; j < staticStringsLength; j++)
@@ -65,18 +60,25 @@ namespace mdpl
                 int previousLineNum = 1;
                 for(size_t j = 0; j < numFlatTokens; j++)
                 {
-                    FlatToken token = flatTokens.getBuff()[j];
+                    SourceToken token = flatTokens.getBuff()[j];
                     if(token.lineNum != previousLineNum)
                     {
                         printf("\n");
                     }
-                    if(reinterpret_cast<uint64_t>(token.str) < 128)
+                    if(token.type == SourceTokenType::Symbol)
                     {
-                        printf("\'%c\' ", reinterpret_cast<uint64_t>(token.str));
+                        if(token.data.charTuple.c2 == '\0')
+                        {
+                            printf("\'%c\' ", token.data.charTuple.c1);
+                        }
+                        else
+                        {
+                            printf("\'%c%c\' ", token.data.charTuple.c1, token.data.charTuple.c2);
+                        }
                     }
                     else
                     {
-                        printf("\'%s\' ", token.str);
+                        printf("\'%s\' ", token.data.str);
                     }
                     previousLineNum = token.lineNum;
                 }
@@ -366,6 +368,10 @@ namespace mdpl
                 {
                     (*numTokens)++;
                     previousIsNullTerminating = true;
+                    if(internal::isSymbol(str[i+1]))
+                    {
+                        i += 1;
+                    }
                 }
                 else if(str[i] == '\n')
                 {
@@ -387,7 +393,7 @@ namespace mdpl
 
             return 0;
         }
-        int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<FlatToken>* tokenList, const size_t& tokenListSize)
+        int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<SourceToken>* tokenList, const size_t& tokenListSize)
         {
             MDPL_RETERR(tokenList->allocate(tokenListSize));
             char* str = buff->getBuff();
@@ -404,8 +410,15 @@ namespace mdpl
                 }
                 if(internal::isSymbol(str[i]))
                 {
-                    tokenList->getBuff()[tokenIndex].str = reinterpret_cast<const char*>(str[i]);
+                    tokenList->getBuff()[tokenIndex].type = SourceTokenType::Symbol;
                     tokenList->getBuff()[tokenIndex].lineNum = lineNum;
+                    tokenList->getBuff()[tokenIndex].heirachy = 0;
+                    tokenList->getBuff()[tokenIndex].data.charTuple.c1 = str[i];
+                    if(internal::isSymbol(str[i+1]))
+                    {
+                        tokenList->getBuff()[tokenIndex].data.charTuple.c2 = str[i+1];
+                        str[i+1] = '\0';
+                    }
                     str[i] = '\0';
                     tokenIndex++;
                 }
@@ -416,8 +429,10 @@ namespace mdpl
                 }
                 else if((str[i] != '\0') && (str[i-1] == '\0'))
                 {
-                    tokenList->getBuff()[tokenIndex].str = str + i;
+                    tokenList->getBuff()[tokenIndex].type = SourceTokenType::Uncatagorised;
                     tokenList->getBuff()[tokenIndex].lineNum = lineNum;
+                    tokenList->getBuff()[tokenIndex].heirachy = 0;
+                    tokenList->getBuff()[tokenIndex].data.str = str + i;
                     tokenIndex++;
                 }
             }
@@ -425,71 +440,50 @@ namespace mdpl
             return 0;
         }
 
-        int catagoriseTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree)
+        int validateDoubleSymbols(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const char* file)
         {
             for(size_t i = 0; i < numTokens; i++)
             {
-                FlatToken token = tokenList->getBuff()[i];
-                if(reinterpret_cast<uint64_t>(token.str) < 128)
+                SourceToken token = tokenList->getBuff()[i];
+                if(token.type == SourceTokenType::Symbol)
                 {
-                    HierarchicalToken newToken;
-                    newToken.type = HierarchicalTokenType::Symbol;
-                    newToken.value = token.str;
-                    newToken.lineNum = token.lineNum;
-                    tokenTree->getBuff()[i] = newToken;
-                }
-                else
-                {
-                    size_t keywordIndex = internal::clasifyKeyword(token.str);
-                    if(keywordIndex == 0)
+                    if(token.data.charTuple.c2 != '\0')
                     {
-                        HierarchicalToken newToken;
-                        newToken.type = HierarchicalTokenType::Uncatagorised;
-                        newToken.value = token.str;
-                        newToken.lineNum = token.lineNum;
-                        tokenTree->getBuff()[i] = newToken;
-                    }
-                    else
-                    {
-                        HierarchicalToken newToken;
-                        newToken.type = HierarchicalTokenType::Keyword;
-                        newToken.value = reinterpret_cast<const char*>(keywordIndex);
-                        newToken.lineNum = token.lineNum;
-                        tokenTree->getBuff()[i] = newToken;
+                        if(!internal::isDoubleSymbol(token.data.charTuple))
+                        {
+                            printf("Syntax error: unknown symbol \"%c%c\".\nFile: %s, line: %d\n\n", token.data.charTuple.c1, token.data.charTuple.c2, file, token.lineNum);
+                            return 1;
+                        }
                     }
                 }
             }
             return 0;
         }
-        int linkTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree)
+        int createHeirechy(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens)
         {
-            tokenTree->getBuff()[0].prev = nullptr;
-            tokenTree->getBuff()[0].next = &(tokenTree->getBuff()[1]);
-            for(size_t i = 1; i < numTokens - 1; i++)
+            int currentHeirachyLevel = 0;
+            for(size_t i = 0; i < numTokens; i++)
             {
-                tokenTree->getBuff()[i].prev = &(tokenTree->getBuff()[i-1]);
-                tokenTree->getBuff()[i].next = &(tokenTree->getBuff()[i+1]);
-            }
-            tokenTree->getBuff()[numTokens-1].prev = &(tokenTree->getBuff()[numTokens-2]);
-            tokenTree->getBuff()[numTokens-1].next = nullptr;
-            return 0;
-        }
-        int mergeDoubleSymbols(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree, size_t* tokenTreeLength)
-        {
-            for(size_t i = 0; i < numTokens - 1; i++)
-            {
-                if((tokenTree->getBuff()[i].type == HierarchicalTokenType::Symbol) && (tokenTree->getBuff()[i+1].type == HierarchicalTokenType::Symbol))
+                SourceToken token = tokenList->getBuff()[i];
+                if(token.type == SourceTokenType::Symbol)
                 {
-                    const char a = static_cast<char>(reinterpret_cast<uint64_t>(tokenTree->getBuff()[i].value));
-                    const char b = static_cast<char>(reinterpret_cast<uint64_t>(tokenTree->getBuff()[i+1].value));
-                    if(internal::isDoubleSymbol(a, b))
+                    if(token.data.charTuple.c2 != '\0')
                     {
-                        tokenTree->getBuff()[i].type = HierarchicalTokenType::DoubleSymbol;
-                        //TODO: somehow convert two characters into a useable format
-                        tokenTree->getBuff()[i].next = tokenTree->getBuff()[i+1].next;
-                        i++;
+                        if((token.data.charTuple.c1 == '('), (token.data.charTuple.c1 == '['), (token.data.charTuple.c1 == '{'))
+                        {
+                            currentHeirachyLevel++;
+                        }
+                        else if((token.data.charTuple.c1 == ')'), (token.data.charTuple.c1 == ']'), (token.data.charTuple.c1 == '}'))
+                        {
+                            currentHeirachyLevel--;
+                        }
                     }
                 }
+                tokenList->getBuff()[i].heirachy = currentHeirachyLevel;
+            }
+            if(currentHeirachyLevel != 0)
+            {
+                printf("Something went wrong when creating heirachy. Final heirachy is %d.\n", currentHeirachyLevel);
             }
             return 0;
         }
@@ -542,30 +536,30 @@ namespace mdpl
                 return 0;
             }
 
-            bool isDoubleSymbol(const char& a, const char& b)
+            bool isDoubleSymbol(const CharTuple& t)
             {
-                if(b == '=')
+                if(t.c2 == '=')
                 {
                     for(size_t i = 0; i < symbolsThatCombineWithEqualsLength; i++)
                     {
-                        if(a == symbolsThatCombineWithEquals[i])
+                        if(t.c1 == symbolsThatCombineWithEquals[i])
                         {
                             return true;
                         }
                     }
                 }
-                else if((a == '-') && (b == '>'))
-                {
-                    return true;
-                }
-                else if((a == ':') && (b == ':'))
-                {
-                    return true;
-                }
                 else
                 {
-                    return false;
+                    for(size_t i = 0; i < nonEqualsDoubleSymbolsLength; i++)
+                    {
+                        CharTuple other = nonEqualsDoubleSymbols[i];
+                        if((t.c1 == other.c1) && (t.c2 == other.c2))
+                        {
+                            return true;
+                        }
+                    }
                 }
+                return false;
             }
         }
     }

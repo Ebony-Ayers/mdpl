@@ -13,6 +13,31 @@ namespace mdpl
     {
         int compile(mdpl::args::CLIOptions* cliOptions);
 
+        enum class SourceTokenType
+        {
+            Symbol,
+            Keyword,
+            Type,
+            Variable,
+            Function,
+            Uncatagorised
+        };
+        struct CharTuple
+        {
+            char c1;
+            char c2;
+        };
+        struct SourceToken
+        {
+            SourceTokenType type;
+            int lineNum;
+            int heirachy;
+            union
+            {
+                const char* str;
+                CharTuple charTuple;
+            } data;
+        };
         struct FlatToken
         {
             const char* str;
@@ -51,11 +76,10 @@ namespace mdpl
         int removeComments(common::RAIIBuffer<char>* buff, const size_t& bufferLength);
         //step 5: create the token list
         int getNumFlatTokens(common::RAIIBuffer<char>* buff, const size_t& bufferLength, size_t* numTokens);
-        int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<FlatToken>* tokenList, const size_t& tokenListSize);
+        int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<SourceToken>* tokenList, const size_t& tokenListSize);
         //step 6: convert the token list into a token tree
-        int catagoriseTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree);
-        int linkTokens(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree);
-        int mergeDoubleSymbols(common::RAIIBuffer<FlatToken>* tokenList, const size_t& numTokens, common::RAIIBuffer<HierarchicalToken>* tokenTree, size_t* tokenTreeLength);
+        int validateDoubleSymbols(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const char* file);
+        int createHeirechy(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         //step 7: check for invalid syntax
         int syntaxChecker(common::RAIIBuffer<HierarchicalToken>* tokenTree, const size_t& tokenTreeSize);
         //step 8: convert the token tree into a syntax tree
@@ -121,9 +145,16 @@ namespace mdpl
             const size_t buildInTypesLength = sizeof(buildInTypes) / sizeof(const char* const);
 
             //symbol pairs operator and =, ->, ::
-            bool isDoubleSymbol(const char& a, const char& b);
+            bool isDoubleSymbol(const CharTuple& t);
             const char symbolsThatCombineWithEquals[] = {'!', '#', '$', '%', '&', '*', '+', '-', '/', '<', '=', '>', '@', '^', '~'};
             const size_t symbolsThatCombineWithEqualsLength = sizeof(symbolsThatCombineWithEquals) / sizeof(char);
+            const CharTuple nonEqualsDoubleSymbols[] = {
+                                                        {'-', '>'},
+                                                        {':', ':'},
+                                                        {'(', ')'},
+                                                        {'{', '}'},
+                                                        };
+            const size_t nonEqualsDoubleSymbolsLength = sizeof(nonEqualsDoubleSymbols) / sizeof(CharTuple);
         }
 
     }
