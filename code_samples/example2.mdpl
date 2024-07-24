@@ -1,0 +1,13 @@
+namespace exampleTwo
+public
+{
+	fn main() -> ();
+}
+
+protected
+{
+	fn main() -> ()
+	{
+		print("Hello world")
+	}
+}

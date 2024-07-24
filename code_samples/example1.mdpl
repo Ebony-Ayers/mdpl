@@ -1,4 +1,4 @@
-namespace example
+namespace exampleOne
 public
 {
     fn add(int32 a, int32 b) -> (int32 c)
@@ -18,13 +18,13 @@ code
     fn add(int32 a, int32 b) -> (int32 c)
     {
         c = a + b
-        ret err::sucess;
+        ret error:sucess;
     }
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
     {
         if b == 0               //if and while must be followed by a {}
         {
-            ret err::div0
+            ret error:div0
         }
         while a >= b
         {
@@ -32,11 +32,12 @@ code
             c += 1
         }
         rem = a
-        ret err::sucess
+        ret error:sucess
     }
     sub increment(int32 ref a) -> ()
     {
-        a += 1
+        a = add(a, 1)
+        let uint32_t unusedVariable = 0
     }
     /*
     //block comment containing a line comment

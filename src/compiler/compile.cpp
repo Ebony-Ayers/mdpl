@@ -47,42 +47,75 @@ namespace mdpl
                 MDPL_RETERR(getNumFlatTokens(&buff, fileSize, &numFlatTokens));
                 mdpl::common::RAIIBuffer<SourceToken> flatTokens;
                 MDPL_RETERR(createTokenList(&buff, fileSize, &flatTokens, numFlatTokens));
-                //step 6: convert the token list into a token tree
+                //step 6: clasify the tokens
                 MDPL_RETERR(validateDoubleSymbols(&flatTokens, numFlatTokens, fileName));
+                MDPL_RETERR(createHeirechy(&flatTokens, numFlatTokens));
+                MDPL_RETERR(identityStrings(&flatTokens, numFlatTokens, &staticStrings, staticStringsLength));
+                MDPL_RETERR(identityKeywords(&flatTokens, numFlatTokens));
+                MDPL_RETERR(identityFunctions(&flatTokens, numFlatTokens));
+                MDPL_RETERR(identityTypes(&flatTokens, numFlatTokens));
 
-                printf("\n================================================\n\nStatic strings:\n");
-                for(size_t j = 0; j < staticStringsLength; j++)
+                //when debuging dump the clasified symbols for each file
+                if(cliOptions->isCompilerDebug)
                 {
-                    printf("- \"%s\"\n", staticStrings[j].getBuff());
-                }
-
-                printf("\n================================================\n\nTokens:\n");
-                int previousLineNum = 1;
-                for(size_t j = 0; j < numFlatTokens; j++)
-                {
-                    SourceToken token = flatTokens.getBuff()[j];
-                    if(token.lineNum != previousLineNum)
+                    printf("\n======================== Token dump ========================\n");
+                    printf("%s\n\n", fileName);
+                    
+                    printf("0     ");
+                    int previousLineNum = 1;
+                    for(size_t j = 0; j < numFlatTokens; j++)
                     {
-                        printf("\n");
-                    }
-                    if(token.type == SourceTokenType::Symbol)
-                    {
-                        if(token.data.charTuple.c2 == '\0')
+                        SourceToken token = flatTokens.getBuff()[j];
+                        if(token.lineNum != previousLineNum)
                         {
-                            printf("\'%c\' ", token.data.charTuple.c1);
+                            printf("\n%-4ld  ", j);
                         }
-                        else
+                        if(token.type == SourceTokenType::Symbol)
                         {
-                            printf("\'%c%c\' ", token.data.charTuple.c1, token.data.charTuple.c2);
+                            internal::terminalColor::setColorRed();
+                            if(token.data.charTuple.c2 == '\0')
+                            {
+                                printf("%c ", token.data.charTuple.c1);
+                            }
+                            else
+                            {
+                                printf("%c%c ", token.data.charTuple.c1, token.data.charTuple.c2);
+                            }
+                            internal::terminalColor::resetColor();
                         }
+                        else if(token.type == SourceTokenType::StringLiteral)
+                        {
+                            internal::terminalColor::setColorGreen();
+                            printf("\"%s\" ", token.data.str);
+                            internal::terminalColor::resetColor();
+                        }
+                        else if(token.type == SourceTokenType::Keyword)
+                        {
+                            internal::terminalColor::setColorYellow();
+                            printf("%s ", internal::posibleKeywords[token.data.keywordIndex]);
+                            internal::terminalColor::resetColor();
+                        }
+                        else if(token.type != SourceTokenType::Empty)
+                        {
+                            if(token.type == SourceTokenType::FunctionImplementation)
+                            {
+                                internal::terminalColor::setColorBlue();
+                            }
+                            else if(token.type == SourceTokenType::FunctionCall)
+                            {
+                                internal::terminalColor::setColorMagenta();
+                            }
+                            else if(token.type == SourceTokenType::Type)
+                            {
+                                internal::terminalColor::setColorCyan();
+                            }
+                            printf("%s ", token.data.str);
+                            internal::terminalColor::resetColor();
+                        }
+                        previousLineNum = token.lineNum;
                     }
-                    else
-                    {
-                        printf("\'%s\' ", token.data.str);
-                    }
-                    previousLineNum = token.lineNum;
+                    printf("\n");
                 }
-                printf("\n");
             }
             return 0;
         }
@@ -221,7 +254,7 @@ namespace mdpl
             char* str = buff->getBuff();
             for(size_t i = 0; i < bufferLength; i++)
             {
-                if(str[i] == ' ')
+                if((str[i] == ' ') || (str[i] == '\t'))
                 {
                     str[i] = '\0';
                 }
@@ -368,7 +401,7 @@ namespace mdpl
                 {
                     (*numTokens)++;
                     previousIsNullTerminating = true;
-                    if(internal::isSymbol(str[i+1]))
+                    if(internal::isSymbol(str[i+1]) && (str[i] != '\"') && (str[i+1] != '\"'))
                     {
                         i += 1;
                     }
@@ -414,7 +447,7 @@ namespace mdpl
                     tokenList->getBuff()[tokenIndex].lineNum = lineNum;
                     tokenList->getBuff()[tokenIndex].heirachy = 0;
                     tokenList->getBuff()[tokenIndex].data.charTuple.c1 = str[i];
-                    if(internal::isSymbol(str[i+1]))
+                    if(internal::isSymbol(str[i+1]) && (str[i] != '\"') && (str[i+1] != '\"'))
                     {
                         tokenList->getBuff()[tokenIndex].data.charTuple.c2 = str[i+1];
                         str[i+1] = '\0';
@@ -467,13 +500,13 @@ namespace mdpl
                 SourceToken token = tokenList->getBuff()[i];
                 if(token.type == SourceTokenType::Symbol)
                 {
-                    if(token.data.charTuple.c2 != '\0')
+                    if(token.data.charTuple.c2 == '\0')
                     {
-                        if((token.data.charTuple.c1 == '('), (token.data.charTuple.c1 == '['), (token.data.charTuple.c1 == '{'))
+                        if((token.data.charTuple.c1 == '(') || (token.data.charTuple.c1 == '[') || (token.data.charTuple.c1 == '{'))
                         {
                             currentHeirachyLevel++;
                         }
-                        else if((token.data.charTuple.c1 == ')'), (token.data.charTuple.c1 == ']'), (token.data.charTuple.c1 == '}'))
+                        else if((token.data.charTuple.c1 == ')') || (token.data.charTuple.c1 == ']') || (token.data.charTuple.c1 == '}'))
                         {
                             currentHeirachyLevel--;
                         }
@@ -484,6 +517,150 @@ namespace mdpl
             if(currentHeirachyLevel != 0)
             {
                 printf("Something went wrong when creating heirachy. Final heirachy is %d.\n", currentHeirachyLevel);
+            }
+            return 0;
+        }
+        int identityStrings(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, mdpl::common::RAIIBuffer<mdpl::common::RAIIBuffer<char>>* staticStrings, const size_t& staticStringsLength)
+        {
+            for(size_t i = 0; i < numTokens - 1; i++)
+            {
+                SourceToken curentToken = tokenList->getBuff()[i];
+                SourceToken nextToken = tokenList->getBuff()[i+1];
+                size_t literalIndex = 0;
+                if(curentToken.type == SourceTokenType::Symbol)
+                {
+                    if((curentToken.data.charTuple.c1 == '\"') && (curentToken.data.charTuple.c2 == '\0'))
+                    {
+                        if((nextToken.type != SourceTokenType::Symbol) || !((nextToken.data.charTuple.c1 == '\"') && (nextToken.data.charTuple.c2 == '\0')))
+                        {
+                            printf("Error: in identityStrings(). Symbol token \" was not followed by a seocnd symbol token \".\n");
+                            return 1;
+                        }
+                        else
+                        {   
+                            if(literalIndex >= staticStringsLength)
+                            {
+                                printf("Error: in identityStrings() literalIndex >= staticStringsLength.\n");
+                                return 1;
+                            }
+                            tokenList->getBuff()[i].type = SourceTokenType::StringLiteral;
+                            tokenList->getBuff()[i].data.str = staticStrings->getBuff()[literalIndex];
+                            tokenList->getBuff()[i+1].type = SourceTokenType::Empty;
+                            i++;
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+        int identityKeywords(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens)
+        {
+            for(size_t i = 0; i < numTokens; i++)
+            {
+                SourceToken curentToken = tokenList->getBuff()[i];
+                if(curentToken.type == SourceTokenType::Uncatagorised)
+                {
+                    size_t keywordIndex = internal::clasifyKeyword(curentToken.data.str);
+                    if(keywordIndex != 0)
+                    {
+                        tokenList->getBuff()[i].type = SourceTokenType::Keyword;
+                        tokenList->getBuff()[i].data.keywordIndex = keywordIndex;
+                    }
+                }
+            }
+            return 0;
+        }
+        int identityFunctions(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens)
+        {
+            for(size_t i = 1; i < numTokens - 1; i++)
+            {
+                SourceToken previousToken = tokenList->getBuff()[i-1];
+                SourceToken curentToken = tokenList->getBuff()[i];
+                SourceToken nextToken = tokenList->getBuff()[i+1];
+                if(curentToken.type == SourceTokenType::Uncatagorised)
+                {
+                    if(nextToken.type == SourceTokenType::Symbol)
+                    {
+                        if((nextToken.data.charTuple.c1 == '(') && (nextToken.data.charTuple.c2 == '\0'))
+                        {
+                            if(previousToken.type == SourceTokenType::Keyword)
+                            {
+                                if((previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_FN) || (previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_SUB))
+                                {
+                                    tokenList->getBuff()[i].type = SourceTokenType::FunctionImplementation;
+                                }
+                                else
+                                {
+                                    tokenList->getBuff()[i].type = SourceTokenType::FunctionCall;
+                                }
+                            }
+                            else
+                            {
+                                tokenList->getBuff()[i].type = SourceTokenType::FunctionCall;
+                            }
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens)
+        {
+            int numOpenFunctions = 0;
+            for(size_t i = 1; i < numTokens; i++)
+            {
+                SourceToken previousToken = tokenList->getBuff()[i-1];
+                SourceToken curentToken = tokenList->getBuff()[i];
+                if(numOpenFunctions != 0)
+                {
+                    if(curentToken.type == SourceTokenType::Uncatagorised)
+                    {
+                        if(previousToken.type == SourceTokenType::Symbol)
+                        {
+                            if(((previousToken.data.charTuple.c1 == '(') && (previousToken.data.charTuple.c2 == '\0')) || ((previousToken.data.charTuple.c1 == ',') && (previousToken.data.charTuple.c2 == '\0')))
+                            {
+                                tokenList->getBuff()[i].type = SourceTokenType::Type;
+                            }
+                        }
+                    }
+                    else if(curentToken.type == SourceTokenType::Symbol)
+                    {
+                        if((curentToken.data.charTuple.c1 == '(') && (curentToken.data.charTuple.c2 == '\0'))
+                        {
+                            numOpenFunctions++;
+                        }
+                        else if((curentToken.data.charTuple.c1 == ')') && (curentToken.data.charTuple.c2 == '\0'))
+                        {
+                            numOpenFunctions--;
+                        }
+                    }
+                }
+                else
+                {
+                    if(curentToken.type == SourceTokenType::Uncatagorised)
+                    {
+                        if(previousToken.type == SourceTokenType::Keyword)
+                        {
+                            if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_LET)
+                            {
+                                tokenList->getBuff()[i].type = SourceTokenType::Type;
+                            }
+                        }
+                    }
+                    else if(curentToken.type == SourceTokenType::FunctionImplementation)
+                    {
+                        numOpenFunctions = 1;
+                        i++;
+                    }
+                    else if(curentToken.type == SourceTokenType::Symbol)
+                    {
+                        if((curentToken.data.charTuple.c1 == '-') && (curentToken.data.charTuple.c1 == '>'))
+                        {
+                            numOpenFunctions = 1;
+                            i++;
+                        }
+                    }
+                }
             }
             return 0;
         }
@@ -538,7 +715,11 @@ namespace mdpl
 
             bool isDoubleSymbol(const CharTuple& t)
             {
-                if(t.c2 == '=')
+                if((t.c1 == '\"') || (t.c2 == '\"'))
+                {
+                    return false;
+                }
+                else if(t.c2 == '=')
                 {
                     for(size_t i = 0; i < symbolsThatCombineWithEqualsLength; i++)
                     {
@@ -560,6 +741,38 @@ namespace mdpl
                     }
                 }
                 return false;
+            }
+
+            namespace terminalColor
+            {
+                void setColorRed()
+                {
+                    printf("\x1b[31m");
+                }
+                void setColorGreen()
+                {
+                    printf("\x1b[32m");
+                }
+                void setColorYellow()
+                {
+                    printf("\x1b[33m");
+                }
+                void setColorBlue()
+                {
+                    printf("\x1b[34m");
+                }
+                void setColorMagenta()
+                {
+                    printf("\x1b[35m");
+                }
+                void setColorCyan()
+                {
+                    printf("\x1b[36m");
+                }
+                void resetColor()
+                {
+                    printf("\x1b[0m");
+                }
             }
         }
     }

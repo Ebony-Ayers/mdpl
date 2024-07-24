@@ -15,11 +15,14 @@ namespace mdpl
 
         enum class SourceTokenType
         {
+            Empty,
             Symbol,
             Keyword,
+            StringLiteral,
+            FunctionImplementation,
+            FunctionCall,
             Type,
             Variable,
-            Function,
             Uncatagorised
         };
         struct CharTuple
@@ -36,31 +39,8 @@ namespace mdpl
             {
                 const char* str;
                 CharTuple charTuple;
+                size_t keywordIndex;
             } data;
-        };
-        struct FlatToken
-        {
-            const char* str;
-            int lineNum;
-        };
-        enum class HierarchicalTokenType
-        {
-            Symbol,
-            DoubleSymbol,
-            Keyword,
-            Type,
-            Variable,
-            Function,
-            Uncatagorised
-        };
-        struct HierarchicalToken
-        {
-            HierarchicalTokenType type;
-            const char* value;
-            HierarchicalToken* next;
-            HierarchicalToken* prev;
-            HierarchicalToken* inside;
-            int lineNum;
         };
         
         //step 1: clean up bad characters
@@ -77,11 +57,15 @@ namespace mdpl
         //step 5: create the token list
         int getNumFlatTokens(common::RAIIBuffer<char>* buff, const size_t& bufferLength, size_t* numTokens);
         int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<SourceToken>* tokenList, const size_t& tokenListSize);
-        //step 6: convert the token list into a token tree
+        //step 6: clasify the tokens
         int validateDoubleSymbols(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const char* file);
         int createHeirechy(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
+        int identityStrings(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, mdpl::common::RAIIBuffer<mdpl::common::RAIIBuffer<char>>* staticStrings, const size_t& staticStringsLength);
+        int identityKeywords(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
+        int identityFunctions(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
+        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         //step 7: check for invalid syntax
-        int syntaxChecker(common::RAIIBuffer<HierarchicalToken>* tokenTree, const size_t& tokenTreeSize);
+        int syntaxChecker(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         //step 8: convert the token tree into a syntax tree
 
         namespace internal
@@ -105,9 +89,11 @@ namespace mdpl
                 "code",
                 "fn",
                 "sub",
+                "ret",
                 "ref",
                 "generic",
                 "prop",
+                "catch",
                 "if",
                 "elif",
                 "else",
@@ -117,6 +103,7 @@ namespace mdpl
                 "break",
                 "switch",
                 "case",
+                "let",
                 "struct",
                 "enum",
                 "typedef",
@@ -125,6 +112,33 @@ namespace mdpl
                 "not",
             };
             const size_t posibleKeywordsLength = sizeof(posibleKeywords) / sizeof(const char* const);
+            #define MDPL_KEYWORD_ENUM_NAMESPACE 1
+            #define MDPL_KEYWORD_ENUM_PUBLIC 2
+            #define MDPL_KEYWORD_ENUM_PROTECTED 3
+            #define MDPL_KEYWORD_ENUM_CODE 4
+            #define MDPL_KEYWORD_ENUM_FN 5
+            #define MDPL_KEYWORD_ENUM_SUB 6
+            #define MDPL_KEYWORD_ENUM_RET 7
+            #define MDPL_KEYWORD_ENUM_REF 8
+            #define MDPL_KEYWORD_ENUM_GENERIC 9
+            #define MDPL_KEYWORD_ENUM_PROP 10
+            #define MDPL_KEYWORD_ENUM_CATCH 11
+            #define MDPL_KEYWORD_ENUM_IF 12
+            #define MDPL_KEYWORD_ENUM_ELIF 13
+            #define MDPL_KEYWORD_ENUM_ELSE 14
+            #define MDPL_KEYWORD_ENUM_FOR 15
+            #define MDPL_KEYWORD_ENUM_WHILE 16
+            #define MDPL_KEYWORD_ENUM_CONTINUE 17
+            #define MDPL_KEYWORD_ENUM_BREAK 18
+            #define MDPL_KEYWORD_ENUM_SWITCH 19
+            #define MDPL_KEYWORD_ENUM_CASE 20
+            #define MDPL_KEYWORD_ENUM_LET 21
+            #define MDPL_KEYWORD_ENUM_STRUCT 22
+            #define MDPL_KEYWORD_ENUM_ENUM 23
+            #define MDPL_KEYWORD_ENUM_TYPEDEF 24
+            #define MDPL_KEYWORD_ENUM_AND 25
+            #define MDPL_KEYWORD_ENUM_OR 26
+            #define MDPL_KEYWORD_ENUM_NOT 27
             const char* const buildInTypes[] = {
                 "",
                 "int8",
@@ -155,6 +169,17 @@ namespace mdpl
                                                         {'{', '}'},
                                                         };
             const size_t nonEqualsDoubleSymbolsLength = sizeof(nonEqualsDoubleSymbols) / sizeof(CharTuple);
+
+            namespace terminalColor
+            {
+                void setColorRed();
+                void setColorGreen();
+                void setColorYellow();
+                void setColorBlue();
+                void setColorMagenta();
+                void setColorCyan();
+                void resetColor();
+            }
         }
 
     }
