@@ -42,6 +42,17 @@ namespace mdpl
                 size_t keywordIndex;
             } data;
         };
+        struct Statment
+        {
+            size_t startTokenIndex;
+            size_t stopTokenIndex;
+            size_t attachedScopeIndex;
+        };
+        struct Scope
+        {
+            size_t startStatmentIndex;
+            size_t stopTokenIndex;
+        };
         
         //step 1: clean up bad characters
         int replaceBadChars(common::RAIIBuffer<char>* buff, const size_t& bufferLength);
@@ -64,9 +75,12 @@ namespace mdpl
         int identityKeywords(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         int identityFunctions(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
-        //step 7: check for invalid syntax
-        int syntaxChecker(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
-        //step 8: convert the token tree into a syntax tree
+        //step 7: group tokens
+        int getNumStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numStatments);
+        int groupStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList);
+        int getNumScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, size_t* numScopes);
+        int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
+        int linkScopesToControlFlow(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
 
         namespace internal
         {
@@ -99,6 +113,9 @@ namespace mdpl
                 "else",
                 "for",
                 "while",
+                "from",
+                "to",
+                "step",
                 "continue",
                 "break",
                 "switch",
@@ -106,7 +123,7 @@ namespace mdpl
                 "let",
                 "struct",
                 "enum",
-                "typedef",
+                "using",
                 "and",
                 "or",
                 "not",
