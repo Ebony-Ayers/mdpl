@@ -50,8 +50,10 @@ namespace mdpl
         };
         struct Scope
         {
-            size_t startStatmentIndex;
+            size_t startTokenIndex;
             size_t stopTokenIndex;
+            size_t startStatmentIndex;
+            size_t stopStatmentIndex;
         };
         
         //step 1: clean up bad characters
@@ -76,10 +78,10 @@ namespace mdpl
         int identityFunctions(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         //step 7: group tokens
+        int getNumScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numScopes);
+        int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
         int getNumStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numStatments);
         int groupStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList);
-        int getNumScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, size_t* numScopes);
-        int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
         int linkScopesToControlFlow(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
 
         namespace internal
@@ -197,6 +199,8 @@ namespace mdpl
                 void setColorCyan();
                 void resetColor();
             }
+
+            int findCorespondingScopeClose(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t startToken, size_t* endToken);
         }
 
     }

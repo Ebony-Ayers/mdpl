@@ -54,6 +54,11 @@ namespace mdpl
                 MDPL_RETERR(identityKeywords(&flatTokens, numFlatTokens));
                 MDPL_RETERR(identityFunctions(&flatTokens, numFlatTokens));
                 MDPL_RETERR(identityTypes(&flatTokens, numFlatTokens));
+                //step 7: group tokens
+                size_t numScopes;
+                MDPL_RETERR(getNumScopes(&flatTokens, numFlatTokens, &numScopes));
+                mdpl::common::RAIIBuffer<Scope> scopeList;
+                MDPL_RETERR(groupScopes(&flatTokens, numFlatTokens, numScopes, &scopeList));
 
                 //when debuging dump the clasified symbols for each file
                 if(cliOptions->isCompilerDebug)
@@ -61,20 +66,46 @@ namespace mdpl
                     printf("\n======================== Token dump ========================\n");
                     printf("%s\n\n", fileName);
                     
+                    //we print the number at the end of the loop as we need to manually print the zero
                     printf("0     ");
                     int previousLineNum = 1;
+                    int numIndents = 0;
                     for(size_t j = 0; j < numFlatTokens; j++)
                     {
                         SourceToken token = flatTokens.getBuff()[j];
+                        //detect a new line
                         if(token.lineNum != previousLineNum)
                         {
+                            //print a line followed by an int padded 4 to the left
                             printf("\n%-4ld  ", j);
+                            for(int k = 0; k < numIndents; k++)
+                            {
+                                printf("    ");
+                            }
                         }
                         if(token.type == SourceTokenType::Symbol)
                         {
                             internal::terminalColor::setColorRed();
+                            //check if the token is one or two chars long
                             if(token.data.charTuple.c2 == '\0')
                             {
+                                if(token.data.charTuple.c1 == '{')
+                                {
+                                    numIndents++;
+                                }
+                                else if(token.data.charTuple.c1 == '}')
+                                {
+                                    numIndents--;
+                                    //to be able to reduce the number of intents we need to reprint the current line
+                                    internal::terminalColor::resetColor();
+                                    printf("\r%-4ld  ", j);
+                                    for(int k = 0; k < numIndents; k++)
+                                    {
+                                        printf("    ");
+                                    }
+                                    internal::terminalColor::setColorRed();
+                                }
+
                                 printf("%c ", token.data.charTuple.c1);
                             }
                             else
@@ -115,6 +146,13 @@ namespace mdpl
                         previousLineNum = token.lineNum;
                     }
                     printf("\n");
+
+                    printf("\n======================== Scope dump ========================\n");
+                    for(size_t k = 0; k < numScopes; k++)
+                    {
+                        Scope scope = scopeList.getBuff()[k];
+                        printf("%d %d\n", scope.startTokenIndex, scope.stopTokenIndex);
+                    }
                 }
             }
             return 0;
@@ -654,7 +692,7 @@ namespace mdpl
                     }
                     else if(curentToken.type == SourceTokenType::Symbol)
                     {
-                        if((curentToken.data.charTuple.c1 == '-') && (curentToken.data.charTuple.c1 == '>'))
+                        if((curentToken.data.charTuple.c1 == '-') && (curentToken.data.charTuple.c2 == '>'))
                         {
                             numOpenFunctions = 1;
                             i++;
@@ -664,6 +702,82 @@ namespace mdpl
             }
             return 0;
         }
+
+        int getNumScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numScopes)
+        {
+            *numScopes = 0;
+            size_t numClosedScopes = 0;
+            for(size_t i = 0; i < numTokens; i++)
+            {
+                SourceToken token = tokenList->getBuff()[i];
+
+                if(token.type == SourceTokenType::Symbol)
+                {
+                    if((token.data.charTuple.c1 == '{') && (token.data.charTuple.c2 == '\0'))
+                    {
+                        *numScopes += 1;
+                    }
+                    else if((token.data.charTuple.c1 == '}') && (token.data.charTuple.c2 == '\0'))
+                    {
+                        numClosedScopes++;
+                    }
+                }
+            }
+            if(*numScopes != numClosedScopes)
+            {
+                printf("Syntax error: at %ld scope(s) were not closed.\n", *numScopes - numClosedScopes);
+                return 1;
+            }
+            return 0;
+        }
+        int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList)
+        {
+            scopeList->allocate(numScopes);
+
+            size_t scopeListIndex = 0;
+            for(size_t i = 0; i < numTokens; i++)
+            {
+                SourceToken token = tokenList->getBuff()[i];
+
+                if(token.type == SourceTokenType::Symbol)
+                {
+                    if((token.data.charTuple.c1 == '{') && (token.data.charTuple.c2 == '\0'))
+                    {
+                        Scope scope;
+                        scope.startTokenIndex = i;
+                        MDPL_RETERR(internal::findCorespondingScopeClose(tokenList, numTokens, i, &scope.stopTokenIndex));
+                        scope.startStatmentIndex = 0;
+                        scope.stopStatmentIndex = 0;
+                        if(scopeListIndex >= numScopes)
+                        {
+                            printf("Error: index exceded number of scopes.\n");
+                            return 1;
+                        }
+                        scopeList->getBuff()[scopeListIndex] = scope;
+                        scopeListIndex++;
+                    }
+                }
+            }
+            return 0;
+        }
+        /*
+        int getNumStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numStatments)
+        {
+            size_t startTokenIndex;
+            size_t stopTokenIndex;
+            for(size_t i = 1; i < numTokens; i++)
+            {
+                SourceToken currentToken = tokenList->getBuff()[i-1];
+                SourceToken previousToken = tokenList->getBuff()[i];
+
+                if(currentToken.lineNum > previousToken.lineNum)
+                {
+                    startTokenIndex = i;
+                }
+            }
+            return 0;
+        }
+        */
 
         namespace internal
         {
@@ -773,6 +887,35 @@ namespace mdpl
                 {
                     printf("\x1b[0m");
                 }
+            }
+
+            int findCorespondingScopeClose(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t startToken, size_t* endToken)
+            {
+                int numOpenScopes = 1;
+                for(size_t i = startToken + 1; i < numTokens; i++)
+                {
+                    SourceToken token = tokenList->getBuff()[i];
+
+                    if(token.type == SourceTokenType::Symbol)
+                    {
+                        if((token.data.charTuple.c1 == '{') && (token.data.charTuple.c2 == '\0'))
+                        {
+                            numOpenScopes++;
+                        }
+                        else if((token.data.charTuple.c1 == '}') && (token.data.charTuple.c2 == '\0'))
+                        {
+                            numOpenScopes--;
+                            if(numOpenScopes <= 0)
+                            {
+                                *endToken = i;
+                                return 0;
+                            }
+                        }
+                    }
+                }
+
+                printf("Error: failed to find closing scope bracket.\n");
+                return 1;
             }
         }
     }
