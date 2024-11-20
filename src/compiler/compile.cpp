@@ -59,6 +59,10 @@ namespace mdpl
                 MDPL_RETERR(getNumScopes(&flatTokens, numFlatTokens, &numScopes));
                 mdpl::common::RAIIBuffer<Scope> scopeList;
                 MDPL_RETERR(groupScopes(&flatTokens, numFlatTokens, numScopes, &scopeList));
+                size_t numStatments;
+                MDPL_RETERR(getNumStatments(&flatTokens, numFlatTokens, &numStatments));
+                mdpl::common::RAIIBuffer<Statment> statmentList;
+                MDPL_RETERR(groupStatments(&flatTokens, numFlatTokens, numStatments, &statmentList));
 
                 //when debuging dump the clasified symbols for each file
                 if(cliOptions->isCompilerDebug)
@@ -760,24 +764,170 @@ namespace mdpl
             }
             return 0;
         }
-        /*
         int getNumStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numStatments)
         {
-            size_t startTokenIndex;
-            size_t stopTokenIndex;
+            *numStatments = 0;
+            size_t startTokenIndex = 0;
+            size_t stopTokenIndex = 1;
             for(size_t i = 1; i < numTokens; i++)
             {
                 SourceToken currentToken = tokenList->getBuff()[i-1];
                 SourceToken previousToken = tokenList->getBuff()[i];
 
-                if(currentToken.lineNum > previousToken.lineNum)
+                if(currentToken.lineNum != previousToken.lineNum)
                 {
+                    stopTokenIndex = i;
+                    if(startTokenIndex != stopTokenIndex)
+                    {
+                        if(startTokenIndex + 1 == stopTokenIndex)
+                        {
+                            SourceToken token = tokenList->getBuff()[startTokenIndex];
+                            if(token.type == SourceTokenType::Symbol)
+                            {
+                                if((token.data.charTuple.c1 == '{' || token.data.charTuple.c1 == '}') and token.data.charTuple.c2 == '\0')
+                                {
+                                    //do nothing
+                                }
+                                else
+                                {
+                                    (*numStatments)++;
+                                }
+                            }
+                            else
+                            {
+                                (*numStatments)++;
+                            }
+                        }
+                        else
+                        {
+                            (*numStatments)++;
+                        }
+                    }
                     startTokenIndex = i;
+                }
+                else if(currentToken.type == SourceTokenType::Symbol)
+                {
+                    if(currentToken.data.charTuple.c1 == ';')
+                    {
+                        stopTokenIndex = i;
+                        if(startTokenIndex != stopTokenIndex)
+                        {
+                            //because we have not checked if a statment terminated by a semi colons is a open or closing brace in this version you can't have { ; or } ;
+                            (*numStatments)++;
+                        }
+                        startTokenIndex = i + 1;
+                    }
                 }
             }
             return 0;
         }
-        */
+
+        int groupStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList)
+        {
+            statmentList->allocate(numStatments);
+
+            size_t startTokenIndex = 0;
+            size_t stopTokenIndex = 1;
+            size_t statmentsIndex = 0;
+            for(size_t i = 1; i < numTokens; i++)
+            {
+                SourceToken currentToken = tokenList->getBuff()[i-1];
+                SourceToken previousToken = tokenList->getBuff()[i];
+
+                if(currentToken.lineNum != previousToken.lineNum)
+                {
+                    stopTokenIndex = i;
+                    if(startTokenIndex != stopTokenIndex)
+                    {
+                        if(startTokenIndex + 1 == stopTokenIndex)
+                        {
+                            SourceToken token = tokenList->getBuff()[startTokenIndex];
+                            if(token.type == SourceTokenType::Symbol)
+                            {
+                                if((token.data.charTuple.c1 == '{' || token.data.charTuple.c1 == '}') and token.data.charTuple.c2 == '\0')
+                                {
+                                    //do nothing
+                                }
+                                else
+                                {
+                                    if(statmentsIndex >= numStatments)
+                                    {
+                                        printf("Error: statments index excedes the number of statments.\n");
+                                        return 1;
+                                    }
+                                    Statment statment;
+                                    statment.startTokenIndex = startTokenIndex;
+                                    statment.stopTokenIndex = stopTokenIndex;
+                                    statment.attachedScopeIndex = 0;
+                                    statmentList->getBuff()[statmentsIndex] = statment;
+                                    statmentsIndex++;
+                                }
+                            }
+                            else
+                            {
+                                if(statmentsIndex >= numStatments)
+                                {
+                                    printf("Error: statments index excedes the number of statments.\n");
+                                    return 1;
+                                }
+                                Statment statment;
+                                statment.startTokenIndex = startTokenIndex;
+                                statment.stopTokenIndex = stopTokenIndex;
+                                statment.attachedScopeIndex = 0;
+                                statmentList->getBuff()[statmentsIndex] = statment;
+                                statmentsIndex++;
+                            }
+                        }
+                        else
+                        {
+                            if(statmentsIndex >= numStatments)
+                            {
+                                printf("Error: statments index excedes the number of statments.\n");
+                                return 1;
+                            }
+                            Statment statment;
+                            statment.startTokenIndex = startTokenIndex;
+                            statment.stopTokenIndex = stopTokenIndex;
+                            statment.attachedScopeIndex = 0;
+                            statmentList->getBuff()[statmentsIndex] = statment;
+                            statmentsIndex++;
+                        }
+                    }
+                    startTokenIndex = i;
+                }
+                else if(currentToken.type == SourceTokenType::Symbol)
+                {
+                    if(currentToken.data.charTuple.c1 == ';')
+                    {
+                        stopTokenIndex = i;
+                        if(startTokenIndex != stopTokenIndex)
+                        {
+                            //because we have not checked if a statment terminated by a semi colons is a open or closing brace in this version you can't have { ; or } ;
+                            if(statmentsIndex >= numStatments)
+                            {
+                                printf("Error: statments index excedes the number of statments.\n");
+                                return 1;
+                            }
+                            Statment statment;
+                            statment.startTokenIndex = startTokenIndex;
+                            statment.stopTokenIndex = stopTokenIndex;
+                            statment.attachedScopeIndex = 0;
+                            statmentList->getBuff()[statmentsIndex] = statment;
+                            statmentsIndex++;
+                        }
+                        startTokenIndex = i + 1;
+                    }
+                }
+            }
+
+            if(statmentsIndex != numStatments - 1)
+            {
+                printf("Error: Failed to group all statments.\n");
+                return 1;
+            }
+
+            return 0;
+        }
 
         namespace internal
         {

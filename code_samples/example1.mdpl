@@ -28,8 +28,8 @@ code
         }
         while a >= b
         {
-            a -= b
-            c += 1
+            //two statments on one line
+            a -= b; c += 1
         }
         rem = a
         ret error:sucess
