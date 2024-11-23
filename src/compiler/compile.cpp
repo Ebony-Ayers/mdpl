@@ -706,6 +706,13 @@ namespace mdpl
                                 tokenList->getBuff()[i].type = SourceTokenType::Type;
                             }
                         }
+                        else if(previousToken.type == SourceTokenType::Keyword)
+                        {
+                            if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_LET)
+                            {
+                                tokenList->getBuff()[i].type = SourceTokenType::Type;
+                            }
+                        }
                     }
                     else if(curentToken.type == SourceTokenType::Symbol)
                     {
@@ -745,6 +752,11 @@ namespace mdpl
                         }
                     }
                 }
+            }
+            if(numOpenFunctions != 0)
+            {
+                printf("Error: unclosed functions in identifyTypes().\n");
+                return 1;
             }
             return 0;
         }

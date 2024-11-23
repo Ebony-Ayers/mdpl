@@ -123,6 +123,7 @@ namespace mdpl
                 "switch",
                 "case",
                 "let",
+                "const",
                 "struct",
                 "enum",
                 "using",
@@ -131,33 +132,37 @@ namespace mdpl
                 "not",
             };
             const size_t posibleKeywordsLength = sizeof(posibleKeywords) / sizeof(const char* const);
-            #define MDPL_KEYWORD_ENUM_NAMESPACE 1
-            #define MDPL_KEYWORD_ENUM_PUBLIC 2
-            #define MDPL_KEYWORD_ENUM_PROTECTED 3
-            #define MDPL_KEYWORD_ENUM_CODE 4
-            #define MDPL_KEYWORD_ENUM_FN 5
-            #define MDPL_KEYWORD_ENUM_SUB 6
-            #define MDPL_KEYWORD_ENUM_RET 7
-            #define MDPL_KEYWORD_ENUM_REF 8
-            #define MDPL_KEYWORD_ENUM_GENERIC 9
-            #define MDPL_KEYWORD_ENUM_PROP 10
-            #define MDPL_KEYWORD_ENUM_CATCH 11
-            #define MDPL_KEYWORD_ENUM_IF 12
-            #define MDPL_KEYWORD_ENUM_ELIF 13
-            #define MDPL_KEYWORD_ENUM_ELSE 14
-            #define MDPL_KEYWORD_ENUM_FOR 15
-            #define MDPL_KEYWORD_ENUM_WHILE 16
-            #define MDPL_KEYWORD_ENUM_CONTINUE 17
-            #define MDPL_KEYWORD_ENUM_BREAK 18
-            #define MDPL_KEYWORD_ENUM_SWITCH 19
-            #define MDPL_KEYWORD_ENUM_CASE 20
-            #define MDPL_KEYWORD_ENUM_LET 21
-            #define MDPL_KEYWORD_ENUM_STRUCT 22
-            #define MDPL_KEYWORD_ENUM_ENUM 23
-            #define MDPL_KEYWORD_ENUM_TYPEDEF 24
-            #define MDPL_KEYWORD_ENUM_AND 25
-            #define MDPL_KEYWORD_ENUM_OR 26
-            #define MDPL_KEYWORD_ENUM_NOT 27
+            #define MDPL_KEYWORD_ENUM_NAMESPACE  1
+            #define MDPL_KEYWORD_ENUM_PUBLIC     2
+            #define MDPL_KEYWORD_ENUM_PROTECTED  3
+            #define MDPL_KEYWORD_ENUM_CODE       4
+            #define MDPL_KEYWORD_ENUM_FN         5
+            #define MDPL_KEYWORD_ENUM_SUB        6
+            #define MDPL_KEYWORD_ENUM_RET        7
+            #define MDPL_KEYWORD_ENUM_REF        8
+            #define MDPL_KEYWORD_ENUM_GENERIC    9
+            #define MDPL_KEYWORD_ENUM_PROP      10
+            #define MDPL_KEYWORD_ENUM_CATCH     11
+            #define MDPL_KEYWORD_ENUM_IF        12
+            #define MDPL_KEYWORD_ENUM_ELIF      13
+            #define MDPL_KEYWORD_ENUM_ELSE      14
+            #define MDPL_KEYWORD_ENUM_FOR       15
+            #define MDPL_KEYWORD_ENUM_WHILE     16
+            #define MDPL_KEYWORD_ENUM_FROM      17
+            #define MDPL_KEYWORD_ENUM_TO        18
+            #define MDPL_KEYWORD_ENUM_STEP      19
+            #define MDPL_KEYWORD_ENUM_CONTINUE  20
+            #define MDPL_KEYWORD_ENUM_BREAK     21
+            #define MDPL_KEYWORD_ENUM_SWITCH    22
+            #define MDPL_KEYWORD_ENUM_CASE      23
+            #define MDPL_KEYWORD_ENUM_LET       24
+            #define MDPL_KEYWORD_ENUM_CONST     25
+            #define MDPL_KEYWORD_ENUM_STRUCT    26
+            #define MDPL_KEYWORD_ENUM_ENUM      27
+            #define MDPL_KEYWORD_ENUM_TYPEDEF   28
+            #define MDPL_KEYWORD_ENUM_AND       29
+            #define MDPL_KEYWORD_ENUM_OR        30
+            #define MDPL_KEYWORD_ENUM_NOT       31
             const char* const buildInTypes[] = {
                 "",
                 "int8",
