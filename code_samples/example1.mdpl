@@ -37,7 +37,7 @@ code
     sub increment(int32 ref a) -> ()
     {
         a = add(a, 1)
-        let uint32_t unusedVariable = 0
+        let uint32 unusedVariable = 0
     }
     /*
     //block comment containing a line comment

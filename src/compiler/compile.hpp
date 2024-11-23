@@ -198,6 +198,9 @@ namespace mdpl
                 void setColorMagenta();
                 void setColorCyan();
                 void resetColor();
+
+                void underlineOn();
+                void underlineOff();
             }
 
             int findCorespondingScopeClose(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t startToken, size_t* endToken);

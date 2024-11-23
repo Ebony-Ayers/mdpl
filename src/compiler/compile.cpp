@@ -74,9 +74,25 @@ namespace mdpl
                     printf("0     ");
                     int previousLineNum = 1;
                     int numIndents = 0;
+                    int statmentIndex = 0;
                     for(size_t j = 0; j < numFlatTokens; j++)
                     {
                         SourceToken token = flatTokens.getBuff()[j];
+                        Statment statment = statmentList.getBuff()[statmentIndex];
+                        //detech change of statments
+                        bool shouldStartUnderline = false;
+                        //to allow a topen to be the end and start of different statments the end must be checked seperate and before the start
+                        if(j == statment.stopTokenIndex)
+                        {
+                            internal::terminalColor::underlineOff();
+                            statmentIndex++;
+                            //a token can be the end of one statment and the start of another as statments are up to but not including
+                            statment = statmentList.getBuff()[statmentIndex];
+                        }
+                        if(j == statment.startTokenIndex)
+                        {
+                            shouldStartUnderline = true;
+                        }
                         //detect a new line
                         if(token.lineNum != previousLineNum)
                         {
@@ -90,6 +106,10 @@ namespace mdpl
                         if(token.type == SourceTokenType::Symbol)
                         {
                             internal::terminalColor::setColorRed();
+                            if(shouldStartUnderline)
+                            {
+                                internal::terminalColor::underlineOn();
+                            }
                             //check if the token is one or two chars long
                             if(token.data.charTuple.c2 == '\0')
                             {
@@ -121,17 +141,29 @@ namespace mdpl
                         else if(token.type == SourceTokenType::StringLiteral)
                         {
                             internal::terminalColor::setColorGreen();
+                            if(shouldStartUnderline)
+                            {
+                                internal::terminalColor::underlineOn();
+                            }
                             printf("\"%s\" ", token.data.str);
                             internal::terminalColor::resetColor();
                         }
                         else if(token.type == SourceTokenType::Keyword)
                         {
                             internal::terminalColor::setColorYellow();
+                            if(shouldStartUnderline)
+                            {
+                                internal::terminalColor::underlineOn();
+                            }
                             printf("%s ", internal::posibleKeywords[token.data.keywordIndex]);
                             internal::terminalColor::resetColor();
                         }
                         else if(token.type != SourceTokenType::Empty)
                         {
+                            if(shouldStartUnderline)
+                            {
+                                internal::terminalColor::underlineOn();
+                            }
                             if(token.type == SourceTokenType::FunctionImplementation)
                             {
                                 internal::terminalColor::setColorBlue();
@@ -155,8 +187,18 @@ namespace mdpl
                     for(size_t k = 0; k < numScopes; k++)
                     {
                         Scope scope = scopeList.getBuff()[k];
-                        printf("%d %d\n", scope.startTokenIndex, scope.stopTokenIndex);
+                        printf("%lu %lu\n", scope.startTokenIndex, scope.stopTokenIndex);
                     }
+
+                    //the statment dump is irrelevant when the underlining works correctly so this has been left here for debugging if underlining breaks
+                    #if 0
+                    printf("\n======================== Statment dump ========================\n");
+                    for(size_t k = 0; k < numStatments; k++)
+                    {
+                        Statment statment = statmentList.getBuff()[k];
+                        printf("%lu %lu\n", statment.startTokenIndex, statment.stopTokenIndex);
+                    }
+                    #endif
                 }
             }
             return 0;
@@ -832,15 +874,19 @@ namespace mdpl
             for(size_t i = 1; i < numTokens; i++)
             {
                 SourceToken currentToken = tokenList->getBuff()[i-1];
-                SourceToken previousToken = tokenList->getBuff()[i];
+                SourceToken nextToken = tokenList->getBuff()[i];
 
-                if(currentToken.lineNum != previousToken.lineNum)
+                //statment ends at EOL
+                if(currentToken.lineNum != nextToken.lineNum)
                 {
                     stopTokenIndex = i;
+                    //if we have progressed at least one token
                     if(startTokenIndex != stopTokenIndex)
                     {
+                        //if the statment is one token long
                         if(startTokenIndex + 1 == stopTokenIndex)
                         {
+                            //create a statment so long as  the starting token is not a curly brace
                             SourceToken token = tokenList->getBuff()[startTokenIndex];
                             if(token.type == SourceTokenType::Symbol)
                             {
@@ -878,6 +924,7 @@ namespace mdpl
                                 statmentsIndex++;
                             }
                         }
+                        //if the statment is more than one token long
                         else
                         {
                             if(statmentsIndex >= numStatments)
@@ -895,6 +942,7 @@ namespace mdpl
                     }
                     startTokenIndex = i;
                 }
+                //statments ends at semi colon
                 else if(currentToken.type == SourceTokenType::Symbol)
                 {
                     if(currentToken.data.charTuple.c1 == ';')
@@ -910,17 +958,19 @@ namespace mdpl
                             }
                             Statment statment;
                             statment.startTokenIndex = startTokenIndex;
-                            statment.stopTokenIndex = stopTokenIndex;
+                            //as ther semi colon has no real meaning do not include it in the statment. Remembering that current token is index i-1
+                            statment.stopTokenIndex = stopTokenIndex - 1;
                             statment.attachedScopeIndex = 0;
                             statmentList->getBuff()[statmentsIndex] = statment;
                             statmentsIndex++;
                         }
-                        startTokenIndex = i + 1;
+                        startTokenIndex = i;
                     }
                 }
             }
 
-            if(statmentsIndex != numStatments - 1)
+            //statmentsIndex will always be incremented after writing to hense not numStatments-1
+            if(statmentsIndex != numStatments)
             {
                 printf("Error: Failed to group all statments.\n");
                 return 1;
@@ -1035,7 +1085,16 @@ namespace mdpl
                 }
                 void resetColor()
                 {
-                    printf("\x1b[0m");
+                    printf("\x1b[39m");
+                }
+
+                void underlineOn()
+                {
+                    printf("\x1b[4m");
+                }
+                void underlineOff()
+                {
+                    printf("\x1b[24m");
                 }
             }
 
