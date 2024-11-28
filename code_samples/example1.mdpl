@@ -34,10 +34,11 @@ code
         rem = a
         ret error:sucess
     }
-    sub increment(int32 ref a) -> ()
+    sub increment(mut int32 ref a) -> ()
     {
-        a = add(a, 1)
+        prop a = add(a, 1)
         let uint32 unusedVariable = 0
+        ret error:success
     }
     /*
     //block comment containing a line comment

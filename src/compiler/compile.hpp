@@ -76,7 +76,7 @@ namespace mdpl
         int identityStrings(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, mdpl::common::RAIIBuffer<mdpl::common::RAIIBuffer<char>>* staticStrings, const size_t& staticStringsLength);
         int identityKeywords(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
         int identityFunctions(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
-        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens);
+        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const char* file);
         //step 7: group tokens
         int getNumScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numScopes);
         int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
@@ -123,7 +123,7 @@ namespace mdpl
                 "switch",
                 "case",
                 "let",
-                "const",
+                "mut",
                 "struct",
                 "enum",
                 "using",
@@ -156,7 +156,7 @@ namespace mdpl
             #define MDPL_KEYWORD_ENUM_SWITCH    22
             #define MDPL_KEYWORD_ENUM_CASE      23
             #define MDPL_KEYWORD_ENUM_LET       24
-            #define MDPL_KEYWORD_ENUM_CONST     25
+            #define MDPL_KEYWORD_ENUM_MUT       25
             #define MDPL_KEYWORD_ENUM_STRUCT    26
             #define MDPL_KEYWORD_ENUM_ENUM      27
             #define MDPL_KEYWORD_ENUM_TYPEDEF   28

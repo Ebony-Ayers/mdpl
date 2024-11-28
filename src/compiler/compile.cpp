@@ -53,7 +53,7 @@ namespace mdpl
                 MDPL_RETERR(identityStrings(&flatTokens, numFlatTokens, &staticStrings, staticStringsLength));
                 MDPL_RETERR(identityKeywords(&flatTokens, numFlatTokens));
                 MDPL_RETERR(identityFunctions(&flatTokens, numFlatTokens));
-                MDPL_RETERR(identityTypes(&flatTokens, numFlatTokens));
+                MDPL_RETERR(identityTypes(&flatTokens, numFlatTokens, fileName));
                 //step 7: group tokens
                 size_t numScopes;
                 MDPL_RETERR(getNumScopes(&flatTokens, numFlatTokens, &numScopes));
@@ -688,14 +688,39 @@ namespace mdpl
             }
             return 0;
         }
-        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens)
+        int identityTypes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const char* file)
         {
-            int numOpenFunctions = 0;
+            int numOpenBrakets = 0;
+            int numCloseBrakets = 0;
+            bool isFunctionImplementation = false;
+            int activeLineNum = 0;
             for(size_t i = 1; i < numTokens; i++)
             {
                 SourceToken previousToken = tokenList->getBuff()[i-1];
                 SourceToken curentToken = tokenList->getBuff()[i];
-                if(numOpenFunctions != 0)
+                if(curentToken.lineNum != activeLineNum)
+                {
+                    if(isFunctionImplementation)
+                    {
+                        if((numOpenBrakets == 2) && (numCloseBrakets == 2))
+                        {
+                            numOpenBrakets = 0;
+                            numCloseBrakets = 0;
+                            isFunctionImplementation = false;
+                            activeLineNum = curentToken.lineNum;
+                        }
+                        else
+                        {
+                            printf("Syntax error: Incorrect number of brackets in function signature.\nFile: %s, line: %d\n\n", file, curentToken.lineNum);
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        activeLineNum = curentToken.lineNum;
+                    }
+                }
+                if(isFunctionImplementation)
                 {
                     if(curentToken.type == SourceTokenType::Uncatagorised)
                     {
@@ -708,55 +733,48 @@ namespace mdpl
                         }
                         else if(previousToken.type == SourceTokenType::Keyword)
                         {
-                            if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_LET)
+                            if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_MUT)
                             {
                                 tokenList->getBuff()[i].type = SourceTokenType::Type;
                             }
                         }
+                        
                     }
                     else if(curentToken.type == SourceTokenType::Symbol)
                     {
                         if((curentToken.data.charTuple.c1 == '(') && (curentToken.data.charTuple.c2 == '\0'))
                         {
-                            numOpenFunctions++;
+                            numOpenBrakets++;
                         }
                         else if((curentToken.data.charTuple.c1 == ')') && (curentToken.data.charTuple.c2 == '\0'))
                         {
-                            numOpenFunctions--;
+                            numCloseBrakets++;
+                        }
+                        else if((curentToken.data.charTuple.c1 == '(') && (curentToken.data.charTuple.c2 == ')'))
+                        {
+                            numOpenBrakets++;
+                            numCloseBrakets++;
                         }
                     }
                 }
                 else
                 {
-                    if(curentToken.type == SourceTokenType::Uncatagorised)
+                    if(curentToken.type == SourceTokenType::FunctionImplementation)
                     {
-                        if(previousToken.type == SourceTokenType::Keyword)
+                        isFunctionImplementation = true;
+                    }
+                    else if(previousToken.type == SourceTokenType::Keyword)
+                    {
+                        if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_LET)
                         {
-                            if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_LET)
-                            {
-                                tokenList->getBuff()[i].type = SourceTokenType::Type;
-                            }
+                            tokenList->getBuff()[i].type = SourceTokenType::Type;
                         }
-                    }
-                    else if(curentToken.type == SourceTokenType::FunctionImplementation)
-                    {
-                        numOpenFunctions = 1;
-                        i++;
-                    }
-                    else if(curentToken.type == SourceTokenType::Symbol)
-                    {
-                        if((curentToken.data.charTuple.c1 == '-') && (curentToken.data.charTuple.c2 == '>'))
+                        else if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_MUT)
                         {
-                            numOpenFunctions = 1;
-                            i++;
+                            tokenList->getBuff()[i].type = SourceTokenType::Type;
                         }
                     }
                 }
-            }
-            if(numOpenFunctions != 0)
-            {
-                printf("Error: unclosed functions in identifyTypes().\n");
-                return 1;
             }
             return 0;
         }
