@@ -2,3 +2,6 @@
 	path = vendor/cargs
 	url = https://github.com/likle/cargs
 	branch = stable
+[submodule "vendor/libdivide"]
+	path = vendor/libdivide
+	url = https://github.com/ridiculousfish/libdivide
