@@ -82,7 +82,7 @@ namespace mdpl
         int groupScopes(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
         int getNumStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, size_t* numStatments);
         int groupStatments(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList);
-        int linkScopesToControlFlow(common::RAIIBuffer<SourceToken>* tokenList, const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
+        int linkScopesToStatments(const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList);
 
         namespace internal
         {
@@ -130,6 +130,7 @@ namespace mdpl
                 "and",
                 "or",
                 "not",
+                "handle",
             };
             const size_t posibleKeywordsLength = sizeof(posibleKeywords) / sizeof(const char* const);
             #define MDPL_KEYWORD_ENUM_NAMESPACE  1
@@ -163,6 +164,7 @@ namespace mdpl
             #define MDPL_KEYWORD_ENUM_AND       29
             #define MDPL_KEYWORD_ENUM_OR        30
             #define MDPL_KEYWORD_ENUM_NOT       31
+            #define MDPL_KEYWORD_ENUM_HANDLE    32
             const char* const buildInTypes[] = {
                 "",
                 "int8",

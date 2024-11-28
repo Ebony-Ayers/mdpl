@@ -63,6 +63,7 @@ namespace mdpl
                 MDPL_RETERR(getNumStatments(&flatTokens, numFlatTokens, &numStatments));
                 mdpl::common::RAIIBuffer<Statment> statmentList;
                 MDPL_RETERR(groupStatments(&flatTokens, numFlatTokens, numStatments, &statmentList));
+                MDPL_RETERR(linkScopesToStatments(numFlatTokens, numStatments, &statmentList, numScopes, &scopeList));
 
                 //when debuging dump the clasified symbols for each file
                 if(cliOptions->isCompilerDebug)
@@ -183,11 +184,11 @@ namespace mdpl
                     }
                     printf("\n");
 
-                    printf("\n======================== Scope dump ========================\n");
+                    printf("\n======================== Scope dump ========================\nstartTokenIndex stopTokenIndex | startStatmentIndex stopStatmentIndex\n");
                     for(size_t k = 0; k < numScopes; k++)
                     {
                         Scope scope = scopeList.getBuff()[k];
-                        printf("%lu %lu\n", scope.startTokenIndex, scope.stopTokenIndex);
+                        printf("%lu %lu | %lu %lu\n", scope.startTokenIndex, scope.stopTokenIndex, scope.startStatmentIndex, scope.stopStatmentIndex);
                     }
 
                     //the statment dump is irrelevant when the underlining works correctly so this has been left here for debugging if underlining breaks
@@ -698,8 +699,10 @@ namespace mdpl
             {
                 SourceToken previousToken = tokenList->getBuff()[i-1];
                 SourceToken curentToken = tokenList->getBuff()[i];
+                //as you cannot have two function declarations of definitions on the same line a change of line indicates a change of statment
                 if(curentToken.lineNum != activeLineNum)
                 {
+                    //if the previous line was a function definition check if it correctly formatted
                     if(isFunctionImplementation)
                     {
                         if((numOpenBrakets == 2) && (numCloseBrakets == 2))
@@ -715,6 +718,7 @@ namespace mdpl
                             return 0;
                         }
                     }
+                    //if the previous line was not a function just update the active line
                     else
                     {
                         activeLineNum = curentToken.lineNum;
@@ -722,6 +726,7 @@ namespace mdpl
                 }
                 if(isFunctionImplementation)
                 {
+                    //check for type requirements and mark as nessescary
                     if(curentToken.type == SourceTokenType::Uncatagorised)
                     {
                         if(previousToken.type == SourceTokenType::Symbol)
@@ -740,6 +745,7 @@ namespace mdpl
                         }
                         
                     }
+                    //count open and close brackets
                     else if(curentToken.type == SourceTokenType::Symbol)
                     {
                         if((curentToken.data.charTuple.c1 == '(') && (curentToken.data.charTuple.c2 == '\0'))
@@ -757,6 +763,7 @@ namespace mdpl
                         }
                     }
                 }
+                //non functions lines
                 else
                 {
                     if(curentToken.type == SourceTokenType::FunctionImplementation)
@@ -770,6 +777,10 @@ namespace mdpl
                             tokenList->getBuff()[i].type = SourceTokenType::Type;
                         }
                         else if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_MUT)
+                        {
+                            tokenList->getBuff()[i].type = SourceTokenType::Type;
+                        }
+                        else if(previousToken.data.keywordIndex == MDPL_KEYWORD_ENUM_FOR)
                         {
                             tokenList->getBuff()[i].type = SourceTokenType::Type;
                         }
@@ -1006,6 +1017,86 @@ namespace mdpl
                 return 1;
             }
 
+            return 0;
+        }
+        int linkScopesToStatments(const size_t& numTokens, const size_t& numStatments, common::RAIIBuffer<Statment>* statmentList, const size_t& numScopes, common::RAIIBuffer<Scope>* scopeList)
+        {
+            size_t statmentIndex = 0;
+            for(size_t i = 0; i < numScopes; i++)
+            {
+                Scope scope = scopeList->getBuff()[i];
+                //printf(">> i=%d statmentIndex=%lu scope.startTokenIndex=%lu scope.stopTokenIndex=%lu statment.stopTokenIndex=%lu statment.stopTokenIndex=%lu\n", i, statmentIndex, scope.startTokenIndex, scope.stopTokenIndex, statmentList->getBuff()[statmentIndex].startTokenIndex, statmentList->getBuff()[statmentIndex].stopTokenIndex);
+
+                //skip empty scopes
+                if(scope.startTokenIndex + 1 == scope.stopTokenIndex)
+                {
+                    printf("continuing.\n");
+                    continue;
+                }
+
+                //getting the starting statment of each scope is easy as they are in order
+                while(scope.startTokenIndex + 1 > statmentList->getBuff()[statmentIndex].startTokenIndex)
+                {
+                    statmentIndex++;
+                    if(statmentIndex >= numStatments)
+                    {
+                        printf("Error: exceded bounds of statment list when searching for start statment.\n");
+                        return 0;
+                    }
+                }
+                if(scope.startTokenIndex + 1 != statmentList->getBuff()[statmentIndex].startTokenIndex)
+                {
+                    printf("Error: could not match start of scope to a statment.\n");
+                    return 0;
+                }
+                else
+                {
+                    scopeList->getBuff()[i].startStatmentIndex = statmentIndex;
+                }
+
+                //the file with likely end with multiuple closes of scope so to avoid edge cases we will mangually handle that here
+                if(scope.stopTokenIndex == numTokens - 1)
+                {
+                    //adjust for up to but not including
+                    scopeList->getBuff()[i].stopStatmentIndex = numStatments;
+                }
+                else
+                {
+                    //finding the stoping statment is a lot harder. I am sure there is an algorithm better then n^2 however this is just a prototype
+                    size_t j = statmentIndex;
+                    while(scope.stopTokenIndex > statmentList->getBuff()[j].stopTokenIndex)
+                    {
+                        j++;
+                        if(j >= numStatments)
+                        {
+                            printf("Error: exceded bounds of statment list when searching for stop statment.\n");
+                            return 0;
+                        }
+                    }
+                    if(scope.stopTokenIndex != statmentList->getBuff()[j].stopTokenIndex)
+                    {
+                        //in the event of two or more scopes closing imediatly after each other we will not be able to find the statment we are looking for so we need to handle this case manually
+                        //the only thing that isn't a statment are curly brackets so the next statment will always be the correct one as nothing can be inbetween as if it was it would be the next statment
+                        //to make sure something disasterous hasn't happened we will check that the next statment is indeed after the scope even though it should be imposible not happen
+                        if(scope.stopTokenIndex < statmentList->getBuff()[j].startTokenIndex)
+                        {
+                            //adjust for up to but not including
+                            scopeList->getBuff()[i].stopStatmentIndex = j;
+                        }
+                        else
+                        {
+                            printf("STOP i=%d statmentIndex=%lu scope.startTokenIndex=%lu scope.stopTokenIndex=%lu statment.startTokenIndex=%lu statment.stopTokenIndex=%lu\n", i, j, scope.startTokenIndex, scope.stopTokenIndex, statmentList->getBuff()[j].startTokenIndex, statmentList->getBuff()[j].stopTokenIndex);
+                            printf("Error: could not match end of scope to a statment.\n");
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        //adjust for up to but not including
+                        scopeList->getBuff()[i].stopStatmentIndex = j + 1;
+                    }
+                }
+            }
             return 0;
         }
 

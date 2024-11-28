@@ -3,6 +3,7 @@ public
 {
     fn add(int32 a, int32 b) -> (int32 c)
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
+    fn imul(int32 a, int32 b) -> (int32 c)
     sub incremenet(int32 ref a) -> ()
 
     string str = "Hello world"
@@ -33,6 +34,18 @@ code
         }
         rem = a
         ret error:sucess
+    }
+    fn imul(int32 a, int32 b) -> (int32 c)
+    {
+        c = 0
+        for int32 i from 0 to b
+        {
+            for int32 j from 0 to a
+            {
+                c += 1
+            }
+        }
+        ret error:success
     }
     sub increment(mut int32 ref a) -> ()
     {
