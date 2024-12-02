@@ -74,6 +74,12 @@ target_link_libraries(mdpl_compiler PUBLIC cargs)
 add_subdirectory(vendor/libdivide)
 target_link_libraries(mdpl_compiler PUBLIC libdivide)
 
+add_subdirectory(src/runtime_lib)
+target_link_libraries(mdpl_test_runtime_lib PRIVATE ${project_options_library})
+target_link_libraries(mdpl_test_runtime_lib PUBLIC mdpl_common)
+target_link_libraries(mdpl_test_runtime_lib PUBLIC libdivide)
+
+
 #Speeds up compilation
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
