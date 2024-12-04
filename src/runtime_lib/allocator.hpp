@@ -13,9 +13,12 @@ namespace mdpl
     {
         namespace allocator
         {
-            void* allocate(const size_t& n);
-            void* allocate_alligned(const size_t allignment, const size_t& n);
-            void deallocate(void* ptr);
+            int allocate(void** ptr, const size_t& n);
+            int allocateAlligned(void** ptr, const size_t allignment, const size_t& n);
+            int deallocate(void* ptr);
+
+            int initialiseAllocator();
+            int destroyAllocator();
         }
     }
 }

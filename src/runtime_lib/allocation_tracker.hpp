@@ -26,18 +26,28 @@ namespace mdpl
             {
                 void** array;
                 size_t size;
-                size_t capacity;
+                size_t capacityIndxex;
                 libdivide::libdivide_u64_t divider;
             };
 
-            AllocationTrackerStruct globalAllocationTracker;
+            int constructor(AllocationTrackerStruct* tracker);
+            int destructor(AllocationTrackerStruct* tracker);
 
-            void constructor(AllocationTrackerStruct* tracker, const size_t& initialSize);
-            void destructor(AllocationTrackerStruct* tracker);
-
-            void add(AllocationTrackerStruct* tracker, void* ptr);
-            void remove(AllocationTrackerStruct* tracker, void* ptr);
+            int add(AllocationTrackerStruct* tracker, void* ptr);
+            int remove(AllocationTrackerStruct* tracker, void* ptr);
             bool contains(AllocationTrackerStruct* tracker, void* ptr);
+
+            struct contentsTuple
+            {
+                void** array;
+                size_t size;
+            };
+            contentsTuple getContents(AllocationTrackerStruct* tracker);
+
+            size_t indexOf(AllocationTrackerStruct* tracker, void* ptr);
+            void initialiseArray(AllocationTrackerStruct* tracker, size_t allocationSize);
+            int addNoReallocationCheck(AllocationTrackerStruct* tracker, void* ptr);
+            int constructorWithCapacity(AllocationTrackerStruct* tracker, size_t initialCapaityIndex);
         }
     }
 }

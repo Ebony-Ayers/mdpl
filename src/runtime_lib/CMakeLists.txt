@@ -1,4 +1,6 @@
 set(compiler_source_files
+  allocation_tracker.cpp
+  allocator.cpp
   test_runtime_lib.cpp
 )
 
