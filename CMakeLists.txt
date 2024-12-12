@@ -75,9 +75,16 @@ add_subdirectory(vendor/libdivide)
 target_link_libraries(mdpl_compiler PUBLIC libdivide)
 
 add_subdirectory(src/runtime_lib)
+target_link_libraries(mdpl_runtime_lib PRIVATE ${project_options_library})
+target_link_libraries(mdpl_runtime_lib PUBLIC libdivide)
 target_link_libraries(mdpl_test_runtime_lib PRIVATE ${project_options_library})
+target_link_libraries(mdpl_test_runtime_lib PUBLIC mdpl_runtime_lib)
 target_link_libraries(mdpl_test_runtime_lib PUBLIC mdpl_common)
-target_link_libraries(mdpl_test_runtime_lib PUBLIC libdivide)
+
+add_subdirectory(src/standard_lib)
+target_link_libraries(mdpl_test_standard_lib PRIVATE ${project_options_library})
+target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_common)
+target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_runtime_lib)
 
 
 #Speeds up compilation
