@@ -8,14 +8,16 @@ namespace mdpl
         {
             allocationTracker::AllocationTrackerStruct globalAllocationTracker;
 
-            int allocate(void** ptr, const size_t& n)
+            int allocate(void** ptr, size_t* actualAllocated, const size_t& n)
             {
-                allocateAlligned(ptr, 4, n);
+                allocateAlligned(ptr, actualAllocated, MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT, n);
                 return 0;
             }
-            int allocateAlligned(void** ptr, const size_t allignment, const size_t& n)
+            int allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t& n)
             {
-                *ptr = aligned_alloc(allignment, n);
+                //round the size up to the nearest multiple of the allignment
+                *actualAllocated = ((n / allignment) + 1) * allignment;
+                *ptr = aligned_alloc(allignment, *actualAllocated);
                 if(ptr == nullptr)
                 {
                     printf("MDPL runtime error: failed to allocate %lu bytes of memory with %lu byte allignment.\n", n, allignment);
@@ -62,6 +64,11 @@ namespace mdpl
                 MDPL_RETERR(allocationTracker::destructor(&globalAllocationTracker));
                 
                 return 0;
+            }
+
+            bool doesAllocatorHaveActiveMemory()
+            {
+                return &globalAllocationTracker.size == 0;
             }
         }
     }

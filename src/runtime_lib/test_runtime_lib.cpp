@@ -135,10 +135,16 @@ void testAllocator()
     void* allocatedPointers[10];
     for(size_t i = 0; i < 10; i++)
     {
-        int retcode = mdpl::runtimeLib::allocator::allocate(allocatedPointers + i, 8);
+        size_t trueCapacity;
+        int retcode = mdpl::runtimeLib::allocator::allocate(allocatedPointers + i, &trueCapacity, 8);
         if(retcode)
         {
             printf("Something went wrong.\n");
+            return;
+        }
+        else if(trueCapacity < 8)
+        {
+            printf("Allocated capacity is less than the requirested capcity.\n");
             return;
         }
     }

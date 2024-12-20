@@ -8,6 +8,9 @@
 #define MDPL_GENERIC_TYPE_NAME_MACRO t_int
 #include "basic_list_template.cpp"
 
+//this is not required for use however is needed for debugging
+#include "../runtime_lib/allocator.hpp"
+
 void testBasicList()
 {
     int retcode;
@@ -84,6 +87,12 @@ void testBasicList()
     if(retcode)
     {
         printf("Failed to destroy basic list.\n");
+        return;
+    }
+
+    if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
+    {
+        printf("Did not deallocate all the memory. Potential memory leak.\n");
         return;
     }
 

@@ -88,6 +88,7 @@ namespace mdpl
                     {
                         MDPL_RETERR(rellocate(list, (*list)->header.capacity * 2, 0));
                     }
+                    //printf("appending at position %lu with size %lu and capacity %lu.\n", (*list)->header.size, (*list)->header.size, (*list)->header.capacity);
                     (*list)->data[(*list)->header.size] = val;
                     (*list)->header.size++;
                     return 0;
@@ -120,9 +121,10 @@ namespace mdpl
 
                 int allocate(BasicList** list, const size_t& capacity, const size_t& offset)
                 {
-                    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned(reinterpret_cast<void**>(list), 64, calculateNewSizeOf(capacity)));
+                    size_t trueCapacity;
+                    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned(reinterpret_cast<void**>(list), &trueCapacity, 64, calculateNewSizeOf(capacity)));
                     (*list)->header.size = 0;
-                    (*list)->header.capacity = capacity;
+                    (*list)->header.capacity = trueSizeToUsableSize(trueCapacity) / sizeof(MDPL_GENERIC_TYPE_MACRO);
                     return 0;
                 }
                 int rellocate(BasicList** list, const size_t& capacity, const size_t& offset)
@@ -131,16 +133,25 @@ namespace mdpl
                     MDPL_RETERR(allocate(&pNewList, capacity, offset));
                     pNewList->header.size = (*list)->header.size;
                     memcpy(&(pNewList->data), &((*list)->data), (*list)->header.size * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                    MDPL_RETERR(destructor(*list));
+                    *list = pNewList;
                     return 0;
                 }
 
+                //returns number of bytes
                 size_t runtimeSizeOf(BasicList* list)
                 {
                     return sizeof(BasicList) + (list->header.capacity * sizeof(MDPL_GENERIC_TYPE_MACRO));
                 }
+                //converts number of elements to number of bytes
                 size_t calculateNewSizeOf(size_t size)
                 {
                     return sizeof(BasicList) + (size * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                }
+                //converts number of bytes to number of bytes
+                size_t trueSizeToUsableSize(size_t size)
+                {
+                    return size - sizeof(BasicList);
                 }
             }
         }

@@ -60,8 +60,12 @@ namespace mdpl
 
                 int allocate(BasicList** list, const size_t& capacity, const size_t& offset);
                 int rellocate(BasicList** list, const size_t& capacity, const size_t& offset);
+                //returns number of bytes
                 size_t runtimeSizeOf(BasicList* list);
+                //converts number of elements to number of bytes
                 size_t calculateNewSizeOf(size_t size);
+                //converts number of bytes to number of bytes
+                size_t trueSizeToUsableSize(size_t size);
             }
         }
     }
