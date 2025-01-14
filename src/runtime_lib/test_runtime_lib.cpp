@@ -169,7 +169,7 @@ void testAllocator()
         }
     }
 
-    printf("Deallocating pullptr. Expect an error\n");
+    printf("Deallocating nullptr. Expect an error\n");
     retcode = mdpl::runtimeLib::allocator::deallocate(nullptr);
     if(!retcode)
     {

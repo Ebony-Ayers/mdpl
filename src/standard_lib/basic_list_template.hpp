@@ -44,6 +44,8 @@ namespace mdpl
                 int front(const BasicList* list, MDPL_GENERIC_TYPE_MACRO* dst);
                 int back(const BasicList* list, MDPL_GENERIC_TYPE_MACRO* dst);
                 int get(const BasicList* list, const size_t& pos, MDPL_GENERIC_TYPE_MACRO* dst);
+                
+                int set(BasicList* list, const size_t& pos, const MDPL_GENERIC_TYPE_MACRO& val);
 
                 bool isEmpty(const BasicList* const list);
                 size_t size(const BasicList* const list);
@@ -58,7 +60,7 @@ namespace mdpl
                 int removeFront(BasicList* list);
                 int removeBack(BasicList* list);
 
-                int allocate(BasicList** list, const size_t& capacity, const size_t& offset);
+                int allocate(BasicList** list, const size_t& capacity);
                 int rellocate(BasicList** list, const size_t& capacity, const size_t& offset);
                 //returns number of bytes
                 size_t runtimeSizeOf(BasicList* list);

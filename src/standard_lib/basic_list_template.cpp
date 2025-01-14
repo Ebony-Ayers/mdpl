@@ -10,7 +10,7 @@ namespace mdpl
             {
                 int constructor(BasicList** list)
                 {
-                    MDPL_RETERR(allocate(list, MDPL_BASIC_LIST_INITIAL_CAPACITY, 0));
+                    MDPL_RETERR(allocate(list, MDPL_BASIC_LIST_INITIAL_CAPACITY));
                     return 0;
                 }
                 int destructor(BasicList* list)
@@ -52,6 +52,17 @@ namespace mdpl
                         return 1;
                     }
                     *dst = list->data[pos];
+                    return 0;
+                }
+
+                int set(BasicList* list, const size_t& pos, const MDPL_GENERIC_TYPE_MACRO& val)
+                {
+                    if(pos >= list->header.size)
+                    {
+                        printf("Out of bounds error: tried to access element outside the bounds of the list.\n");
+                        return 1;
+                    }
+                    list->data[pos] = val;
                     return 0;
                 }
 
@@ -101,7 +112,7 @@ namespace mdpl
                     }
                     else
                     {
-                        memcpy((*list)->data, (*list)->data + 1, ((*list)->header.size) * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                        memcpy((*list)->data + 1, (*list)->data, ((*list)->header.size) * sizeof(MDPL_GENERIC_TYPE_MACRO));
                     }
                     (*list)->data[0] = val;
                     (*list)->header.size++;
@@ -110,7 +121,8 @@ namespace mdpl
 
                 int removeFront(BasicList* list)
                 {
-                    memcpy(list->data + 1, list->data, (list->header.size - 1) * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                    memcpy(list->data, list->data + 1, (list->header.size - 1) * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                    list->header.size--;
                     return 0;
                 }
                 int removeBack(BasicList* list)
@@ -119,7 +131,7 @@ namespace mdpl
                     return 0;
                 }
 
-                int allocate(BasicList** list, const size_t& capacity, const size_t& offset)
+                int allocate(BasicList** list, const size_t& capacity)
                 {
                     size_t trueCapacity;
                     MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned(reinterpret_cast<void**>(list), &trueCapacity, 64, calculateNewSizeOf(capacity)));
@@ -130,9 +142,9 @@ namespace mdpl
                 int rellocate(BasicList** list, const size_t& capacity, const size_t& offset)
                 {
                     BasicList* pNewList;
-                    MDPL_RETERR(allocate(&pNewList, capacity, offset));
+                    MDPL_RETERR(allocate(&pNewList, capacity));
                     pNewList->header.size = (*list)->header.size;
-                    memcpy(&(pNewList->data), &((*list)->data), (*list)->header.size * sizeof(MDPL_GENERIC_TYPE_MACRO));
+                    memcpy(&(pNewList->data[offset]), &((*list)->data), (*list)->header.size * sizeof(MDPL_GENERIC_TYPE_MACRO));
                     MDPL_RETERR(destructor(*list));
                     *list = pNewList;
                     return 0;

@@ -44,7 +44,7 @@ void testBasicList()
     for(int i = 0; i < 100; i++)
     {
         int val;
-        retcode = mdpl::standardLibrary::BasicList::t_int::get(pList, i, &val);
+        retcode = mdpl::standardLibrary::BasicList::t_int::get(pList, static_cast<size_t>(i), &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -80,6 +80,161 @@ void testBasicList()
             printf("basic list did not contain the right data.\n");
             return;
         }
+    }
+
+    //test remove back
+    for(int i = 999; i >= 0; i--)
+    {
+        int val;
+        retcode = mdpl::standardLibrary::BasicList::t_int::back(pList, &val);
+        if(retcode)
+        {
+            printf("Failed to get data from back basic list.\n");
+            return;
+        }
+        if(val != i)
+        {
+            printf("basic list did not contain the right data.\n");
+            return;
+        }
+        retcode = mdpl::standardLibrary::BasicList::t_int::removeBack(pList);
+        if(retcode)
+        {
+            printf("Failed to remove last element of list.\n");
+            return;
+        }
+    }
+    if(!mdpl::standardLibrary::BasicList::t_int::isEmpty(pList))
+    {
+        printf("List should be empty but it isn't.\n");
+        return;
+    }
+
+    //test prepend without reallocation
+    for(int i = 0; i < 100; i++)
+    {
+        retcode = mdpl::standardLibrary::BasicList::t_int::prepend(&pList, i);
+        if(retcode)
+        {
+            printf("Failed to prepend to basic list.\n");
+            return;
+        }
+    }
+    for(int i = 0; i < 100; i++)
+    {
+        int val;
+        retcode = mdpl::standardLibrary::BasicList::t_int::get(pList, static_cast<size_t>(i), &val);
+        if(retcode)
+        {
+            printf("Failed to get data from basic list.\n");
+            return;
+        }
+        if(val != 99 - i)
+        {
+            printf("basic list did not contain the right data.\n");
+            return;
+        }
+    }
+    //test prepend with reallocation
+    for(int i = 100; i < 2000; i++)
+    {
+        retcode = mdpl::standardLibrary::BasicList::t_int::prepend(&pList, i);
+        if(retcode)
+        {
+            printf("Failed to prepend to basic list.\n");
+            return;
+        }
+    }
+    for(int i = 0; i < 2000; i++)
+    {
+        int val;
+        retcode = mdpl::standardLibrary::BasicList::t_int::get(pList, static_cast<size_t>(i), &val);
+        if(retcode)
+        {
+            printf("Failed to get data from basic list.\n");
+            return;
+        }
+        if(val != 1999 - i)
+        {
+            printf("basic list did not contain the right data.\n");
+            return;
+        }
+    }
+
+    //test remove front
+    for(int i = 1999; i >= 0; i--)
+    {
+        int val;
+        retcode = mdpl::standardLibrary::BasicList::t_int::front(pList, &val);
+        if(retcode)
+        {
+            printf("Failed to get data from front basic list.\n");
+            return;
+        }
+        if(val != i)
+        {
+            printf("basic list did not contain the right data.\n");
+            return;
+        }
+        retcode = mdpl::standardLibrary::BasicList::t_int::removeFront(pList);
+        if(retcode)
+        {
+            printf("Failed to remove first element of list.\n");
+            return;
+        }
+    }
+    if(!mdpl::standardLibrary::BasicList::t_int::isEmpty(pList))
+    {
+        printf("List should be empty but it isn't.\n");
+        return;
+    }
+
+    //test setting data
+    for(int i = 0; i < 10; i++)
+    {
+        retcode = mdpl::standardLibrary::BasicList::t_int::append(&pList, i);
+        if(retcode)
+        {
+            printf("Failed to append to basic list.\n");
+            return;
+        }
+    }
+    for(int i = 0; i < 10; i++)
+    {
+        retcode = mdpl::standardLibrary::BasicList::t_int::set(pList, static_cast<size_t>(i), i + 10);
+        if(retcode)
+        {
+            printf("Failed to write to basic list.\n");
+            return;
+        }
+    }
+    for(int i = 0; i < 10; i++)
+    {
+        int val;
+        retcode = mdpl::standardLibrary::BasicList::t_int::get(pList, static_cast<size_t>(i), &val);
+        if(retcode)
+        {
+            printf("Failed to get data from basic list.\n");
+            return;
+        }
+        if(val != i + 10)
+        {
+            printf("basic list did not contain the right data.\n");
+            return;
+        }
+    }
+
+    //test clear
+    retcode = mdpl::standardLibrary::BasicList::t_int::clear(pList);
+    if(retcode)
+    {
+        printf("Failed to clear list.\n");
+        return;
+    }
+    else if(!mdpl::standardLibrary::BasicList::t_int::isEmpty(pList))
+    {
+        printf("List is not empty when it should be.\n");
+        return;
     }
 
     //test deconstruction
