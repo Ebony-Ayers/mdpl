@@ -68,7 +68,7 @@ namespace mdpl
 
             bool doesAllocatorHaveActiveMemory()
             {
-                return &globalAllocationTracker.size == 0;
+                return globalAllocationTracker.size != 0;
             }
         }
     }

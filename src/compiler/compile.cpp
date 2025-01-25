@@ -1085,7 +1085,7 @@ namespace mdpl
                         }
                         else
                         {
-                            printf("STOP i=%d statmentIndex=%lu scope.startTokenIndex=%lu scope.stopTokenIndex=%lu statment.startTokenIndex=%lu statment.stopTokenIndex=%lu\n", i, j, scope.startTokenIndex, scope.stopTokenIndex, statmentList->getBuff()[j].startTokenIndex, statmentList->getBuff()[j].stopTokenIndex);
+                            printf("STOP i=%lu statmentIndex=%lu scope.startTokenIndex=%lu scope.stopTokenIndex=%lu statment.startTokenIndex=%lu statment.stopTokenIndex=%lu\n", i, j, scope.startTokenIndex, scope.stopTokenIndex, statmentList->getBuff()[j].startTokenIndex, statmentList->getBuff()[j].stopTokenIndex);
                             printf("Error: could not match end of scope to a statment.\n");
                             return 0;
                         }

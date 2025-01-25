@@ -161,7 +161,7 @@ void testAllocator()
     printf("Deallocating memeory.\n");
     for(size_t i = 0; i < 10; i++)
     {
-        int retcode = mdpl::runtimeLib::allocator::deallocate(allocatedPointers[i]);
+        retcode = mdpl::runtimeLib::allocator::deallocate(allocatedPointers[i]);
         if(retcode)
         {
             printf("Something went wrong.\n");
@@ -178,9 +178,11 @@ void testAllocator()
 
    printf("Destroying allocator.\n");
    mdpl::runtimeLib::allocator::destroyAllocator();
+
+   printf("\nRuntime lib passed all tests.\n");
 }
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
     testTracker();
     testAllocator();

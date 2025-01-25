@@ -254,7 +254,7 @@ void testBasicList()
     printf("Basic list passed all tests.\n");
 }
 
-int main()
+int main(int /*argc*/, char** /*argv*/)
 {
     mdpl::runtimeLib::allocator::initialiseAllocator();
 

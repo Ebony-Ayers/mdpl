@@ -104,7 +104,7 @@ namespace mdpl
             {
                 //compute ptr mod capacity
                 const uint64_t val = reinterpret_cast<uint64_t>(ptr);
-                const size_t divResult = static_cast<size_t>(libdivide::libdivide_u64_do(val, &(tracker->divider)));
+                const size_t divResult = libdivide::libdivide_u64_do(val, &(tracker->divider));
                 const size_t capacity = tablePrimes[tracker->capacityIndxex];
                 size_t index = static_cast<size_t>(val) - (divResult * capacity);
                 
@@ -145,7 +145,7 @@ namespace mdpl
             {
                 //compute ptr mod capacity
                 const uint64_t val = reinterpret_cast<uint64_t>(ptr);
-                const size_t divResult = static_cast<size_t>(libdivide::libdivide_u64_do(val, &(tracker->divider)));
+                const size_t divResult = libdivide::libdivide_u64_do(val, &(tracker->divider));
                 const size_t capacity = tablePrimes[tracker->capacityIndxex];
                 size_t index = static_cast<size_t>(val) - (divResult * capacity);
                 
