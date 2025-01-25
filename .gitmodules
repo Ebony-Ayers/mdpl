@@ -5,3 +5,7 @@
 [submodule "vendor/libdivide"]
 	path = vendor/libdivide
 	url = https://github.com/ridiculousfish/libdivide
+	branch = master
+[submodule "vendor/text"]
+	path = vendor/text
+	url = https://github.com/soasis/text

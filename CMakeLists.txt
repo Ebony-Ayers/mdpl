@@ -85,7 +85,8 @@ add_subdirectory(src/standard_lib)
 target_link_libraries(mdpl_test_standard_lib PRIVATE ${project_options_library})
 target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_common)
 target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_runtime_lib)
-
+add_subdirectory(vendor/text)
+target_link_libraries(mdpl_test_standard_lib PUBLIC ztd::text)
 
 #Speeds up compilation
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)

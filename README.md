@@ -26,3 +26,4 @@ Work in progress.
 ### I have used the following libraries have been used to make MDPL and am very greatful for the work of their respective developers
 - cargs ([https://github.com/likle/cargs](https://github.com/likle/cargs))
 - libdivide ([https://github.com/ridiculousfish/libdivide](https://github.com/ridiculousfish/libdivide))
+- ztd.text ([https://github.com/soasis/text](https://github.com/soasis/text))
