@@ -27,3 +27,4 @@ Work in progress.
 - cargs ([https://github.com/likle/cargs](https://github.com/likle/cargs))
 - libdivide ([https://github.com/ridiculousfish/libdivide](https://github.com/ridiculousfish/libdivide))
 - ztd.text ([https://github.com/soasis/text](https://github.com/soasis/text))
+- utf8proc ([https://github.com/JuliaStrings/utf8proc/](https://github.com/JuliaStrings/utf8proc/))

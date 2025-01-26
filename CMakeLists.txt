@@ -87,6 +87,8 @@ target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_common)
 target_link_libraries(mdpl_test_standard_lib PUBLIC mdpl_runtime_lib)
 add_subdirectory(vendor/text)
 target_link_libraries(mdpl_test_standard_lib PUBLIC ztd::text)
+add_subdirectory(vendor/utf8proc)
+target_link_libraries(mdpl_test_standard_lib PUBLIC utf8proc)
 
 #Speeds up compilation
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
