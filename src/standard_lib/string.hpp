@@ -11,18 +11,25 @@ namespace mdpl
     {
         namespace String
         {
+            namespace RawStringFlags
+            {
+                const uint32_t isNormalised = 1;
+                const uint32_t isAscii      = 2;
+                const uint32_t isSingleCase = 4;
+            };
             struct RawString
             {
                 size_t refCount;
                 const size_t numBytes;
-                char str[1];
+                uint32_t flags;
+                const char str[1];
             };
             struct String
             {
                 size_t numCharacters;
                 size_t startByte;
-                size_t endByte;
-                const RawString* const str;
+                size_t endByte; //up to but not including
+                RawString* const rawStr;
             };
             struct Character
             {
@@ -102,12 +109,12 @@ namespace mdpl
 
             //================ Internal functions ================
 
-            int createString(String** newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, const RawString* const str);
-            int copyString(const String* const originalStr, String** newStr);
-            int destroyString(const String* const str);
-
-            int createRawString(RawString** newStr, const size_t& numBytes);
-            int destroyRawString(const RawString* const str);
+            int createRawString(RawString** newStr, const char* data, const size_t& numBytes);
+            int destroyRawString(RawString* const str);
+            
+            int createString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
+            int copyString(const String* const originalStr, String* newStr);
+            int destroyString(String* const str);
         }
     }
 }

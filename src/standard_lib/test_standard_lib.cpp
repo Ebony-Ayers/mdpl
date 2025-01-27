@@ -8,7 +8,9 @@
 #define MDPL_GENERIC_TYPE_NAME_MACRO t_int
 #include "basic_list_template.cpp"
 
-//this is not required for use however is needed for debugging
+#include "string.hpp"
+
+//this is not required in general use for use however is needed for debugging
 #include "../runtime_lib/allocator.hpp"
 
 void testBasicList()
@@ -254,11 +256,90 @@ void testBasicList()
     printf("Basic list passed all tests.\n");
 }
 
+void testString()
+{
+    const char* cstr = "Hello world";
+    int retcode;
+
+    mdpl::standardLibrary::String::RawString* rawStr;
+    retcode = mdpl::standardLibrary::String::createRawString(&rawStr, cstr, 11);
+    if(retcode)
+    {
+        printf("Error 1\n");
+        return;
+    }
+
+    if(rawStr->numBytes != 11)
+    {
+        printf("Error 2\n");
+        return;
+    }
+    for(size_t i = 0; i < 11; i++)
+    {
+        printf("%c", rawStr->str[i]);
+    }
+    printf("\n");
+
+    mdpl::standardLibrary::String::String str = {};
+    retcode = mdpl::standardLibrary::String::createString(&str, 11, 0, 11, rawStr);
+    if(retcode)
+    {
+        printf("Error 3\n");
+        return;
+    }
+    if(str.rawStr != rawStr)
+    {
+        printf("Error 4\n");
+        return;
+    }
+    for(size_t i = 0; i < 11; i++)
+    {
+        printf("%c", str.rawStr->str[i]);
+    }
+    printf("\n");
+
+    mdpl::standardLibrary::String::String copyOfStr = {};
+    retcode = mdpl::standardLibrary::String::copyString(&str, &copyOfStr);
+    if(retcode)
+    {
+        printf("Error 6\n");
+        return;
+    }
+    if(copyOfStr.rawStr != rawStr)
+    {
+        printf("Error 7\n");
+        return;
+    }
+
+    retcode = mdpl::standardLibrary::String::destroyString(&str);
+    if(retcode)
+    {
+        printf("Error 8\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyString(&copyOfStr);
+    if(retcode)
+    {
+        printf("Error 9\n");
+        return;
+    }
+
+    if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
+    {
+        printf("Did not deallocate all the memory. Potential memory leak.\n");
+        return;
+    }
+
+    printf("String passed all tests.\n");
+}
+
 int main(int /*argc*/, char** /*argv*/)
 {
     mdpl::runtimeLib::allocator::initialiseAllocator();
 
     testBasicList();
+
+    testString();
 
     mdpl::runtimeLib::allocator::destroyAllocator();
 
