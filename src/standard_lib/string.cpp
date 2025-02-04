@@ -15,9 +15,9 @@ namespace mdpl
                 MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned(reinterpret_cast<void**>(newStr), &notUsed, 4, sizeof(RawString) + numBytes));
                 //initialise string
                 (**newStr).refCount = 0;
-                const_cast<size_t&>((**newStr).numBytes) = numBytes;
+                mdpl::common::writeToConstVariable(&(**newStr).numBytes, numBytes);
                 (**newStr).flags = 0;
-                memcpy(const_cast<void*>(reinterpret_cast<const void*>((**newStr).str)), reinterpret_cast<const void*>(data), numBytes);
+                mdpl::common::copyToConstArray((**newStr).str, data, numBytes);
                 return 0;
             }
             int destroyRawString(RawString* const str)
@@ -32,7 +32,7 @@ namespace mdpl
                 (*newStr).numCharacters = numCharacters;
                 (*newStr).startByte = startByte;
                 (*newStr).endByte = endByte;
-                memcpy(const_cast<void*>(reinterpret_cast<const void*>(&(newStr->rawStr))), reinterpret_cast<const void*>(&rawStr), sizeof(void*));
+                mdpl::common::writeToPointerConst(&newStr->rawStr, &rawStr);
                 (*newStr).rawStr->refCount++;
                 return 0;
             }
@@ -41,7 +41,7 @@ namespace mdpl
                 (*newStr).numCharacters = originalStr->numCharacters;
                 (*newStr).startByte = originalStr->startByte;
                 (*newStr).endByte = originalStr->endByte;
-                memcpy(const_cast<void*>(reinterpret_cast<const void*>(&(newStr->rawStr))), const_cast<void*>(reinterpret_cast<const void*>(&(originalStr->rawStr))), sizeof(void*));
+                mdpl::common::writeToPointerConst(&newStr->rawStr, &originalStr->rawStr);
                 (*newStr).rawStr->refCount++;
                 return 0;
             }
