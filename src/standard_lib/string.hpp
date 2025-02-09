@@ -4,6 +4,7 @@
 #include "../pch.hpp"
 #include "../common/mdpl_common.hpp"
 #include "../runtime_lib/allocator.hpp"
+#include "../../vendor/utf8proc/utf8proc.h"
 
 namespace mdpl
 {
@@ -30,6 +31,7 @@ namespace mdpl
                 size_t startByte;
                 size_t endByte; //up to but not including
                 RawString* const rawStr;
+                RawString* normalisedStr;
             };
             struct Character
             {
@@ -110,11 +112,14 @@ namespace mdpl
             //================ Internal functions ================
 
             int createRawString(RawString** newStr, const char* data, const size_t& numBytes);
+            int createRawStringNoCopy(RawString** newStr, const size_t& numBytes);
             int destroyRawString(RawString* const str);
             
             int createString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
             int copyString(const String* const originalStr, String* newStr);
             int destroyString(String* const str);
+
+            int normaliseString(String* const str);
         }
     }
 }
