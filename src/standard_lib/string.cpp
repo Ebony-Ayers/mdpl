@@ -84,6 +84,9 @@ namespace mdpl
             {
                 if(str->normalisedStr == nullptr)
                 {
+                    const utf8proc_uint8_t* originalCStr = reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str);
+                    const utf8proc_ssize_t originalNumBytes = static_cast<utf8proc_ssize_t>(str->rawStr->numBytes);
+
                     //the following code is a moddified version of the function utf8proc_map_custom in vendor/utf8proc/utf8proc.c.
                     //as there are no comments in the original this is my best attempt at explaining what is happening
 
@@ -91,24 +94,23 @@ namespace mdpl
                     const utf8proc_option_t options = static_cast<utf8proc_option_t>(UTF8PROC_STABLE | UTF8PROC_COMPOSE);
                     //to be able to normalise a string we must first decompose it and to do this we need to know how many characters are needed. Note these are unicode characters which may not nessesarily be printable.
                     //calling the function with the third and fourth parameters set to nullptr and 0 respectivly queries the length with out performing any conversion
-                    utf8proc_ssize_t numDecomposedUnicodeCharacters = utf8proc_decompose_custom(reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str), str->rawStr->numBytes, nullptr, 0, options, nullptr, nullptr);
-                    if(numDecomposedUnicodeCharacters < 0)
+                    utf8proc_ssize_t result = utf8proc_decompose_custom(originalCStr, originalNumBytes, nullptr, 0, options, nullptr, nullptr);
+                    if(result < 0)
                     {
-                        printf("String error: \"%s\" occured during counting number of characters for normalisation.\n", utf8proc_errmsg(numDecomposedUnicodeCharacters));
+                        printf("String error: \"%s\" occured during counting number of characters for normalisation.\n", utf8proc_errmsg(result));
                         return 1;
                     }
                     //for reasons I don't understand we must assume that each character will be the maximum length of 4 code points / 4 bytes. An extra byte is added for null terminating the string to determine it's length.
-                    size_t numBytesRequiredForDecomposition = static_cast<size_t>(numDecomposedUnicodeCharacters) * sizeof(utf8proc_int32_t) + 1;
+                    size_t numBytesRequiredForDecomposition = static_cast<utf8proc_size_t>(result) * sizeof(utf8proc_int32_t);
                     //while the final string will be shorter than or equal to numBytesRequiredForDecomposition we require a temporary buffer. To avoid reallocation this will be the final output.
                     MDPL_RETERR(createRawStringNoCopy(&str->normalisedStr, numBytesRequiredForDecomposition));
                     utf8proc_int32_t* buffer = reinterpret_cast<utf8proc_int32_t*>(const_cast<char*>(str->normalisedStr->str));
-                    reinterpret_cast<char*>(buffer)[numBytesRequiredForDecomposition - 1] = '\0';
                     //I have no idea what result represents
                     //calling the function with the third and fourth parameters set to as follows performs the decompistion
-                    utf8proc_ssize_t result = utf8proc_decompose_custom(reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str), str->rawStr->numBytes, buffer, numDecomposedUnicodeCharacters, options, nullptr, nullptr);
+                    result = utf8proc_decompose_custom(originalCStr, originalNumBytes, buffer, result, options, nullptr, nullptr);
                     if(result < 0)
                     {
-                        printf("String error: \"%s\" occured during decomposing string for normalisation.\n", utf8proc_errmsg(numDecomposedUnicodeCharacters));
+                        printf("String error: \"%s\" occured during decomposing string for normalisation.\n", utf8proc_errmsg(result));
                         return 1;
                     }
                     //I have no idea what result represents
@@ -116,12 +118,12 @@ namespace mdpl
                     result = utf8proc_reencode(buffer, result, options);
                     if(result < 0)
                     {
-                        printf("String error: \"%s\" occured during composing string for normalisation.\n", utf8proc_errmsg(numDecomposedUnicodeCharacters));
+                        printf("String error: \"%s\" occured during composing string for normalisation.\n", utf8proc_errmsg(result));
                         return 1;
                     }
                     //finish initialising the string
                     str->normalisedStr->refCount++;
-                    mdpl::common::writeToConstVariable(&str->normalisedStr->numBytes, static_cast<size_t>(strlen(str->normalisedStr->str)));
+                    mdpl::common::writeToConstVariable(&str->normalisedStr->numBytes, static_cast<size_t>(result));
                     str->normalisedStr->flags |= RawStringFlags::isNormalised;
                 }
 
