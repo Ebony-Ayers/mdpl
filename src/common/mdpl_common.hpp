@@ -16,7 +16,16 @@ namespace mdpl
         template<typename T>
         void writeToPointerConst(T* const* ptr, T* const* value)
         {
-            memcpy(const_cast<void*>(reinterpret_cast<const void*>(ptr)), reinterpret_cast<const void*>(value), sizeof(void*));
+            //memcpy(const_cast<void*>(reinterpret_cast<const void*>(ptr)), reinterpret_cast<const void*>(value), sizeof(void*));
+            *(const_cast<void**>(reinterpret_cast<void* const*>(ptr))) = *(const_cast<void**>(reinterpret_cast<void* const*>(value)));
+        }
+
+        template<typename T>
+        void writeNullToPointerConst(T* const* ptr)
+        {
+            //T* value = nullptr;
+            //writeToPointerConst(ptr, value);
+            *(const_cast<void**>(reinterpret_cast<void* const*>(ptr))) = nullptr;
         }
 
         template<typename T>

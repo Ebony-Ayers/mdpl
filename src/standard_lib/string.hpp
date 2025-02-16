@@ -12,31 +12,45 @@ namespace mdpl
     {
         namespace String
         {
-            namespace RawStringFlags
+            /*
+            namespace StringFlags
             {
-                const uint32_t isNormalised = 1;
-                const uint32_t isAscii      = 2;
-                const uint32_t isSingleCase = 4;
+                uint32_t isLower        = 1;
+                uint32_t isUpper        = 2;
+                uint32_t isWhiteSpace   = 4;
+                uint32_t isPrintable    = 8;
+                uint32_t isAscii        = 16;
+                uint32_t isDecimal      = 32;
+                uint32_t isInt          = 64;
+                uint32_t isFloat        = 128;
+                uint32_t isAlpha        = 256;
+                uint32_t isAlphaNumeric = 512;
             };
+            */
             struct RawString
             {
                 size_t refCount;
                 const size_t numBytes;
-                uint32_t flags;
                 const char str[1];
             };
             struct String
             {
+                size_t refCount;
                 size_t numCharacters;
                 size_t startByte;
                 size_t endByte; //up to but not including
+                uint32_t flagsData;
+                uint32_t flagsSet;
                 RawString* const rawStr;
                 RawString* normalisedStr;
             };
+            struct StringRef
+            {
+                String* const s;
+            };
             struct Character
             {
-                size_t startByte;
-                size_t endByte;
+                size_t numBytes;
                 char str[4];
             };
             struct StringForwardsIterator
@@ -59,16 +73,16 @@ namespace mdpl
 
             int frontForwardsIterator(const String* const str, size_t* StringForwardsIterator);
 
-            int isAllLower(const String* const str, bool* isLower);
-            int isAllUpper(const String* const str, bool* isLower);
-            int isWhiteSpace(const String* const str, bool* isLower);
-            int isPrintable(const String* const str, bool* isLower);
-            int isAscii(const String* const str, bool* isLower);
-            int isDecimal(const String* const str, bool* isLower);
-            int isInt(const String* const str, bool* isLower);
-            int isFloat(const String* const str, bool* isLower);
-            int isAlpha(const String* const str, bool* isLower);
-            int isAlphaNumeric(const String* const str, bool* isLower);
+            int isAllLower(const String* const str, bool* result);
+            int isAllUpper(const String* const str, bool* result);
+            int isWhiteSpace(const String* const str, bool* result);
+            int isPrintable(const String* const str, bool* result);
+            int isAscii(const String* const str, bool* result);
+            int isDecimal(const String* const str, bool* result);
+            int isInt(const String* const str, bool* result);
+            int isFloat(const String* const str, bool* result);
+            int isAlpha(const String* const str, bool* result);
+            int isAlphaNumeric(const String* const str, bool* result);
 
             int valueEqualityStrStr(const String* const str1, const String* const str2);
             int valueEqualityStrChr(const String* const str, const Character* const chr);
@@ -85,16 +99,16 @@ namespace mdpl
 
             //================ Character functions ================
 
-            int isAllLowerChr(const Character* const str, bool* isLower);
-            int isAllUpperChr(const Character* const str, bool* isLower);
-            int isWhiteSpaceChr(const Character* const str, bool* isLower);
-            int isPrintableChr(const Character* const str, bool* isLower);
-            int isAsciiChr(const Character* const str, bool* isLower);
-            int isDecimalChr(const Character* const str, bool* isLower);
-            int isIntChr(const Character* const str, bool* isLower);
-            int isFloatChr(const Character* const str, bool* isLower);
-            int isAlphaChr(const Character* const str, bool* isLower);
-            int isAlphaNumericChr(const Character* const str, bool* isLower);
+            int isAllLowerChr(const Character* const str, bool* result);
+            int isAllUpperChr(const Character* const str, bool* result);
+            int isWhiteSpaceChr(const Character* const str, bool* result);
+            int isPrintableChr(const Character* const str, bool* result);
+            int isAsciiChr(const Character* const str, bool* result);
+            int isDecimalChr(const Character* const str, bool* result);
+            int isIntChr(const Character* const str, bool* result);
+            int isFloatChr(const Character* const str, bool* result);
+            int isAlphaChr(const Character* const str, bool* result);
+            int isAlphaNumericChr(const Character* const str, bool* result);
 
             int valueEqualityChrChr(const Character* const chr1, const Character* const chr2);
             int valueEqualityChrStr(const Character* const chr, const String* const str);
@@ -109,17 +123,25 @@ namespace mdpl
             int next(StringForwardsIterator* it);
             int isFinished(const StringForwardsIterator* const it, bool* finished);
 
-            //================ Internal functions ================
+            //================ Constructors ================
 
-            int createRawString(RawString** newStr, const char* data, const size_t& numBytes);
-            int createRawStringNoCopy(RawString** newStr, const size_t& numBytes);
-            int destroyRawString(RawString* const str);
-            
-            int createString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
-            int copyString(const String* const originalStr, String* newStr);
-            int destroyString(String* const str);
+            int createStringRefFromCStr(StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters);
+            int copyStringRef(const StringRef originalStrRef, StringRef* const newStrRef);
+            int destroyStringRef(const StringRef strRef);
 
-            int normaliseString(String* const str);
+            namespace internal
+            {
+                int createRawString(RawString** newStr, const char* data, const size_t& numBytes);
+                int createRawStringNoCopy(RawString** newStr, const size_t& numBytes);
+                int destroyRawString(RawString* const str);
+
+                int createStringWithRawStr(String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
+                int createStringNoRawStr(String* const* newStr);
+                int initialiseExistingString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
+                int destroyString(String* const str);
+
+                int normaliseString(String* const str);
+            }
         }
     }
 }
