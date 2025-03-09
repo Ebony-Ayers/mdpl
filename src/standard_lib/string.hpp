@@ -12,21 +12,21 @@ namespace mdpl
     {
         namespace String
         {
-            /*
+            
             namespace StringFlags
             {
-                uint32_t isLower        = 1;
-                uint32_t isUpper        = 2;
-                uint32_t isWhiteSpace   = 4;
-                uint32_t isPrintable    = 8;
-                uint32_t isAscii        = 16;
-                uint32_t isDecimal      = 32;
-                uint32_t isInt          = 64;
-                uint32_t isFloat        = 128;
-                uint32_t isAlpha        = 256;
-                uint32_t isAlphaNumeric = 512;
+                const uint32_t isLower        = 1;
+                const uint32_t isUpper        = 2;
+                const uint32_t isWhiteSpace   = 4;
+                const uint32_t isPrintable    = 8;
+                const uint32_t isAscii        = 16;
+                const uint32_t isValidDecimal = 32;
+                const uint32_t isValidInt     = 64;
+                const uint32_t isValidFloat   = 128;
+                const uint32_t isAlpha        = 256;
+                const uint32_t isAlphaNumeric = 512;
             };
-            */
+            
             struct RawString
             {
                 size_t refCount;
@@ -73,16 +73,16 @@ namespace mdpl
 
             int frontForwardsIterator(const String* const str, size_t* StringForwardsIterator);
 
-            int isAllLower(const String* const str, bool* result);
-            int isAllUpper(const String* const str, bool* result);
-            int isWhiteSpace(const String* const str, bool* result);
-            int isPrintable(const String* const str, bool* result);
-            int isAscii(const String* const str, bool* result);
-            int isDecimal(const String* const str, bool* result);
-            int isInt(const String* const str, bool* result);
-            int isFloat(const String* const str, bool* result);
-            int isAlpha(const String* const str, bool* result);
-            int isAlphaNumeric(const String* const str, bool* result);
+            int isAllLower(const StringRef str, bool* result);
+            int isAllUpper(const StringRef str, bool* result);
+            int isWhiteSpace(const StringRef str, bool* result);
+            int isPrintable(const StringRef str, bool* result);
+            int isAscii(const StringRef str, bool* result);
+            int isValidDecimal(const StringRef str, bool* result);
+            int isValidInt(const StringRef str, bool* result);
+            int isValidFloat(const StringRef str, bool* result);
+            int isAlpha(const StringRef str, bool* result);
+            int isAlphaNumeric(const StringRef str, bool* result);
 
             int valueEqualityStrStr(const String* const str1, const String* const str2);
             int valueEqualityStrChr(const String* const str, const Character* const chr);

@@ -6,6 +6,167 @@ namespace mdpl
     {
         namespace String
         {
+            int isAscii(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isAscii) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isAscii ? true : false;
+                    return 0;
+                }
+                else
+                {
+                    for(size_t i = str.s->startByte; i < str.s->endByte; i++)
+                    {
+                        if(str.s->rawStr->str[i] & 0b10000000)
+                        {
+                            *result = false;
+                            str.s->flagsSet |= StringFlags::isAscii;
+                            str.s->flagsData &= ~StringFlags::isAscii;
+                            return 0;
+                        }
+                    }
+                    *result = true;
+                    str.s->flagsSet |= StringFlags::isAscii;
+                    str.s->flagsData |= StringFlags::isAscii;
+                    return 0;
+                }
+            }
+            int isValidDecimal(const StringRef str, bool* result)
+            {
+                //check if a previous call to this function has been done
+                if(str.s->flagsSet & StringFlags::isValidDecimal)
+                {
+                    *result = str.s->flagsData & StringFlags::isValidDecimal ? true : false;
+                    return 0;
+                }
+                //if the stirng is not ascii then by definition it cannot be a decimal
+                bool ascii;
+                MDPL_RETERR(isAscii(str, &ascii));
+                if(!ascii)
+                {
+                    *result = false;
+                    str.s->flagsSet |= StringFlags::isValidDecimal;
+                    str.s->flagsData &= ~StringFlags::isValidDecimal;
+                    return 0;
+                }
+                else
+                {
+                    for(size_t i = str.s->startByte; i < str.s->endByte; i++)
+                    {
+                        const char c = str.s->rawStr->str[i];
+                        if(! ((c >= '0') && (c <= '9')) )
+                        {
+                            *result = false;
+                            str.s->flagsSet |= StringFlags::isValidDecimal;
+                            str.s->flagsData &= ~StringFlags::isValidDecimal;
+                            return 0;
+                        }
+                    }
+                    *result = true;
+                    str.s->flagsSet |= StringFlags::isValidDecimal;
+                    str.s->flagsData |= StringFlags::isValidDecimal;
+                    return 0;
+                }
+            }
+            int isValidInt(const StringRef str, bool* result)
+            {
+                //check if a previous call to this function has been done
+                if(str.s->flagsSet & StringFlags::isValidInt)
+                {
+                    *result = str.s->flagsData & StringFlags::isValidInt ? true : false;
+                    return 0;
+                }
+                //if the stirng is not ascii then by definition it cannot be an int
+                bool ascii;
+                MDPL_RETERR(isAscii(str, &ascii));
+                if(!ascii)
+                {
+                    *result = false;
+                    str.s->flagsSet |= StringFlags::isValidInt;
+                    str.s->flagsData &= ~StringFlags::isValidInt;
+                    return 0;
+                }
+                else
+                {
+                    //if the first character is a - then we can skip checking it
+                    const size_t firstCharacterHythenOffset = str.s->rawStr->str[str.s->startByte] == '-' ? 1 : 0;
+                    for(size_t i = str.s->startByte + firstCharacterHythenOffset; i < str.s->endByte; i++)
+                    {
+                        const char c = str.s->rawStr->str[i];
+                        if(! ((c >= '0') && (c <= '9')) )
+                        {
+                            *result = false;
+                            str.s->flagsSet |= StringFlags::isValidInt;
+                            str.s->flagsData &= ~StringFlags::isValidInt;
+                            return 0;
+                        }
+                    }
+                    *result = true;
+                    str.s->flagsSet |= StringFlags::isValidInt;
+                    str.s->flagsData |= StringFlags::isValidInt;
+                    return 0;
+                }
+            }
+            int isValidFloat(const StringRef str, bool* result)
+            {
+                //check if a previous call to this function has been done
+                if(str.s->flagsSet & StringFlags::isValidFloat)
+                {
+                    *result = str.s->flagsData & StringFlags::isValidFloat ? true : false;
+                    return 0;
+                }
+                //if the stirng is not ascii then by definition it cannot be an int
+                bool ascii;
+                MDPL_RETERR(isAscii(str, &ascii));
+                if(!ascii)
+                {
+                    *result = false;
+                    str.s->flagsSet |= StringFlags::isValidFloat;
+                    str.s->flagsData &= ~StringFlags::isValidFloat;
+                    return 0;
+                }
+                else
+                {
+                    //if the first character is a - then we can skip checking it
+                    const size_t firstCharacterHythenOffset = str.s->rawStr->str[str.s->startByte] == '-' ? 1 : 0;
+                    bool alreadyFoundDecimalPoint = false;
+                    for(size_t i = str.s->startByte + firstCharacterHythenOffset; i < str.s->endByte; i++)
+                    {
+                        const char c = str.s->rawStr->str[i];
+                        if(! ((c >= '0') && (c <= '9')) )
+                        {
+                            if(c == '.')
+                            {
+                                //a float can only have a single decimal point so if we have already found it, it is not valid
+                                if(alreadyFoundDecimalPoint)
+                                {
+                                    *result = false;
+                                    str.s->flagsSet |= StringFlags::isValidFloat;
+                                    str.s->flagsData &= ~StringFlags::isValidFloat;
+                                    return 0;
+                                }
+                                else
+                                {
+                                    alreadyFoundDecimalPoint = true;
+                                }
+                            }
+                            else
+                            {
+                                *result = false;
+                                str.s->flagsSet |= StringFlags::isValidFloat;
+                                str.s->flagsData &= ~StringFlags::isValidFloat;
+                                return 0;
+                            }
+                        }
+                    }
+                    *result = true;
+                    str.s->flagsSet |= StringFlags::isValidFloat;
+                    str.s->flagsData |= StringFlags::isValidFloat;
+                    return 0;
+                }
+            }
+        
+
             int createStringRefFromCStr(StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters)
             {
                 MDPL_RETERR(internal::createStringNoRawStr(&strRef->s));
@@ -25,7 +186,6 @@ namespace mdpl
                 MDPL_RETERR(internal::destroyString(strRef.s));
                 return 0;
             }
-
 
             namespace internal
             {

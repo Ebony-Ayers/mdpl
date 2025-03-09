@@ -277,6 +277,7 @@ void testString()
     const size_t normaliseCStrNumBytes2 = 6;
     
     int retcode;
+    bool result;
     
     //test 1: construct string with ascii data and test raw str
     mdpl::standardLibrary::String::StringRef asciiStr = {};
@@ -486,6 +487,370 @@ void testString()
         }
     }
 
+    //test 6: isAscii
+    retcode = mdpl::standardLibrary::String::isAscii(asciiStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 6. Error during isAscii call on ascii str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 6. isAscii result is wrong for ascii str.\n");
+        return;
+    }
+    if(! ((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) || (asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii)) )
+    {
+        printf("Failed test 6. Flags incorrectly set for ascii str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAscii(emojiStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 6. Error during isAscii call on emoji str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 6. isAscii result is wrong for emoji str.\n");
+        return;
+    }
+    if(! ((emojiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) || (emojiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii)) )
+    {
+        printf("Failed test 6. Flags incorrectly set for emoji str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAscii(normaliseStr1, &result);
+    if(retcode)
+    {
+        printf("Failed test 6. Error during isAscii call on normalise str 1.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 6. isAscii result is wrong for normalise str 1.\n");
+        return;
+    }
+    if(! ((normaliseStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) || (normaliseStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii)) )
+    {
+        printf("Failed test 6. Flags incorrectly set for normalise str 1.\n");
+        return;
+    }
+
+    //setup for steps 7-9
+    mdpl::standardLibrary::String::StringRef validDecimalStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validDecimalStr, "123456789", 9, 9);
+    if(retcode) { printf("Failed test 7. Error during constructing valid decimal str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef validIntStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validIntStr, "-123456789", 10, 10);
+    if(retcode) { printf("Failed test 7. Error during constructing valid int str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef invalidIntStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidIntStr, "-1234567-89", 11, 11);
+    if(retcode) { printf("Failed test 7. Error during constructing invalid int str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef validFloatStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validFloatStr, "-1234.56789", 11, 11);
+    if(retcode) { printf("Failed test 7. Error during constructing valid float str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef invalidFloatStr1 = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidFloatStr1, "-1234.567.89", 12, 12);
+    if(retcode) { printf("Failed test 7. Error during constructing invalid float str 1.\n"); return; }
+    mdpl::standardLibrary::String::StringRef invalidFloatStr2 = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidFloatStr2, "-1234.567-89", 12, 12);
+    if(retcode) { printf("Failed test 7. Error during constructing invalid float str 2.\n"); return; }
+    
+    //test 7: isValidDecimal
+    retcode = mdpl::standardLibrary::String::isValidDecimal(validDecimalStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on valid decimal str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for valid decimal str.\n");
+        return;
+    }
+    if(! ((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for valid decimal str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidDecimal(validIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on valid int str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for valid int str.\n");
+        return;
+    }
+    if(! ((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for valid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on invalid int str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for invalid int str.\n");
+        return;
+    }
+    if(! ((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for invalid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidDecimal(validFloatStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on valid float str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for valid float str.\n");
+        return;
+    }
+    if(! ((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for valid float str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidFloatStr1, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on invalid float str 1.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for invalid float str 1.\n");
+        return;
+    }
+    if(! ((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for invalid float str 1.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidFloatStr2, &result);
+    if(retcode)
+    {
+        printf("Failed test 7. Error during isValidDecimal call on invalid float str 2.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 7. isValidDecimal result is wrong for invalid float str 2.\n");
+        return;
+    }
+    if(! ((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) || (invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal)) )
+    {
+        printf("Failed test 7. Flags incorrectly set for invalid float str 2.\n");
+        return;
+    }
+
+    //test 8: isValidInt
+    retcode = mdpl::standardLibrary::String::isValidInt(validDecimalStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on valid decimal str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for valid decimal str.\n");
+        return;
+    }
+    if(! ((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for valid decimal str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidInt(validIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on valid int str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for valid int str.\n");
+        return;
+    }
+    if(! ((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for valid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidInt(invalidIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on invalid int str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for invalid int str.\n");
+        return;
+    }
+    if(! ((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for invalid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidInt(validFloatStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on valid float str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for valid float str.\n");
+        return;
+    }
+    if(! ((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for valid float str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidInt(invalidFloatStr1, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on invalid float str 1.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for invalid float str 1.\n");
+        return;
+    }
+    if(! ((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for invalid float str 1.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidInt(invalidFloatStr2, &result);
+    if(retcode)
+    {
+        printf("Failed test 8. Error during isValidInt call on invalid float str 2.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 8. isValidInt result is wrong for invalid float str 2.\n");
+        return;
+    }
+    if(! ((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) || (invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt)) )
+    {
+        printf("Failed test 8. Flags incorrectly set for invalid float str 2.\n");
+        return;
+    }
+
+    //test 9: isValidFloat
+    retcode = mdpl::standardLibrary::String::isValidFloat(validDecimalStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on valid decimal str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for valid decimal str.\n");
+        return;
+    }
+    if(! ((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for valid decimal str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidFloat(validIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on valid int str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for valid int str.\n");
+        return;
+    }
+    if(! ((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for valid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidFloat(invalidIntStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on invalid int str.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for invalid int str.\n");
+        return;
+    }
+    if(! ((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for invalid int str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidFloat(validFloatStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on valid float str.\n");
+        return;
+    }
+    if(!result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for valid float str.\n");
+        return;
+    }
+    if(! ((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for valid float str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidFloat(invalidFloatStr1, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on invalid float str 1.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for invalid float str 1.\n");
+        return;
+    }
+    if(! ((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for invalid float str 1.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isValidFloat(invalidFloatStr2, &result);
+    if(retcode)
+    {
+        printf("Failed test 9. Error during isValidFloat call on invalid float str 2.\n");
+        return;
+    }
+    if(result)
+    {
+        printf("Failed test 9. isValidFloat result is wrong for invalid float str 2.\n");
+        return;
+    }
+    if(! ((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) || (invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat)) )
+    {
+        printf("Failed test 9. Flags incorrectly set for invalid float str 2.\n");
+        return;
+    }
+
     //final test: deconstructions
     retcode = mdpl::standardLibrary::String::destroyStringRef(asciiStr);
     if(retcode)
@@ -506,6 +871,43 @@ void testString()
         return;
     }
     retcode = mdpl::standardLibrary::String::destroyStringRef(normaliseStr2);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+
+    retcode = mdpl::standardLibrary::String::destroyStringRef(validDecimalStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(validIntStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidIntStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(validFloatStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidFloatStr1);
+    if(retcode)
+    {
+        printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidFloatStr2);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
