@@ -69,7 +69,7 @@ namespace mdpl
                     (**newStr).rawStr->refCount++;
                     return 0;
                 }
-                int createStringNoRawStr(String** newStr)
+                int createStringNoRawStr(String* const* newStr)
                 {
                     //construct the string and assign it values to make it clear that it is not initialised
                     String* ptr;

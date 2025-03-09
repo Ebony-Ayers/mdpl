@@ -131,8 +131,8 @@ namespace mdpl
 
             namespace internal
             {
-                int createRawString(RawString** newStr, const char* data, const size_t& numBytes);
-                int createRawStringNoCopy(RawString** newStr, const size_t& numBytes);
+                int createRawString(RawString* const* newStr, const char* data, const size_t& numBytes);
+                int createRawStringNoCopy(RawString* const* newStr, const size_t& numBytes);
                 int destroyRawString(RawString* const str);
 
                 int createStringWithRawStr(String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);

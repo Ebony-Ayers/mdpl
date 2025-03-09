@@ -277,253 +277,211 @@ void testString()
     const size_t normaliseCStrNumBytes2 = 6;
     
     int retcode;
-    /*
+    
     //test 1: construct string with ascii data and test raw str
     mdpl::standardLibrary::String::StringRef asciiStr = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&asciiStr, asciiCStr, asciiCStrNumBytes, asciiCStrNumCharacters);
     if(retcode)
     {
-        printf("Failed test 1. Error during constructing raw string.\n");
-        return;
+        printf("Failed test 1. Error during constructing ascii str.\n");
     }
     if(asciiStr.s->rawStr->numBytes != asciiCStrNumBytes)
     {
-        printf("Failed test 1. Raw string had incorrect number of bytes.\n");
+        printf("Failed test 1. Ascii str's raw string had incorrect number of bytes.\n");
         return;
     }
-    for(size_t i = 0; i < asciiCStrNumBytes; i++)
-    {
-        if(asciiStr.s->rawStr->str[i] != asciiCStr[i])
-        {
-            printf("Failed test 1. Raw string did not contain the correct data.");
-            return;
-        }
-    }
-
-    //test 2: construct string with ascii data and test str
     if(asciiStr.s->numCharacters != asciiCStrNumCharacters)
     {
-        printf("Failed test 2. Number of characters is incorrect.\n");
+        printf("Failed test 1. Ascii str's number of characters is incorrect.\n");
         return;
     }
     if(asciiStr.s->startByte != 0)
     {
-        printf("Failed test 2. Start byte is incorrect.\n");
+        printf("Failed test 1. Ascii str's start byte is incorrect.\n");
         return;
     }
     if(asciiStr.s->endByte != asciiCStrNumBytes)
     {
-        printf("Failed test 2. End byte is incorrect.\n");
+        printf("Failed test 1. Ascii str's end byte is incorrect.\n");
         return;
     }
     for(size_t i = 0; i < asciiCStrNumBytes; i++)
     {
         if(asciiStr.s->rawStr->str[i] != asciiCStr[i])
         {
-            printf("Failed test 2. String did not contain the correct data.\n");
+            printf("Failed test 1. Ascii str did not contain the correct data.\n");
         }
     }
 
-    //test 4: construct raw string with emoji data and test raw str
+    //test 2: construct raw string with emoji data and test raw str
     mdpl::standardLibrary::String::StringRef emojiStr = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&emojiStr, emojiCStr, emojiCStrNumBytes, emojiCStrNumCharacters);
     if(retcode)
     {
-        printf("Failed test 4. Error during constructing raw string.\n");
+        printf("Failed test 2. Error during constructing emijo string.\n");
         return;
     }
     if(emojiStr.s->rawStr->numBytes != emojiCStrNumBytes)
     {
-        printf("Failed test 4. Raw string had incorrect number of bytes.\n");
+        printf("Failed test 2. Emoji str's raw string had incorrect number of bytes.\n");
         return;
     }
-    for(size_t i = 0; i < emojiCStrNumBytes; i++)
-    {
-        if(emojiStr.s->rawStr->str[i] != emojiCStr[i])
-        {
-            printf("Failed test 4. Raw string did not contain the correct data.");
-            return;
-        }
-    }
-
-    //test 5: construct string with emoji data and test str
     if(emojiStr.s->numCharacters != emojiCStrNumCharacters)
     {
-        printf("Failed test 5. Number of characters is incorrect.\n");
+        printf("Failed test 2. Emoji str's number of characters is incorrect.\n");
         return;
     }
     if(emojiStr.s->startByte != 0)
     {
-        printf("Failed test 5. Start byte is incorrect.\n");
+        printf("Failed test 2. Emoji str's start byte is incorrect.\n");
         return;
     }
     if(emojiStr.s->endByte != emojiCStrNumBytes)
     {
-        printf("Failed test 5. End byte is incorrect.\n");
+        printf("Failed test 2. Emoji str's end byte is incorrect.\n");
         return;
     }
     for(size_t i = 0; i < emojiCStrNumBytes; i++)
     {
         if(emojiStr.s->rawStr->str[i] != emojiCStr[i])
         {
-            printf("Failed test 5. String did not contain the correct data.\n");
+            printf("Failed test 2. Emoji str did not contain the correct data.\n");
         }
     }
 
-    //test 7: construct raw string with normalise data
+    //test 3: construct raw string with normalise data
     mdpl::standardLibrary::String::StringRef normaliseStr1 = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&normaliseStr1, normaliseCStr1, normaliseCStrNumBytes1, normaliseCStrNumCharacters1);
     if(retcode)
     {
-        printf("Failed test 7. Error during constructing raw string.\n");
+        printf("Failed test 3. Error during constructing normalise str 1.\n");
         return;
     }
     if(normaliseStr1.s->rawStr->numBytes != normaliseCStrNumBytes1)
     {
-        printf("Failed test 7. Raw string had incorrect number of bytes.\n");
+        printf("Failed test 3. Normalise str 1's raw string had incorrect number of bytes.\n");
         return;
     }
-    for(size_t i = 0; i < normaliseCStrNumBytes1; i++)
-    {
-        if(normaliseStr1.s->rawStr->str[i] != normaliseCStr1[i])
-        {
-            printf("Failed test 7. Raw string did not contain the correct data.");
-            return;
-        }
-    }
-
-    //test 8: construct string with normalise data
     if(normaliseStr1.s->numCharacters != normaliseCStrNumCharacters1)
     {
-        printf("Failed test 8. Number of characters is incorrect.\n");
+        printf("Failed test 3. Normalise str 1's number of characters is incorrect.\n");
         return;
     }
     if(normaliseStr1.s->startByte != 0)
     {
-        printf("Failed test 8. Start byte is incorrect.\n");
+        printf("Failed test 3. Normalise str 1's start byte is incorrect.\n");
         return;
     }
     if(normaliseStr1.s->endByte != normaliseCStrNumBytes1)
     {
-        printf("Failed test 8. End byte is incorrect.\n");
+        printf("Failed test 3. Normalise str 1's end byte is incorrect.\n");
         return;
     }
     for(size_t i = 0; i < normaliseCStrNumBytes1; i++)
     {
         if(normaliseStr1.s->rawStr->str[i] != normaliseCStr1[i])
         {
-            printf("Failed test 8. String did not contain the correct data.\n");
+            printf("Failed test 3. Normalise str 1 did not contain the correct data.\n");
         }
     }
 
-    //test 10: construct raw string with normalise data
+    //test 4: construct raw string with normalise data
     mdpl::standardLibrary::String::StringRef normaliseStr2 = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&normaliseStr2, normaliseCStr2, normaliseCStrNumBytes2, normaliseCStrNumCharacters2);
     if(retcode)
     {
-        printf("Failed test 10. Error during constructing raw string.\n");
+        printf("Failed test 4. Error during constructing normalise str 2.\n");
         return;
     }
     if(normaliseStr2.s->rawStr->numBytes != normaliseCStrNumBytes2)
     {
-        printf("Failed test 10. Raw string had incorrect number of bytes.\n");
+        printf("Failed test 4. Normalise str 2's raw string had incorrect number of bytes.\n");
         return;
     }
-    for(size_t i = 0; i < normaliseCStrNumBytes2; i++)
-    {
-        if(normaliseStr2.s->rawStr->str[i] != normaliseCStr2[i])
-        {
-            printf("Failed test 10. Raw string did not contain the correct data.");
-            return;
-        }
-    }
-
-    //test 11: construct string with normalise data
     if(normaliseStr2.s->numCharacters != normaliseCStrNumCharacters2)
     {
-        printf("Failed test 11. Number of characters is incorrect.\n");
+        printf("Failed test 4. Normalise str 2's number of characters is incorrect.\n");
         return;
     }
     if(normaliseStr2.s->startByte != 0)
     {
-        printf("Failed test 11. Start byte is incorrect.\n");
+        printf("Failed test 4. Normalise str 2's start byte is incorrect.\n");
         return;
     }
     if(normaliseStr2.s->endByte != normaliseCStrNumBytes2)
     {
-        printf("Failed test 11. End byte is incorrect.\n");
+        printf("Failed test 4. Normalise str 2's end byte is incorrect.\n");
         return;
     }
     for(size_t i = 0; i < normaliseCStrNumBytes2; i++)
     {
         if(normaliseStr2.s->rawStr->str[i] != normaliseCStr2[i])
         {
-            printf("Failed test 11. String did not contain the correct data.\n");
+            printf("Failed test 4. Normalise str 2 did not contain the correct data.\n");
         }
     }
 
-    //test 13: string normalisation
+    //test 5: string normalisation
     retcode = mdpl::standardLibrary::String::internal::normaliseString(normaliseStr1.s);
     if(retcode)
     {
-        printf("Failed test 13. Error during normalising string 1.\n");
+        printf("Failed test 5. Error during normalising normalise str 1.\n");
         return;
     }
     retcode = mdpl::standardLibrary::String::internal::normaliseString(normaliseStr2.s);
     if(retcode)
     {
-        printf("Failed test 13. Error during normalising string 2.\n");
+        printf("Failed test 5. Error during normalising normalise str 2.\n");
         return;
     }
     if(normaliseStr1.s->normalisedStr->numBytes != normaliseStr2.s->normalisedStr->numBytes)
     {
-        printf("Failed test 13. Normalised strings do not match. Different bumber of bytes.\n");
+        printf("Failed test 5. Normalised strings do not match. Different bumber of bytes.\n");
         return;
     }
     for(size_t i = 0; i < normaliseStr1.s->normalisedStr->numBytes; i++)
     {
         if(normaliseStr1.s->normalisedStr->str[i] != normaliseStr2.s->normalisedStr->str[i])
         {
-            printf("Failed test 13. Normalised strings do not match.\n");
+            printf("Failed test 5. Normalised strings do not match.\n");
             return;
         }
     }
     retcode = mdpl::standardLibrary::String::internal::normaliseString(asciiStr.s);
     if(retcode)
     {
-        printf("Failed test 13. Error during normalising ascii string.\n");
+        printf("Failed test 5. Error during normalising ascii string.\n");
         return;
     }
     if(asciiStr.s->normalisedStr->numBytes != asciiCStrNumBytes)
     {
-        printf("Failed test 13. Normalised form of ascii string has the wrong number of bytes.\n");
+        printf("Failed test 5. Normalised form of ascii string has the wrong number of bytes.\n");
         return;
     }
     for(size_t i = 0; i < asciiStr.s->normalisedStr->numBytes; i++)
     {
         if(asciiStr.s->normalisedStr->str[i] != asciiCStr[i])
         {
-            printf("Failed test 13. Normalised form of ascii string is incorrect.\n");
+            printf("Failed test 5. Normalised form of ascii string is incorrect.\n");
             return;
         }
     }
-    printf("start of emoji string\n");
     retcode = mdpl::standardLibrary::String::internal::normaliseString(emojiStr.s);
     if(retcode)
     {
-        printf("Failed test 13. Error during normalising emoji string.\n");
+        printf("Failed test 5. Error during normalising emoji string.\n");
         return;
     }
     if(emojiStr.s->normalisedStr->numBytes != emojiCStrNumBytes)
     {
-        printf("Failed test 13. Normalised form of emoji string has the wrong number of bytes.\n");
+        printf("Failed test 5. Normalised form of emoji string has the wrong number of bytes.\n");
         return;
     }
     for(size_t i = 0; i < emojiStr.s->normalisedStr->numBytes; i++)
     {
         if(emojiStr.s->normalisedStr->str[i] != emojiCStr[i])
         {
-            printf("Failed test 13. Normalised form of emoji string is incorrect.\n");
+            printf("Failed test 5. Normalised form of emoji string is incorrect.\n");
             return;
         }
     }
@@ -559,7 +517,7 @@ void testString()
         printf("Did not deallocate all the memory. Potential memory leak.\n");
         return;
     }
-    */
+    
     printf("String passed all tests.\n");
 }
 
