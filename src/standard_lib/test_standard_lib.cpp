@@ -851,6 +851,87 @@ void testString()
         return;
     }
 
+    //setup for steps 10-11
+    mdpl::standardLibrary::String::StringRef lowerCaseStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCaseStr, "street straße δρόμος", 27, 20);
+    if(retcode) { printf("Failed test 10. Error during constructing lower cases str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef upperCaseStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCaseStr, "STREET STRASSE ΔΡΌΜΟΣ", 27, 21);
+    if(retcode) { printf("Failed test 10. Error during constructing upper cases str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef mixedCaseStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&mixedCaseStr, "Street Straße Δρόμος", 27, 20);
+    if(retcode) { printf("Failed test 10. Error during constructing mixed cases str.\n"); return; }
+
+    //test 10: isLower
+    retcode = mdpl::standardLibrary::String::isLower(lowerCaseStr, &result);
+    if(!result)
+    {
+        printf("Failed test 10. isLower is incorrect for lower case str.\n");
+        return;
+    }
+    if((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) && !(lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower))
+    {
+        printf("Failed test 10. isLower incorrectly set flags for lower case str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLower(upperCaseStr, &result);
+    if(result)
+    {
+        printf("Failed test 10. isLower is incorrect for upper case str.\n");
+        return;
+    }
+    if((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) && (upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower))
+    {
+        printf("Failed test 10. isLower incorrectly set flags for upper case str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLower(mixedCaseStr, &result);
+    if(result)
+    {
+        printf("Failed test 10. isLower is incorrect for mixed case str.\n");
+        return;
+    }
+    if((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) && (mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower))
+    {
+        printf("Failed test 10. isLower incorrectly set flags for mixed case str.\n");
+        return;
+    }
+
+    //test 11: isUpper
+    retcode = mdpl::standardLibrary::String::isUpper(lowerCaseStr, &result);
+    if(result)
+    {
+        printf("Failed test 11. isUpper is incorrect for lower case str.\n");
+        return;
+    }
+    if((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
+    {
+        printf("Failed test 10. isUpper incorrectly set flags for lower case str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpper(upperCaseStr, &result);
+    if(!result)
+    {
+        printf("Failed test 11. isUpper is incorrect for upper case str.\n");
+        return;
+    }
+    if((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && !(upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
+    {
+        printf("Failed test 10. isUpper incorrectly set flags for upper case str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpper(mixedCaseStr, &result);
+    if(result)
+    {
+        printf("Failed test 11. isUpper is incorrect for mixed case str.\n");
+        return;
+    }
+    if((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
+    {
+        printf("Failed test 10. isUpper incorrectly set flags for mixed case str.\n");
+        return;
+    }
+
     //final test: deconstructions
     retcode = mdpl::standardLibrary::String::destroyStringRef(asciiStr);
     if(retcode)
@@ -912,6 +993,21 @@ void testString()
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCaseStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of lower case string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCaseStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of upper case string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(mixedCaseStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of mixed case string.\n");
     }
 
     if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())

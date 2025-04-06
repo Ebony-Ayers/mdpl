@@ -73,8 +73,8 @@ namespace mdpl
 
             int frontForwardsIterator(const String* const str, size_t* StringForwardsIterator);
 
-            int isAllLower(const StringRef str, bool* result);
-            int isAllUpper(const StringRef str, bool* result);
+            int isLower(const StringRef str, bool* result);
+            int isUpper(const StringRef str, bool* result);
             int isWhiteSpace(const StringRef str, bool* result);
             int isPrintable(const StringRef str, bool* result);
             int isAscii(const StringRef str, bool* result);
@@ -99,8 +99,8 @@ namespace mdpl
 
             //================ Character functions ================
 
-            int isAllLowerChr(const Character* const str, bool* result);
-            int isAllUpperChr(const Character* const str, bool* result);
+            int isLowerChr(const Character* const str, bool* result);
+            int isUpperChr(const Character* const str, bool* result);
             int isWhiteSpaceChr(const Character* const str, bool* result);
             int isPrintableChr(const Character* const str, bool* result);
             int isAsciiChr(const Character* const str, bool* result);
@@ -141,6 +141,9 @@ namespace mdpl
                 int destroyString(String* const str);
 
                 int normaliseString(String* const str);
+
+                int createCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr);
+                int incrementCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* codepoint);
             }
         }
     }

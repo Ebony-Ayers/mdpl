@@ -6,6 +6,118 @@ namespace mdpl
     {
         namespace String
         {
+            int isLower(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isLower) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isLower ? true : false;
+                    return 0;
+                }
+
+                *result = true;
+                const utf8proc_uint8_t* ptr;
+                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                for (size_t i = 0; i < str.s->numCharacters; i++)
+                {
+                    utf8proc_int32_t character;
+                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    const utf8proc_property_t *p = utf8proc_get_property(character);
+                    if((p->lowercase_seqindex != UINT16_MAX) && (p->uppercase_seqindex == UINT16_MAX))
+                    {
+                        *result = false;
+                        str.s->flagsSet |= StringFlags::isLower;
+                        str.s->flagsData &= ~StringFlags::isLower;
+                        return 0;
+                    }
+                }
+                str.s->flagsSet |= StringFlags::isLower;
+                str.s->flagsData |= StringFlags::isLower;
+                return 0;
+            }
+            int isUpper(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isUpper) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isUpper ? true : false;
+                    return 0;
+                }
+
+                *result = true;
+                const utf8proc_uint8_t* ptr;
+                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                for (size_t i = 0; i < str.s->numCharacters; i++)
+                {
+                    utf8proc_int32_t character;
+                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    const utf8proc_property_t *p = utf8proc_get_property(character);
+                    if((p->lowercase_seqindex == UINT16_MAX) && (p->uppercase_seqindex != UINT16_MAX))
+                    {
+                        *result = false;
+                        str.s->flagsSet |= StringFlags::isUpper;
+                        str.s->flagsData &= ~StringFlags::isUpper;
+                        return 0;
+                    }
+                }
+                str.s->flagsSet |= StringFlags::isUpper;
+                str.s->flagsData |= StringFlags::isUpper;
+                return 0;
+            }
+            int isWhiteSpace(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isWhiteSpace) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isWhiteSpace ? true : false;
+                    return 0;
+                }
+
+                *result = true;
+                const utf8proc_uint8_t* ptr;
+                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                for (size_t i = 0; i < str.s->numCharacters; i++)
+                {
+                    utf8proc_int32_t character;
+                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    const utf8proc_property_t *p = utf8proc_get_property(character);
+                    if(p->bidi_class != UTF8PROC_BIDI_CLASS_WS)
+                    {
+                        *result = false;
+                        str.s->flagsSet |= StringFlags::isWhiteSpace;
+                        str.s->flagsData &= ~StringFlags::isWhiteSpace;
+                        return 0;
+                    }
+                }
+                str.s->flagsSet |= StringFlags::isWhiteSpace;
+                str.s->flagsData |= StringFlags::isWhiteSpace;
+                return 0;
+            }
+            int isPrintable(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isPrintable) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isPrintable ? true : false;
+                    return 0;
+                }
+
+                *result = true;
+                const utf8proc_uint8_t* ptr;
+                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                for (size_t i = 0; i < str.s->numCharacters; i++)
+                {
+                    utf8proc_int32_t character;
+                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    //a char width of 0 indicates the character is non-printable
+                    if(utf8proc_charwidth(character) == 0)
+                    {
+                        *result = false;
+                        str.s->flagsSet |= StringFlags::isPrintable;
+                        str.s->flagsData &= ~StringFlags::isPrintable;
+                        return 0;
+                    }
+                }
+                str.s->flagsSet |= StringFlags::isPrintable;
+                str.s->flagsData |= StringFlags::isPrintable;
+                return 0;
+            }
             int isAscii(const StringRef str, bool* result)
             {
                 if(str.s->flagsSet & StringFlags::isAscii) [[likely]]
@@ -298,15 +410,15 @@ namespace mdpl
 
                         //the options bitset instructs utf8proc as to what we are trying to do
                         const utf8proc_option_t options = static_cast<utf8proc_option_t>(UTF8PROC_STABLE | UTF8PROC_COMPOSE);
-                        //to be able to normalise a string we must first decompose it and to do this we need to know how many characters are needed. Note these are unicode characters which may not nessesarily be printable.
+                        //to be able to normalise a string we must first decompose it and to do this we need to know how many codepoints are needed.
                         //calling the function with the third and fourth parameters set to nullptr and 0 respectivly queries the length with out performing any conversion
                         utf8proc_ssize_t result = utf8proc_decompose_custom(originalCStr, originalNumBytes, nullptr, 0, options, nullptr, nullptr);
                         if(result < 0)
                         {
-                            printf("String error: \"%s\" occured during counting number of characters for normalisation.\n", utf8proc_errmsg(result));
+                            printf("String error: \"%s\" occured during counting number of codepoints for normalisation.\n", utf8proc_errmsg(result));
                             return 1;
                         }
-                        //for reasons I don't understand we must assume that each character will be the maximum length of 4 code points / 4 bytes. An extra byte is added for null terminating the string to determine it's length.
+                        //for reasons I don't understand we must assume that each codepoint will be the maximum length of 4 code points / 4 bytes. An extra byte is added for null terminating the string to determine it's length.
                         size_t numBytesRequiredForDecomposition = static_cast<utf8proc_size_t>(result) * sizeof(utf8proc_int32_t);
                         //while the final string will be shorter than or equal to numBytesRequiredForDecomposition we require a temporary buffer. To avoid reallocation this will be the final output.
                         MDPL_RETERR(mdpl::standardLibrary::String::internal::createRawStringNoCopy(&str->normalisedStr, numBytesRequiredForDecomposition));
@@ -332,6 +444,31 @@ namespace mdpl
                         mdpl::common::writeToConstVariable(&str->normalisedStr->numBytes, static_cast<size_t>(result));
                     }
 
+                    return 0;
+                }
+
+                int createCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr)
+                {
+                    *ptr = reinterpret_cast<const utf8proc_uint8_t*>(str.s->rawStr->str) + str.s->startByte;
+                    return 0;
+                }
+                int incrementCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* codepoint)
+                {
+                    if(*ptr < reinterpret_cast<const utf8proc_uint8_t*>(str.s->rawStr->str) + str.s->endByte)
+                    {
+                        utf8proc_ssize_t retcode = utf8proc_iterate(*ptr, -1, codepoint);
+                        if(retcode < 0)
+                        {
+                            printf("String error: \"%s\" occured during isLower.\n", utf8proc_errmsg(retcode));
+                            return 1;
+                        }
+                        *ptr += retcode;
+                    }
+                    else
+                    {
+                        printf("String error: code point iterator exceeded bounds of string.\n");
+                        return 1;
+                    }
                     return 0;
                 }
             }
