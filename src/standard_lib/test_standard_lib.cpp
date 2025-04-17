@@ -906,7 +906,7 @@ void testString()
     }
     if((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for lower case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for lower case str.\n");
         return;
     }
     retcode = mdpl::standardLibrary::String::isUpper(upperCaseStr, &result);
@@ -917,7 +917,7 @@ void testString()
     }
     if((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && !(upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for upper case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for upper case str.\n");
         return;
     }
     retcode = mdpl::standardLibrary::String::isUpper(mixedCaseStr, &result);
@@ -928,9 +928,77 @@ void testString()
     }
     if((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for mixed case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for mixed case str.\n");
         return;
     }
+
+    //test 12: isWhitespace
+    //the following list of characters is sourced from https://en.wikipedia.org/wiki/Whitespace_character
+    //as some of these characters are considered non-stnadard some systems may automatically remove them. For example \r. To guarentee this does not break the test the string is created at runtime. 
+    utf8proc_int32_t whiteSpaceCodepoints[] = {0x000C, 0x0020, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x2008, 0x2009, 0x200A, 0x2028, 0x205F, 0x3000};
+    utf8proc_ssize_t whiteSpaceCodepointsLength = sizeof(whiteSpaceCodepoints) / sizeof(utf8proc_int32_t);
+    utf8proc_ssize_t utf8proc_result = utf8proc_reencode(whiteSpaceCodepoints, whiteSpaceCodepointsLength, static_cast<utf8proc_option_t>(0));
+    if(utf8proc_result < 0) { printf("Something went wrong during setup for test 12. %s.\n", utf8proc_errmsg(utf8proc_result)); }
+    mdpl::standardLibrary::String::StringRef whitespaceStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&whitespaceStr, reinterpret_cast<const char*>(whiteSpaceCodepoints), strlen(reinterpret_cast<const char*>(whiteSpaceCodepoints)), 19);
+    if(retcode) { printf("Failed test 12. Error during constructing whitespace str.\n"); return; }
+
+    retcode = mdpl::standardLibrary::String::isWhiteSpace(whitespaceStr, &result);
+    if(!result)
+    {
+        printf("Failed test 12. isWhiteSpace is incorrect for white space str.\n");
+        return;
+    }
+    if((whitespaceStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) && !(whitespaceStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isWhiteSpace))
+    {
+        printf("Failed test 12. isWhiteSpace incorrectly set flags for white space str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isWhiteSpace(asciiStr, &result);
+    if(result)
+    {
+        printf("Failed test 12. isWhiteSpace is incorrect for ascii str.\n");
+        return;
+    }
+    if((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) && (asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isWhiteSpace))
+    {
+        printf("Failed test 12. isWhiteSpace incorrectly set flags for ascii str.\n");
+        return;
+    }
+
+    //test 13: isPrintable
+    //these charcters cannot be printed so they have to be stored as hex
+    utf8proc_int32_t unprintableCodepoints[] = {0x0001, 0x0002, 0x0003, 0x0004, 0x0888, 0x0889, 0x1328, 0x1515};
+    utf8proc_ssize_t unprintableCodepointsLength = sizeof(unprintableCodepoints) / sizeof(utf8proc_int32_t);
+    utf8proc_result = utf8proc_reencode(unprintableCodepoints, unprintableCodepointsLength, static_cast<utf8proc_option_t>(0));
+    if(utf8proc_result < 0) { printf("Something went wrong during setup for test 13. %s.\n", utf8proc_errmsg(utf8proc_result)); }
+    mdpl::standardLibrary::String::StringRef unprintableStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&unprintableStr, reinterpret_cast<const char*>(unprintableCodepoints), strlen(reinterpret_cast<const char*>(unprintableCodepoints)), 19);
+    if(retcode) { printf("Failed test 12. Error during constructing whitespace str.\n"); return; }
+
+    retcode = mdpl::standardLibrary::String::isPrintable(unprintableStr, &result);
+    if(result)
+    {
+        printf("Failed test 13. isPrintable is incorrect for white space str.\n");
+        return;
+    }
+    if((whitespaceStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isPrintable) && (unprintableStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isPrintable))
+    {
+        printf("Failed test 13. isPrintable incorrectly set flags for white space str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isPrintable(asciiStr, &result);
+    if(!result)
+    {
+        printf("Failed test 13. isPrintable is incorrect for ascii str.\n");
+        return;
+    }
+    if((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isPrintable) && !(asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isPrintable))
+    {
+        printf("Failed test 13. isPrintable incorrectly set flags for ascii str.\n");
+        return;
+    }
+    
 
     //final test: deconstructions
     retcode = mdpl::standardLibrary::String::destroyStringRef(asciiStr);
@@ -1008,6 +1076,16 @@ void testString()
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of mixed case string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(whitespaceStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of white space string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(unprintableStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of white space string.\n");
     }
 
     if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
