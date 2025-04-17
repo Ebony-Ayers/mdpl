@@ -277,6 +277,68 @@ namespace mdpl
                     return 0;
                 }
             }
+            int isAlpha(const StringRef str, bool* result)
+            {
+                if(str.s->flagsSet & StringFlags::isAlpha) [[likely]]
+                {
+                    *result = str.s->flagsData & StringFlags::isAlpha ? true : false;
+                    return 0;
+                }
+
+                *result = true;
+                const utf8proc_uint8_t* ptr;
+                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                for (size_t i = 0; i < str.s->numCharacters; i++)
+                {
+                    utf8proc_int32_t character;
+                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    const utf8proc_property_t *p = utf8proc_get_property(character);
+                    const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO;
+                    //check if the category is a subset of the mask
+                    if(((p->category & mask) == 0) || ((p->category & (~mask)) != 0))
+                    {
+                        *result = false;
+                        str.s->flagsSet |= StringFlags::isAlpha;
+                        str.s->flagsData &= ~StringFlags::isAlpha;
+                        return 0;
+                    }
+                }
+                str.s->flagsSet |= StringFlags::isAlpha;
+                str.s->flagsData |= StringFlags::isAlpha;
+                return 0;
+            }
+            int isAlphaNumeric(const StringRef str, bool* result)
+            {
+                {
+                    if(str.s->flagsSet & StringFlags::isAlphaNumeric) [[likely]]
+                    {
+                        *result = str.s->flagsData & StringFlags::isAlphaNumeric ? true : false;
+                        return 0;
+                    }
+    
+                    *result = true;
+                    const utf8proc_uint8_t* ptr;
+                    MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                    for (size_t i = 0; i < str.s->numCharacters; i++)
+                    {
+                        utf8proc_int32_t character;
+                        MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                        const utf8proc_property_t *p = utf8proc_get_property(character);
+                        const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO | UTF8PROC_CATEGORY_ND | UTF8PROC_CATEGORY_NL | UTF8PROC_CATEGORY_NO;
+                        //check if the category is a subset of the mask
+                        if(((p->category & mask) == 0) || ((p->category & (~mask)) != 0))
+                        {
+                            *result = false;
+                            str.s->flagsSet |= StringFlags::isAlphaNumeric;
+                            str.s->flagsData &= ~StringFlags::isAlphaNumeric;
+                            return 0;
+                        }
+                    }
+                    str.s->flagsSet |= StringFlags::isAlphaNumeric;
+                    str.s->flagsData |= StringFlags::isAlphaNumeric;
+                    return 0;
+                }
+            }
         
 
             int createStringRefFromCStr(StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters)

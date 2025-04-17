@@ -906,7 +906,7 @@ void testString()
     }
     if((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for lower case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for lower case str.\n");
         return;
     }
     retcode = mdpl::standardLibrary::String::isUpper(upperCaseStr, &result);
@@ -917,7 +917,7 @@ void testString()
     }
     if((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && !(upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for upper case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for upper case str.\n");
         return;
     }
     retcode = mdpl::standardLibrary::String::isUpper(mixedCaseStr, &result);
@@ -928,7 +928,107 @@ void testString()
     }
     if((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) && (mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper))
     {
-        printf("Failed test 10. isUpper incorrectly set flags for mixed case str.\n");
+        printf("Failed test 11. isUpper incorrectly set flags for mixed case str.\n");
+        return;
+    }
+
+    //setup for test 14 and 15
+    mdpl::standardLibrary::String::StringRef alphaStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&alphaStr, "helloWorld", 10, 10);
+    if(retcode) { printf("Failed test 14. Error during constructing alpha str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef alphaNumStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&alphaNumStr, "helloWorld1234", 14, 14);
+    if(retcode) { printf("Failed test 14. Error during constructing alpha numeric str.\n"); return; }
+
+    //test 14: isAlpha
+    retcode = mdpl::standardLibrary::String::isAlpha(asciiStr, &result);
+    if(result)
+    {
+        printf("Failed test 14. isAlpha is incorrect for ascii str.\n");
+        return;
+    }
+    if((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) && (asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha))
+    {
+        printf("Failed test 14. isAlpha incorrectly set flags for ascii str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlpha(alphaStr, &result);
+    if(!result)
+    {
+        printf("Failed test 14. isAlpha is incorrect for alpha str.\n");
+        return;
+    }
+    if((alphaStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) && !(alphaStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha))
+    {
+        printf("Failed test 14. isAlpha incorrectly set flags for alpha str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlpha(alphaNumStr, &result);
+    if(result)
+    {
+        printf("Failed test 14. isAlpha is incorrect for alpha numeric str.\n");
+        return;
+    }
+    if((alphaNumStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) && (alphaNumStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha))
+    {
+        printf("Failed test 14. isAlpha incorrectly set flags for alpha numeric str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlpha(validDecimalStr, &result);
+    if(result)
+    {
+        printf("Failed test 14. isAlpha is incorrect for valid decimal str.\n");
+        return;
+    }
+    if((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) && (validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha))
+    {
+        printf("Failed test 14. isAlpha incorrectly set flags for valid decimal str.\n");
+        return;
+    }
+
+    //test 15: isAlphaNumeric
+    retcode = mdpl::standardLibrary::String::isAlphaNumeric(asciiStr, &result);
+    if(result)
+    {
+        printf("Failed test 15. isAlphaNumeric is incorrect for ascii str.\n");
+        return;
+    }
+    if((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) && (asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric))
+    {
+        printf("Failed test 15. isAlphaNumeric incorrectly set flags for ascii str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaNumeric(alphaStr, &result);
+    if(!result)
+    {
+        printf("Failed test 15. isAlphaNumeric is incorrect for alpha str.\n");
+        return;
+    }
+    if((alphaStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) && !(alphaStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric))
+    {
+        printf("Failed test 15. isAlphaNumeric incorrectly set flags for alpha str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaNumeric(alphaNumStr, &result);
+    if(!result)
+    {
+        printf("Failed test 15. isAlphaNumeric is incorrect for alpha numeric str.\n");
+        return;
+    }
+    if((alphaNumStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) && !(alphaNumStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric))
+    {
+        printf("Failed test 15. isAlphaNumeric incorrectly set flags for alpha numeric str.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaNumeric(validDecimalStr, &result);
+    if(!result)
+    {
+        printf("Failed test 14. isAlphaNumeric is incorrect for valid decimal str.\n");
+        return;
+    }
+    if((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) && !(validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric))
+    {
+        printf("Failed test 14. isAlphaNumeric incorrectly set flags for valid decimal str.\n");
         return;
     }
 
@@ -1008,6 +1108,16 @@ void testString()
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of mixed case string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(alphaStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of alpha string.\n");
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(alphaNumStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of alpha numeric string.\n");
     }
 
     if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
