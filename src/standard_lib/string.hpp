@@ -50,28 +50,30 @@ namespace mdpl
             };
             struct Character
             {
-                size_t numBytes;
-                char str[4];
+                uint32_t character;
             };
-            struct StringForwardsIterator
+            struct StringIterator
             {
                 const String* const str;
-                size_t codePointIndex;
+                size_t byteIndex;
+                size_t characterIndex;
+                int32_t step;
             };
 
             const size_t npos = static_cast<size_t>(-1);
 
             //================ String functions ================
             
-            int count(const String* const str, size_t* ocurances);
-            int findIndex(const String* const str, const String* const target, size_t* characterIndex);
-            int rFindIndex(const String* const str, const String* const target, size_t* characterIndex);
-            int findForwardsIterator(const String* const str, const String* const target, size_t* StringForwardsIterator);
-            int rFindForwardsIterator(const String* const str, const String* const target, size_t* StringForwardsIterator);
-            int startsWith(const String* const str, const String* const target, bool* doesStartWith);
-            int endsWith(const String* const str, const String* const target, bool* doesEndWith);
+            int count(const StringRef str, size_t* ocurances);
+            int findIndex(const StringRef str, const String* const target, size_t* characterIndex);
+            int rFindIndex(const StringRef str, const String* const target, size_t* characterIndex);
+            int findForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
+            int rFindForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
+            int startsWith(const StringRef str, const StringRef target, bool* result);
+            int endsWith(const StringRef str, const StringRef target, bool* result);
 
-            int frontForwardsIterator(const String* const str, size_t* StringForwardsIterator);
+            int frontForwardsIterator(const String* const str, size_t* StringIterator);
+            int backReverseIterator(const String* const str, size_t* StringIterator);
 
             int isLower(const StringRef str, bool* result);
             int isUpper(const StringRef str, bool* result);
@@ -94,8 +96,8 @@ namespace mdpl
             int toUpper(const String* const str);
             int toLower(const String* const str);
             
-            int substrIndex(const String* const originalStr, String** newStr, const size_t& startIndex, const size_t& endIndex);
-            int substrForwardsIterator(const String* const originalStr, String** newStr, const StringForwardsIterator& startIt, const StringForwardsIterator& endIt);
+            int substrIndex(const StringRef originalStr, StringRef* const newStr, const size_t& startIndex, const size_t& endIndex);
+            int substrIterator(const StringRef originalStr, StringRef* const newStr, const StringIterator& startIt, const StringIterator& endIt);
 
             //================ Character functions ================
 
@@ -119,9 +121,9 @@ namespace mdpl
 
             //================ String iterator ================
 
-            int getCurrent(const StringForwardsIterator* const it, Character* dst);
-            int next(StringForwardsIterator* it);
-            int isFinished(const StringForwardsIterator* const it, bool* finished);
+            int getCurrent(const StringIterator* const it, Character* dst);
+            int next(StringIterator* it);
+            int isFinished(const StringIterator* const it, bool* finished);
 
             //================ Constructors ================
 
@@ -138,12 +140,13 @@ namespace mdpl
                 int createStringWithRawStr(String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
                 int createStringNoRawStr(String* const* newStr);
                 int initialiseExistingString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
+                int copyString(const String* const originalStr, String* const* newStr);
                 int destroyString(String* const str);
 
                 int normaliseString(String* const str);
 
-                int createCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr);
-                int incrementCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* codepoint);
+                int createInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr);
+                int incrementInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character);
             }
         }
     }

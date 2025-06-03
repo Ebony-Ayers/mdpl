@@ -6,6 +6,8 @@ namespace mdpl
     {
         namespace String
         {
+            //================ String functions ================
+
             int isLower(const StringRef str, bool* result)
             {
                 if(str.s->flagsSet & StringFlags::isLower) [[likely]]
@@ -16,11 +18,11 @@ namespace mdpl
 
                 *result = true;
                 const utf8proc_uint8_t* ptr;
-                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                 for (size_t i = 0; i < str.s->numCharacters; i++)
                 {
                     utf8proc_int32_t character;
-                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
                     if((p->lowercase_seqindex != UINT16_MAX) && (p->uppercase_seqindex == UINT16_MAX))
                     {
@@ -44,11 +46,11 @@ namespace mdpl
 
                 *result = true;
                 const utf8proc_uint8_t* ptr;
-                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                 for (size_t i = 0; i < str.s->numCharacters; i++)
                 {
                     utf8proc_int32_t character;
-                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
                     if((p->lowercase_seqindex == UINT16_MAX) && (p->uppercase_seqindex != UINT16_MAX))
                     {
@@ -72,11 +74,11 @@ namespace mdpl
 
                 *result = true;
                 const utf8proc_uint8_t* ptr;
-                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                 for (size_t i = 0; i < str.s->numCharacters; i++)
                 {
                     utf8proc_int32_t character;
-                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
                     if(p->bidi_class != UTF8PROC_BIDI_CLASS_WS)
                     {
@@ -100,11 +102,11 @@ namespace mdpl
 
                 *result = true;
                 const utf8proc_uint8_t* ptr;
-                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                 for (size_t i = 0; i < str.s->numCharacters; i++)
                 {
                     utf8proc_int32_t character;
-                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     //a char width of 0 indicates the character is non-printable
                     if(utf8proc_charwidth(character) == 0)
                     {
@@ -287,11 +289,11 @@ namespace mdpl
 
                 *result = true;
                 const utf8proc_uint8_t* ptr;
-                MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                 for (size_t i = 0; i < str.s->numCharacters; i++)
                 {
                     utf8proc_int32_t character;
-                    MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                    MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
                     const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO;
                     //check if the category is a subset of the mask
@@ -318,11 +320,11 @@ namespace mdpl
     
                     *result = true;
                     const utf8proc_uint8_t* ptr;
-                    MDPL_RETERR(internal::createCodepointIterator(str, &ptr));
+                    MDPL_RETERR(internal::createInternalIterator(str, &ptr));
                     for (size_t i = 0; i < str.s->numCharacters; i++)
                     {
                         utf8proc_int32_t character;
-                        MDPL_RETERR(internal::incrementCodepointIterator(str, &ptr, &character));
+                        MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                         const utf8proc_property_t *p = utf8proc_get_property(character);
                         const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO | UTF8PROC_CATEGORY_ND | UTF8PROC_CATEGORY_NL | UTF8PROC_CATEGORY_NO;
                         //check if the category is a subset of the mask
@@ -339,7 +341,147 @@ namespace mdpl
                     return 0;
                 }
             }
+            
+            int substrIndex(const StringRef originalStr, StringRef* const newStr, const size_t& startIndex, const size_t& endIndex)
+            {
+                if(startIndex > endIndex)
+                {
+                    printf("String error: substrIndex() start index greater than end index.\n");
+                    return 1;
+                }
+                if(startIndex == endIndex)
+                {
+                    printf("String error: substrIndex() start index same as end index.\n");
+                    return 1;
+                }
+
+                MDPL_RETERR(internal::copyString(originalStr.s, &newStr->s));
+                newStr->s->numCharacters = endIndex - startIndex;
+                
+                bool result;
+                MDPL_RETERR(isAscii(originalStr, &result));
+                if(result)
+                {
+                    newStr->s->startByte = startIndex;
+                    newStr->s->endByte = endIndex;
+                }
+                else
+                {
+                    const utf8proc_uint8_t* startIt;
+                    const utf8proc_uint8_t* movingvIt;
+                    MDPL_RETERR(internal::createInternalIterator(originalStr, &startIt));
+                    MDPL_RETERR(internal::createInternalIterator(originalStr, &movingvIt));
+                    for(size_t i = 0; i < startIndex; i++) { utf8proc_int32_t c; MDPL_RETERR(internal::incrementInternalIterator(originalStr, &movingvIt, &c)); }
+                    newStr->s->startByte = static_cast<size_t>(movingvIt - startIt);
+                    for(size_t i = startIndex; i < endIndex; i++) { utf8proc_int32_t c; MDPL_RETERR(internal::incrementInternalIterator(originalStr, &movingvIt, &c)); }
+                    newStr->s->endByte = static_cast<size_t>(movingvIt - startIt);
+                }
+                const uint32_t carryOverFlags = originalStr.s->flagsSet & originalStr.s->flagsData;
+                newStr->s->flagsData = carryOverFlags;
+                newStr->s->flagsSet = carryOverFlags; 
+                newStr->s->normalisedStr = nullptr;
+                return 0;
+            }
+            int substrIterator(const StringRef originalStr, StringRef* const newStr, const StringIterator& startIt, const StringIterator& endIt)
+            {
+                if(((startIt.step > 1) || (startIt.step < -1)) && ((endIt.step > 1) || (endIt.step < -1)))
+                {
+                    printf("String error: substrIiterator() steps other than 1 not yet implemented.\n");
+                    return 1;
+                }
+                if((startIt.characterIndex > endIt.characterIndex) && ((startIt.step < 0) || (endIt.step < 0)))
+                {
+                    printf("String error: substrIiterator() reverse substrings not yet implemented.\n");
+                    return 1;
+                }
+                if(startIt.characterIndex > endIt.characterIndex)
+                {
+                    printf("String error: substrIiterator() start iterator after end iterator.\n");
+                    return 1;
+                }
+                if(startIt.characterIndex == endIt.characterIndex)
+                {
+                    printf("String error: substrIiterator() start iterator same as end iterator.\n");
+                    return 1;
+                }
+                MDPL_RETERR(internal::copyString(originalStr.s, &newStr->s));
+                newStr->s->numCharacters = endIt.characterIndex - startIt.characterIndex;
+                newStr->s->startByte = startIt.byteIndex;
+                newStr->s->endByte = endIt.byteIndex;
+                const uint32_t carryOverFlags = originalStr.s->flagsSet & originalStr.s->flagsData;
+                newStr->s->flagsData = carryOverFlags;
+                newStr->s->flagsSet = carryOverFlags; 
+                newStr->s->normalisedStr = nullptr;
+                return 0;
+            }
+            
+            //================ Character functions ================
+
+            //================ String iterator ================
+
+            int getCurrent(const StringIterator* const it, Character* dst)
+            {
+                utf8proc_ssize_t retcode = utf8proc_iterate(reinterpret_cast<const utf8proc_uint8_t*>(it->str->rawStr->str + it->byteIndex), -1, reinterpret_cast<utf8proc_int32_t*>(&(dst->character)));
+                if(retcode < 0)
+                {
+                    printf("String error: \"%s\" occured during string iterator getCurrrent.\n", utf8proc_errmsg(retcode));
+                    return 1;
+                }
+                return 0;
+            }
+            int next(StringIterator* it)
+            {
+                utf8proc_int32_t chracter;
+                if(it->step == 0) [[unlikely]]
+                {
+                    printf("String error: iterator step size set to 0.\n");
+                    return 1;
+                }
+                else if(it->step > 0)
+                {
+                    for(int32_t i = 0; i < it->step; i++)
+                    {
+                        utf8proc_ssize_t retcode = utf8proc_iterate(reinterpret_cast<const utf8proc_uint8_t*>(it->str->rawStr->str + it->byteIndex), -1, &chracter);
+                        if(retcode < 0)
+                        {
+                            printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
+                            return 1;
+                        }
+                        it->byteIndex += static_cast<size_t>(retcode);
+                    }
+                    it->characterIndex += static_cast<size_t>(it->step);
+                    return 0;
+                }
+                else
+                {
+                    for(int32_t i = 0; i < -(it->step); i++)
+                    {
+                        //as we will be pointing to the first byte decrement by one so that we either go to the previous ascii and skip or we go to the previous multibyte and loop bakwards
+                        it->byteIndex--;
+                        while((it->str->rawStr->str[it->byteIndex] & 0b11000000) == 0b10000000)
+                        {
+                            it->byteIndex--;
+                        }
+                    }
+                    Character c;
+                    MDPL_RETERR(getCurrent(it, &c));
+                    if(!utf8proc_codepoint_valid(static_cast<utf8proc_int32_t>(c.character)))
+                    {
+                        printf("String error: reverse iteration produced invalid code point.\n");
+                        return 1;
+                    }
+                    it->characterIndex += static_cast<size_t>(it->step);
+                    return 0;
+                }
+                return 0;
+            }
+            int isFinished(const StringIterator* const it, bool* finished)
+            {
+                *finished = it->byteIndex >= it->str->rawStr->numBytes;
+                return 0;
+            }
         
+            //================ Constructors ================
 
             int createStringRefFromCStr(StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters)
             {
@@ -391,7 +533,7 @@ namespace mdpl
                     return 0;
                 }
 
-                int createStringWithRawStr(String** newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr)
+                int createStringWithRawStr(String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr)
                 {
                     (**newStr).numCharacters = numCharacters;
                     (**newStr).startByte = startByte;
@@ -434,6 +576,21 @@ namespace mdpl
                     newStr->rawStr->refCount++;
                     return 0;
                 }
+                int copyString(const String* const originalStr, String* const* newStr)
+                {
+                    size_t notUsed;
+                    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned(reinterpret_cast<void**>(const_cast<String**>(newStr)), &notUsed, 4, sizeof(String)));
+                    (**newStr).refCount = 1;
+                    (**newStr).numCharacters = originalStr->numCharacters;
+                    (**newStr).startByte = originalStr->startByte;
+                    (**newStr).endByte = originalStr->endByte;
+                    (**newStr).flagsData = originalStr->flagsData;
+                    (**newStr).flagsSet = originalStr->flagsSet;
+                    mdpl::common::writeToPointerConst(&(**newStr).rawStr, &(originalStr->rawStr));
+                    (**newStr).normalisedStr = originalStr->normalisedStr;
+                    (**newStr).rawStr->refCount++;
+                    return 0;
+                }
                 int destroyString(String* const str)
                 {
                     if(str->rawStr != nullptr)
@@ -464,7 +621,7 @@ namespace mdpl
                 {
                     if(str->normalisedStr == nullptr)
                     {
-                        const utf8proc_uint8_t* originalCStr = reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str);
+                        const utf8proc_uint8_t* originalCStr = reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str + str->startByte);
                         const utf8proc_ssize_t originalNumBytes = static_cast<utf8proc_ssize_t>(str->rawStr->numBytes);
 
                         //the following code is a moddified version of the function utf8proc_map_custom in vendor/utf8proc/utf8proc.c.
@@ -472,15 +629,15 @@ namespace mdpl
 
                         //the options bitset instructs utf8proc as to what we are trying to do
                         const utf8proc_option_t options = static_cast<utf8proc_option_t>(UTF8PROC_STABLE | UTF8PROC_COMPOSE);
-                        //to be able to normalise a string we must first decompose it and to do this we need to know how many codepoints are needed.
+                        //to be able to normalise a string we must first decompose it and to do this we need to know how many bytes are needed.
                         //calling the function with the third and fourth parameters set to nullptr and 0 respectivly queries the length with out performing any conversion
                         utf8proc_ssize_t result = utf8proc_decompose_custom(originalCStr, originalNumBytes, nullptr, 0, options, nullptr, nullptr);
                         if(result < 0)
                         {
-                            printf("String error: \"%s\" occured during counting number of codepoints for normalisation.\n", utf8proc_errmsg(result));
+                            printf("String error: \"%s\" occured during counting number of bytes for normalisation.\n", utf8proc_errmsg(result));
                             return 1;
                         }
-                        //for reasons I don't understand we must assume that each codepoint will be the maximum length of 4 code points / 4 bytes. An extra byte is added for null terminating the string to determine it's length.
+                        //for reasons I don't understand we must assume that each bytes will be the maximum length of 4 bytes. An extra byte is added for null terminating the string to determine it's length.
                         size_t numBytesRequiredForDecomposition = static_cast<utf8proc_size_t>(result) * sizeof(utf8proc_int32_t);
                         //while the final string will be shorter than or equal to numBytesRequiredForDecomposition we require a temporary buffer. To avoid reallocation this will be the final output.
                         MDPL_RETERR(mdpl::standardLibrary::String::internal::createRawStringNoCopy(&str->normalisedStr, numBytesRequiredForDecomposition));
@@ -509,26 +666,26 @@ namespace mdpl
                     return 0;
                 }
 
-                int createCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr)
+                int createInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr)
                 {
                     *ptr = reinterpret_cast<const utf8proc_uint8_t*>(str.s->rawStr->str) + str.s->startByte;
                     return 0;
                 }
-                int incrementCodepointIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* codepoint)
+                int incrementInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character)
                 {
                     if(*ptr < reinterpret_cast<const utf8proc_uint8_t*>(str.s->rawStr->str) + str.s->endByte)
                     {
-                        utf8proc_ssize_t retcode = utf8proc_iterate(*ptr, -1, codepoint);
+                        utf8proc_ssize_t retcode = utf8proc_iterate(*ptr, -1, character);
                         if(retcode < 0)
                         {
-                            printf("String error: \"%s\" occured during isLower.\n", utf8proc_errmsg(retcode));
+                            printf("String error: \"%s\" occured during incrementInternalIterator.\n", utf8proc_errmsg(retcode));
                             return 1;
                         }
                         *ptr += retcode;
                     }
                     else
                     {
-                        printf("String error: code point iterator exceeded bounds of string.\n");
+                        printf("String error: Internal iterator exceeded bounds of string.\n");
                         return 1;
                     }
                     return 0;
