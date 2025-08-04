@@ -281,6 +281,15 @@ void testString()
     int retcode;
     bool result;
     
+    uint64_t spacera = 0;
+    uint64_t spacerb = 1;
+    uint64_t spacerc = 2;
+    uint64_t spacerd = 3;
+    uint64_t spacere = 4;
+    uint64_t spacerf = 5;
+    uint64_t spacerg = 6;
+    uint64_t spacerh = 7;
+
     //test 1: construct string with ascii data and test raw str
     mdpl::standardLibrary::String::StringRef asciiStr = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&asciiStr, asciiCStr, asciiCStrNumBytes, asciiCStrNumCharacters);

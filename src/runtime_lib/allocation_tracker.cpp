@@ -28,6 +28,13 @@ namespace mdpl
 
             int add(AllocationTrackerStruct* tracker, void* ptr)
             {
+                //just some fun memory safety things
+                if(tracker == nullptr) [[unlikely]]
+                {
+                    printf("MDPL runtime error: addNoReallocationCheck() called with null tracker.\n");
+                    return 1;
+                }
+                
                 if(ptr == nullptr)
                 {
                     printf("MDPL runtime error: attempting to add nullptr to the tracker.\n");
@@ -113,6 +120,8 @@ namespace mdpl
                 while((tracker->array[index] != ptr) && (counter < capacity))
                 {
                     index++;
+                    //the compiler should make this branchless which will avoid a mod
+                    if(index >= capacity) { index = 0; }
                     counter++;
                 }
 
@@ -141,20 +150,43 @@ namespace mdpl
                     }
                 }
             }
-            int addNoReallocationCheck(AllocationTrackerStruct* tracker, void* ptr)\
+            int addNoReallocationCheck(AllocationTrackerStruct* tracker, void* ptr)
             {
+                //just some fun memory safety things
+                if(tracker == nullptr) [[unlikely]]
+                {
+                    printf("MDPL runtime error: addNoReallocationCheck() called with null tracker.\n");
+                    return 1;
+                }
+                if(tracker->array == nullptr) [[unlikely]]
+                {
+                    printf("MDPL runtime error: addNoReallocationCheck() called with null tracker->array.\n");
+                    return 1;
+                }
+
                 //compute ptr mod capacity
                 const uint64_t val = reinterpret_cast<uint64_t>(ptr);
                 const size_t divResult = libdivide::libdivide_u64_do(val, &(tracker->divider));
                 const size_t capacity = tablePrimes[tracker->capacityIndxex];
                 size_t index = static_cast<size_t>(val) - (divResult * capacity);
+
+                //printf("Inserting: %lu | Original index: %lu. Value at original index %lu", val, index, tracker->array[index]);
                 
                 //linear probe
                 size_t counter = 0;
                 while((tracker->array[index] != ptr) && (counter < capacity) && (tracker->array[index] != nullptr))
                 {
                     index++;
+                    //the compiler should make this branchless which will avoid a mod
+                    if(index >= capacity) { index = 0; }
                     counter++;
+                }
+
+                //printf(" | Probed index: %lu. Value at probed index: %lu.\n", index, tracker->array[index]);
+
+                if(index >= capacity)
+                {
+                    printf("Tracker out of bounds.\n");
                 }
 
                 //we have three cases, found pointer, found empty space, exceded size of container
@@ -188,7 +220,7 @@ namespace mdpl
                     printf("MDPL runtime error: could not allocate enough memory for allocation tracker. Attempted to allocate %lu byhtes.\n", allocationSize);
                     return 1;
                 }
-                initialiseArray(tracker, allocationSize);
+                initialiseArray(tracker, tablePrimes[tracker->capacityIndxex]);
                 return 0;
             }
         }

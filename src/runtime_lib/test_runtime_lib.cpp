@@ -1,4 +1,5 @@
 #include "../pch.hpp"
+#include<time.h>
 #include "../common/mdpl_common.hpp"
 #include "allocator.hpp"
 
@@ -120,6 +121,85 @@ void testTracker()
         }
     }
     printf("Passed test 3.\n\n");
+    
+    printf("======================Running randomised test.\n");
+    uint64_t* insertedValues = reinterpret_cast<uint64_t*>(malloc(5000 * sizeof(uint64_t)));
+    srand(time(nullptr));
+    for(size_t i = 0; i < 5000; i++)
+    {
+        while(1)
+        {
+            insertedValues[i] = static_cast<uint64_t>(rand());
+            if(insertedValues[i] == reinterpret_cast<uint64_t>(nullptr))
+            {
+                break;
+            }
+            bool foundMatch = false;
+            for(size_t j = 0; j < i; j++)
+            {
+                if(insertedValues[i] == insertedValues[j])
+                {
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if(!foundMatch)
+            {
+                break;
+            }
+        }
+    }
+    //double check the test does not contain duplicate items
+    for(uint64_t* i = insertedValues; i < insertedValues + 5000; i++)
+    {
+        for(uint64_t* j = insertedValues; j < insertedValues + 5000; j++)
+        {
+            if(i != j)
+            {
+                if(*i == *j)
+                {
+                    printf("Testing error: Test contains duplicates.\n");
+                    cleanUpTracker(&tracker);
+                    free(insertedValues);
+                    return;
+                }
+            }
+        }
+    }
+    printf("Adding to tracker.\n");
+    for(size_t i = 0; i < 5000; i++)
+    {
+        mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+    }
+    printf("Checking contents of tracker.\n");
+    for(size_t i = 0; i < 5000; i++)
+    {
+        bool res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        if(!res)
+        {
+            printf("Tracker failed fourth test. Did not contain %lu when it should have.\n", insertedValues[i]);
+            cleanUpTracker(&tracker);
+            return;
+        }
+    }
+    printf("Removing from tracker.\n");
+    for(size_t i = 0; i < 5000; i++)
+    {
+        mdpl::runtimeLib::allocationTracker::remove(&tracker, reinterpret_cast<void*>(insertedValues[i])); 
+    }
+    printf("Checking contents of tracker.\n");
+    for(size_t i = 0; i < 5000; i++)
+    {
+        bool res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        if(res)
+        {
+            printf("Tracker failed fourth test. Contain %lu when it should have been removed.\n", insertedValues[i]);
+            cleanUpTracker(&tracker);
+            return;
+        }
+    }
+    free(insertedValues);
+    printf("Passed test 4.\n\n");
 
     cleanUpTracker(&tracker);
 }
