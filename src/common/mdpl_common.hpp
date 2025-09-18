@@ -1,6 +1,8 @@
 #ifndef MDPL_COMMON_HEADER_GUARD
 #define MDPL_COMMON_HEADER_GUARD
 
+#include "../pch.hpp"
+
 #include "system_headers.hpp"
 #include "file_access.hpp"
 #include "buffer.hpp"

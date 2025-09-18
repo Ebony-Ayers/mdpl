@@ -96,7 +96,7 @@ namespace mdpl
             }
             bool contains(AllocationTrackerStruct* tracker, void* ptr)
             {
-                return indexOf(tracker, ptr) != tablePrimes[tracker->capacityIndxex];
+                return tracker->array[indexOf(tracker, ptr)] == ptr;
             }
 
             contentsTuple getContents(AllocationTrackerStruct* tracker)
@@ -211,16 +211,22 @@ namespace mdpl
             {
                 tracker->size = 0;
                 tracker->capacityIndxex = initialCapaityIndex;
-                tracker->divider = libdivide::libdivide_u64_gen(tablePrimes[tracker->capacityIndxex]);
+                const size_t capacity = tablePrimes[tracker->capacityIndxex];
+                tracker->divider = libdivide::libdivide_u64_gen(capacity);
                 
-                const size_t allocationSize = tablePrimes[tracker->capacityIndxex] * sizeof(void*);
+                const size_t allocationSize = capacity * sizeof(void*);
                 tracker->array = reinterpret_cast<void**>(malloc(allocationSize));
                 if(tracker->array == nullptr)
                 {
                     printf("MDPL runtime error: could not allocate enough memory for allocation tracker. Attempted to allocate %lu byhtes.\n", allocationSize);
                     return 1;
                 }
-                initialiseArray(tracker, tablePrimes[tracker->capacityIndxex]);
+                //initialise the array. This is done here rather than in a function do make valgrind stop complaining
+                for(size_t i = 0; i < capacity; i++)
+	            {
+	            	tracker->array[i] = nullptr;
+                }
+                //initialiseArray(tracker, capacity);
                 return 0;
             }
         }
