@@ -69,8 +69,8 @@ namespace mdpl
             int rFindIndex(const StringRef str, const String* const target, size_t* characterIndex);
             int findForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
             int rFindForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
-            int startsWith(const StringRef str, const StringRef target, bool* result);
-            int endsWith(const StringRef str, const StringRef target, bool* result);
+            int startsWith(const StringRef str, const StringRef prefix, bool* result);
+            int endsWith(const StringRef str, const StringRef suffix, bool* result);
 
             int frontForwardsIterator(const String* const str, size_t* StringIterator);
             int backReverseIterator(const String* const str, size_t* StringIterator);

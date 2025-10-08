@@ -280,15 +280,6 @@ void testString()
     
     int retcode;
     bool result;
-    
-    uint64_t spacera = 0;
-    uint64_t spacerb = 1;
-    uint64_t spacerc = 2;
-    uint64_t spacerd = 3;
-    uint64_t spacere = 4;
-    uint64_t spacerf = 5;
-    uint64_t spacerg = 6;
-    uint64_t spacerh = 7;
 
     //test 1: construct string with ascii data and test raw str
     mdpl::standardLibrary::String::StringRef asciiStr = {};
@@ -469,6 +460,19 @@ void testString()
     mdpl::standardLibrary::String::StringRef alphaNumStr = {};
     retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&alphaNumStr, "helloWorld1234", 14, 14);
     if(retcode) { printf("Failed test 20. Error during constructing alpha numeric str.\n"); return; }
+    //setup for steps 22-23
+    mdpl::standardLibrary::String::StringRef lowerCasePrefixStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCasePrefixStr, "street", 6, 6);
+    if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef upperCasePrefixStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCasePrefixStr, "STREET", 6, 6);
+    if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef lowerCaseSuffixStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCaseSuffixStr, "δρόμος", 12, 6);
+    if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
+    mdpl::standardLibrary::String::StringRef upperCaseSuffixStr = {};
+    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCaseSuffixStr, "ΔΡΌΜΟΣ", 12, 6);
+    if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
 
     //setup for test 5 - 8
     mdpl::standardLibrary::String::StringIterator asciiStrForwardIt = {asciiStr.s, 6, 6, 1};
@@ -1797,6 +1801,96 @@ void testString()
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for valid decimal str.\n");
         return;
     }
+    //test 22: startsWith
+    retcode = mdpl::standardLibrary::String::startsWith(lowerCaseStr, lowerCasePrefixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 22. error during startsWith on lowerCaseStr with lowerCasePrefixStr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 22. lowerCaseStr should start with lowerCasePrefixStr but does not.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::startsWith(lowerCaseStr, upperCasePrefixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 22. error during startsWith on lowerCaseStr with upperCasePrefixStr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 22. lowerCaseStr should not start with upperCasePrefixStr but does.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::startsWith(upperCaseStr, lowerCasePrefixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 22. error during startsWith on upperCaseStr with lowerCasePrefixStr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 22. upperCaseStr should not start with lowerCasePrefixStr but does.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::startsWith(upperCaseStr, upperCasePrefixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 22. error during startsWith on upperCaseStr with upperCasePrefixStr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 22. upperCaseStr should start with upperCasePrefixStr but does not.\n");
+        return;
+    }
+
+    //test 23: endsWith
+    retcode = mdpl::standardLibrary::String::endsWith(lowerCaseStr, lowerCaseSuffixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 23. error during endsWith on lowerCaseStr with lowerCaseSuffixStr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 23. lowerCaseStr should start with lowerCaseSuffixStr but does not.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::endsWith(lowerCaseStr, upperCaseSuffixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 23. error during endsWith on lowerCaseStr with upperCaseSuffixStr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 23. lowerCaseStr should not start with upperCaseSuffixStr but does.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::endsWith(upperCaseStr, lowerCaseSuffixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 23. error during endsWith on upperCaseStr with lowerCaseSuffixStr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::endsWith(upperCaseStr, upperCaseSuffixStr, &result);
+    if(retcode)
+    {
+        printf("Failed test 23. error during endsWith on upperCaseStr with upperCaseSuffixStr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 23. upperCaseStr should start with upperCaseSuffixStr but does not.\n");
+        return;
+    }
     
 
     //final test: deconstructions
@@ -1930,6 +2024,30 @@ void testString()
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of non ascii index substring.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCasePrefixStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of lower case prefix string.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCasePrefixStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of upper case prefix string.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCaseSuffixStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of lower case suffix string.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCaseSuffixStr);
+    if(retcode)
+    {
+        printf("Failed final test. Error during deconstruction of upper case suffix string.\n");
         return;
     }
 

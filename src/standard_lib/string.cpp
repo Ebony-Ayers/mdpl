@@ -8,6 +8,77 @@ namespace mdpl
         {
             //================ String functions ================
 
+            int startsWith(const StringRef str, const StringRef prefix, bool* result)
+            {
+                //if the prefix is longer than the string then by definition it cannot be a prefix
+                if(prefix.s->numCharacters > str.s->numCharacters)
+                {
+                    *result = false;
+                    return 0;
+                }
+
+                //make sure the strings are normalised for comparison
+                MDPL_RETERR(internal::normaliseString(str.s));
+                MDPL_RETERR(internal::normaliseString(prefix.s));
+                
+                //if the prefix has more bytes then the str after normalisation they cannot be the same
+                if(prefix.s->normalisedStr->numBytes > str.s->normalisedStr->numBytes)
+                {
+                    *result = false;
+                    return 0;
+                }
+
+                //compare the normalised strings byte by byte. As the strings are normalised this is a valid way to compare them.
+                //this method is optimal for both ascii and non-ascii strings
+                const size_t numBytes = prefix.s->normalisedStr->numBytes;
+                for(size_t i = 0; i < numBytes; i++)
+                {
+                    if(str.s->normalisedStr->str[i] != prefix.s->normalisedStr->str[i])
+                    {
+                        *result = false;
+                        return 0;
+                    }
+                }
+                *result = true;
+                return 0;
+            }
+            int endsWith(const StringRef str, const StringRef suffix, bool* result)
+            {
+                //if the prefix is longer than the string then by definition it cannot be a prefix
+                if(suffix.s->numCharacters > str.s->numCharacters)
+                {
+                    *result = false;
+                    return 0;
+                }
+
+                //make sure the strings are normalised for comparison
+                MDPL_RETERR(internal::normaliseString(str.s));
+                MDPL_RETERR(internal::normaliseString(suffix.s));
+                
+                //if the prefix has more bytes then the str after normalisation they cannot be the same
+                if(suffix.s->normalisedStr->numBytes > str.s->normalisedStr->numBytes)
+                {
+                    *result = false;
+                    return 0;
+                }
+
+                //compare the normalised strings byte by byte. As the strings are normalised this is a valid way to compare them.
+                //this method is optimal for both ascii and non-ascii strings
+                const size_t numBytesStr = str.s->normalisedStr->numBytes;
+                const size_t numBytesSuffix = suffix.s->normalisedStr->numBytes;
+                //start iStr numBytesSuffix back from the end and compare forwards
+                for(size_t iStr = numBytesStr - numBytesSuffix, iSuffix = 0; (iStr < numBytesStr) && (iSuffix < numBytesSuffix); iStr++, iSuffix++)
+                {
+                    if(str.s->normalisedStr->str[iStr] != suffix.s->normalisedStr->str[iSuffix])
+                    {
+                        *result = false;
+                        return 0;
+                    }
+                }
+                *result = true;
+                return 0;
+            }
+
             int isLower(const StringRef str, bool* result)
             {
                 if(str.s->flagsSet & StringFlags::isLower) [[likely]]
@@ -619,6 +690,7 @@ namespace mdpl
 
                 int normaliseString(String* const str)
                 {
+                    //TODO: skip normalising if the string is ascii
                     if(str->normalisedStr == nullptr)
                     {
                         const utf8proc_uint8_t* originalCStr = reinterpret_cast<const utf8proc_uint8_t*>(str->rawStr->str + str->startByte);
