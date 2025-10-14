@@ -489,7 +489,7 @@ void testString()
         printf("failed test 5: Error during getCurrent on asciiStrForwardIt.\n");
         return;
     }
-    if(c.character != 'w')
+    if(c.codepoint != 'w')
     {
         printf("failed test 5: Character did not contain the correct information for asciiStrForwardIt.\n");
         return;
@@ -501,7 +501,7 @@ void testString()
         printf("failed test 5: Error during getCurrent on asciiStrReverseIt.\n");
         return;
     }
-    if(c.character != 'd')
+    if(c.codepoint != 'd')
     {
         printf("failed test 5: Character did not contain the correct information for asciiStrReverseIt.\n");
         return;
@@ -513,7 +513,7 @@ void testString()
         printf("failed test 5: Error during getCurrent on asciiStrDoubleIt.\n");
         return;
     }
-    if(c.character != 'H')
+    if(c.codepoint != 'H')
     {
         printf("failed test 5: Character did not contain the correct information for asciiStrDoubleIt.\n");
         return;
@@ -525,7 +525,7 @@ void testString()
         printf("failed test 5: Error during getCurrent on normaliseStr1It.\n");
         return;
     }
-    if(c.character != 197)
+    if(c.codepoint != 197)
     {
         printf("failed test 5: Character did not contain the correct information for normaliseStr1It.\n");
         return;
@@ -748,7 +748,7 @@ void testString()
             printf("failed test 8: Error during getCurrent in asciiStrForwardIt.\n");
             return;
         }
-        if(c.character != asciiExpectedCharacters[i])
+        if(c.codepoint != asciiExpectedCharacters[i])
         {
             printf("failed test 8: Incorrect character in asciiStrForwardIt.\n");
         }
@@ -791,9 +791,9 @@ void testString()
             printf("failed test 8: Error during getCurrent in nonAsciiStrIt.\n");
             return;
         }
-        if(c.character != nonAsciiExpectedCharacters[i])
+        if(c.codepoint != nonAsciiExpectedCharacters[i])
         {
-            printf("observed=%d expected=%d\n", c.character, nonAsciiExpectedCharacters[i]);
+            printf("observed=%d expected=%d\n", c.codepoint, nonAsciiExpectedCharacters[i]);
             printf("failed test 8: Incorrect character in nonAsciiStrIt.\n");
         }
         retcode = mdpl::standardLibrary::String::next(&nonAsciiStrIt);
@@ -1634,7 +1634,7 @@ void testString()
     //test 18: isWhitespace
     //the following list of characters is sourced from https://en.wikipedia.org/wiki/Whitespace_character
     //as some of these characters are considered non-stnadard some systems may automatically remove them. For example \r. To guarentee this does not break the test the string is created at runtime. 
-    utf8proc_int32_t whiteSpaceCodepoints[] = {0x000C, 0x0020, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x2008, 0x2009, 0x200A, 0x2028, 0x205F, 0x3000};
+    utf8proc_int32_t whiteSpaceCodepoints[] = {0x0009, 0x000A, 0x000C, 0x0020, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x2008, 0x2009, 0x200A, 0x2028, 0x205F, 0x3000};
     utf8proc_ssize_t whiteSpaceCodepointsLength = sizeof(whiteSpaceCodepoints) / sizeof(utf8proc_int32_t);
     utf8proc_ssize_t utf8proc_result = utf8proc_reencode(whiteSpaceCodepoints, whiteSpaceCodepointsLength, static_cast<utf8proc_option_t>(0));
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 18. %s.\n", utf8proc_errmsg(utf8proc_result)); }
@@ -1751,6 +1751,18 @@ void testString()
         printf("Failed test 20. isAlpha incorrectly set flags for valid decimal str.\n");
         return;
     }
+    MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
+    retcode = mdpl::standardLibrary::String::isAlpha(validIntStr, &result);
+    if(result == true)
+    {
+        printf("Failed test 20. isAlpha is incorrect for valid int str.\n");
+        return;
+    }
+    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) != 0))
+    {
+        printf("Failed test 20. isAlpha incorrectly set flags for valid int str.\n");
+        return;
+    }
 
     //test 21: isAlphaNumeric
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
@@ -1801,6 +1813,19 @@ void testString()
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for valid decimal str.\n");
         return;
     }
+    MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
+    retcode = mdpl::standardLibrary::String::isAlphaNumeric(validIntStr, &result);
+    if(result == true)
+    {
+        printf("Failed test 20. isAlphaNumeric is incorrect for valid int str.\n");
+        return;
+    }
+    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) != 0))
+    {
+        printf("Failed test 20. isAlphaNumeric incorrectly set flags for valid int str.\n");
+        return;
+    }
+
     //test 22: startsWith
     retcode = mdpl::standardLibrary::String::startsWith(lowerCaseStr, lowerCasePrefixStr, &result);
     if(retcode)
@@ -1889,6 +1914,721 @@ void testString()
     if(result == false)
     {
         printf("Failed test 23. upperCaseStr should start with upperCaseSuffixStr but does not.\n");
+        return;
+    }
+
+    //setup for test 24-39
+    mdpl::standardLibrary::String::StringIterator it = {};
+
+    //test 24: frontForwardsIterator
+    retcode = mdpl::standardLibrary::String::frontForwardsIterator(lowerCaseStr, &it);
+    if(retcode)
+    {
+        printf("Failed test 24. error during frontForwardsIterator.\n");
+        return;
+    }
+    if(it.str != lowerCaseStr.s)
+    {
+        printf("Failed test 24. iterator's string pointer does not match string's string pointer.\n");
+        return;
+    }
+    if(it.byteIndex != 0)
+    {
+        printf("Failed test 24. byteIndex incorect.\n");
+        return;
+    }
+    if(it.characterIndex != 0)
+    {
+        printf("Failed test 24. characterIndex incorect.\n");
+        return;
+    }
+    if(it.step != 1)
+    {
+        printf("Failed test 24. step incorect.\n");
+        return;
+    }
+
+    //test 25: backReverseIterator
+    retcode = mdpl::standardLibrary::String::backReverseIterator(lowerCaseStr, &it);
+    if(retcode)
+    {
+        printf("Failed test 25. error during backReverseIterator.\n");
+        return;
+    }
+    if(it.str != lowerCaseStr.s)
+    {
+        printf("Failed test 25. iterator's string pointer does not match string's string pointer.\n");
+        return;
+    }
+    if(it.byteIndex != 25)
+    {
+        printf("Failed test 25. byteIndex incorect.\n");
+        return;
+    }
+    if(it.characterIndex != 19)
+    {
+        printf("Failed test 25. characterIndex incorect.\n");
+        return;
+    }
+    if(it.step != -1)
+    {
+        printf("Failed test 25. step incorect.\n");
+        return;
+    }
+
+    //setups for test 26-41
+    mdpl::standardLibrary::String::Character lowerCaseAsciiChr = {'h'};
+    mdpl::standardLibrary::String::Character upperCaseAsciiChr = {'H'};
+    mdpl::standardLibrary::String::Character lowerCaseUnicodeChr = {954};
+    mdpl::standardLibrary::String::Character upperCaseUnicodeChr = {922};
+    mdpl::standardLibrary::String::Character numberChr = {'1'};
+    mdpl::standardLibrary::String::Character dashChr = {'-'};
+    mdpl::standardLibrary::String::Character dotChr = {'.'};
+    mdpl::standardLibrary::String::Character spaceChr = {' '};
+    mdpl::standardLibrary::String::Character newLineChr = {'\n'};
+    mdpl::standardLibrary::String::Character nullChr = {'\0'};
+
+    //test 26: isLowerChr
+    retcode = mdpl::standardLibrary::String::isLowerChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 26. error durng isLowerChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 26. isLowerChr incorrect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLowerChr(&upperCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 26. error durng isLowerChr with upperCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 26. isLowerChr incorrect for upperCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLowerChr(&lowerCaseUnicodeChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 26. error durng isLowerChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 26. isLowerChr incorrect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLowerChr(&upperCaseUnicodeChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 26. error durng isLowerChr with upperCaseUnicodeChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 26. isUpperChr isLowerChr for upperCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isLowerChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 26. error durng isLowerChr with dashChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 26. isUpperChr isLowerChr for dashChr.\n");
+        return;
+    }
+
+    //test 27: isUpperChr
+    retcode = mdpl::standardLibrary::String::isUpperChr(&upperCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 27. error durng isUpperChr with upperCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 27. isUpperChr incorrect for upperCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpperChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 27. error durng isUpperChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 27. isUpperChr incorrect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpperChr(&upperCaseUnicodeChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 27. error durng isUpperChr with upperCaseUnicodeChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 27. isUpperChr incorrect for upperCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpperChr(&lowerCaseUnicodeChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 27. error durng isUpperChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 27. isUpperChr incorrect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isUpperChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 27. error durng isUpperChr with dashChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 27. isUpperChr incorrect for dashChr.\n");
+        return;
+    }
+    
+    //test 28: isWhiteSpaceChr
+    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&spaceChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 28. error durng isWhiteSpaceChr with spaceChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 28. isWhiteSpaceChr incorrect for spaceChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&newLineChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 28. error durng isWhiteSpaceChr with newLineChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 28. isWhiteSpaceChr incorrect for newLineChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 28. error durng isWhiteSpaceChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 28. isWhiteSpaceChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 29: isPrintableChr
+    retcode = mdpl::standardLibrary::String::isPrintableChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 29. error durng isPrintableChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 29. isPrintableChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isPrintableChr(&nullChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 29. error durng isPrintableChr with nullChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 29. isPrintableChr incorect for nullChr.\n");
+        return;
+    }
+
+    //test 30: isAsciiChr
+    retcode = mdpl::standardLibrary::String::isAsciiChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 30. error durng isAsciiChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 30. isAsciiChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAsciiChr(&lowerCaseUnicodeChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 30. error durng isAsciiChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 30. isAsciiChr incorect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+
+    //test 31: isDecimalChr
+    retcode = mdpl::standardLibrary::String::isDecimalChr(&numberChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 31. error durng isDecimalChr with numberChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 31. isDecimalChr incorect for numberChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isDecimalChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 31. error durng isDecimalChr with dashChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 31. isDecimalChr incorect for dashChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isDecimalChr(&dotChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 31. error durng isDecimalChr with dotChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 31. isDecimalChr incorect for dotChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isDecimalChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 31. error durng isDecimalChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 31. isDecimalChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 32: isIntChr
+    retcode = mdpl::standardLibrary::String::isIntChr(&numberChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 32. error durng isIntChr with numberChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 32. isIntChr incorect for numberChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isIntChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 32. error durng isIntChr with dashChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 32. isIntChr incorect for dashChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isIntChr(&dotChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 32. error durng isIntChr with dotChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 32. isIntChr incorect for dotChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isIntChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 32. error durng isIntChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 32. isIntChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 33: isFloatChr
+    retcode = mdpl::standardLibrary::String::isFloatChr(&numberChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 33. error durng isFloatChr with numberChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 33. isFloatChr incorect for numberChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isFloatChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 33. error durng isFloatChr with dashChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 33. isFloatChr incorect for dashChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isFloatChr(&dotChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 33. error durng isFloatChr with dotChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 33. isFloatChr incorect for dotChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isFloatChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 33. error durng isFloatChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 33. isFloatChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 34: isAlphaChr
+    retcode = mdpl::standardLibrary::String::isAlphaChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 34. error durng isAlphaChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 34. isAlphaChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaChr(&numberChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 34. error durng isAlphaChr with numberChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 34. isAlphaChr incorect for numberChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 34. error durng isAlphaChr with dashChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 34. isAlphaChr incorect for dashChr.\n");
+        return;
+    }
+
+    //test 35: isAlphaNumericChr
+    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 35. error durng isAlphaNumericChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 35. isAlphaNumericChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&numberChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 35. error durng isAlphaNumericChr with numberChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 35. isAlphaNumericChr incorect for numberChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&dashChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 35. error durng isAlphaNumericChr with dashChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 35. isAlphaNumericChr incorect for dashChr.\n");
+        return;
+    }
+
+    //test 36: isNewLineChr
+    retcode = mdpl::standardLibrary::String::isNewLineChr(&newLineChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 36. error durng isNewLineChr with newLineChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 36. isNewLineChr incorect for newLineChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isNewLineChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 36. error durng isNewLineChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 36. isNewLineChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 37: isNullChr
+    retcode = mdpl::standardLibrary::String::isNullChr(&nullChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 37. error durng isNullChr with nullChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 37. isNullChr incorect for nullChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::isNullChr(&lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 37. error durng isNullChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 37. isNullChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 38: valueEqualityChrChr
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &lowerCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and lowerCaseAsciiChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 38. valueEqualityChrChr incorect for lowerCaseAsciiChr and lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &upperCaseAsciiChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and upperCaseAsciiChr.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 38. valueEqualityChrChr incorect for lowerCaseAsciiChr and upperCaseAsciiChr.\n");
+        return;
+    }
+
+    //test 39: valueEqualityChrUnicode
+    retcode = mdpl::standardLibrary::String::valueEqualityChrUnicode(&lowerCaseAsciiChr, 'h', &result);
+    if(retcode)
+    {
+        printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'h\'.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 39. valueEqualityChrUnicode incorect for lowerCaseAsciiChr and \'h\'.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrUnicode(&lowerCaseAsciiChr, 'H', &result);
+    if(retcode)
+    {
+        printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'H\'.\n");
+        return;
+    }
+    if(result == true)
+    {
+        printf("Failed test 39. valueEqualityChrUnicode incorect for lowerCaseAsciiChr and \'H\'.\n");
+        return;
+    }
+    
+    //setup for test 40 and 41
+    mdpl::standardLibrary::String::Character newChr;
+
+    //test 40: toLowerChr
+    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseAsciiChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 40. toLowerChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseAsciiChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 40. toLowerChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseUnicodeChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 40. toLowerChr incorect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseUnicodeChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 40. toLowerChr incorect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+
+    //test 41: toUpperChr
+    retcode = mdpl::standardLibrary::String::toUpperChr(&lowerCaseAsciiChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng toUpperChr with lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 41. toUpperChr incorect for lowerCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toUpperChr(&upperCaseAsciiChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng toUpperChr with upperCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 41. toUpperChr incorect for upperCaseAsciiChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toUpperChr(&lowerCaseUnicodeChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng toUpperChr with lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 41. toUpperChr incorect for lowerCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::toUpperChr(&upperCaseUnicodeChr, &newChr);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng toUpperChr with upperCaseUnicodeChr.\n");
+        return;
+    }
+    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
+    if(retcode)
+    {
+        printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
+        return;
+    }
+    if(result == false)
+    {
+        printf("Failed test 41. toUpperChr incorect for upperCaseUnicodeChr.\n");
         return;
     }
     

@@ -151,7 +151,7 @@ namespace mdpl
                     utf8proc_int32_t character;
                     MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
-                    if(p->bidi_class != UTF8PROC_BIDI_CLASS_WS)
+                    if(!((p->bidi_class == UTF8PROC_BIDI_CLASS_B) || (p->bidi_class == UTF8PROC_BIDI_CLASS_S) || (p->bidi_class == UTF8PROC_BIDI_CLASS_WS)))
                     {
                         *result = false;
                         str.s->flagsSet |= StringFlags::isWhiteSpace;
@@ -366,9 +366,7 @@ namespace mdpl
                     utf8proc_int32_t character;
                     MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                     const utf8proc_property_t *p = utf8proc_get_property(character);
-                    const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO;
-                    //check if the category is a subset of the mask
-                    if(((p->category & mask) == 0) || ((p->category & (~mask)) != 0))
+                    if((p->category == 0) || (p->category > 5))
                     {
                         *result = false;
                         str.s->flagsSet |= StringFlags::isAlpha;
@@ -397,9 +395,7 @@ namespace mdpl
                         utf8proc_int32_t character;
                         MDPL_RETERR(internal::incrementInternalIterator(str, &ptr, &character));
                         const utf8proc_property_t *p = utf8proc_get_property(character);
-                        const int mask = UTF8PROC_CATEGORY_LU | UTF8PROC_CATEGORY_LL | UTF8PROC_CATEGORY_LT | UTF8PROC_CATEGORY_LM | UTF8PROC_CATEGORY_LO | UTF8PROC_CATEGORY_ND | UTF8PROC_CATEGORY_NL | UTF8PROC_CATEGORY_NO;
-                        //check if the category is a subset of the mask
-                        if(((p->category & mask) == 0) || ((p->category & (~mask)) != 0))
+                        if( !(((p->category > 0) && (p->category < 6)) || ((p->category > 8) && (p->category < 12))) )
                         {
                             *result = false;
                             str.s->flagsSet |= StringFlags::isAlphaNumeric;
@@ -488,11 +484,124 @@ namespace mdpl
             
             //================ Character functions ================
 
+            int isLowerChr(const Character* const chr, bool* result)
+            {
+                const utf8proc_property_t *p = utf8proc_get_property(static_cast<utf8proc_int32_t>(chr->codepoint));
+                *result = (p->lowercase_seqindex == UINT16_MAX) && (p->uppercase_seqindex != UINT16_MAX);
+                return 0;
+            }
+            int isUpperChr(const Character* const chr, bool* result)
+            {
+                const utf8proc_property_t *p = utf8proc_get_property(static_cast<utf8proc_int32_t>(chr->codepoint));
+                *result = (p->lowercase_seqindex != UINT16_MAX) && (p->uppercase_seqindex == UINT16_MAX);
+                return 0;
+            }
+            int isWhiteSpaceChr(const Character* const chr, bool* result)
+            {
+                const utf8proc_property_t *p = utf8proc_get_property(static_cast<utf8proc_int32_t>(chr->codepoint));
+                *result = (p->bidi_class == UTF8PROC_BIDI_CLASS_B) || (p->bidi_class == UTF8PROC_BIDI_CLASS_S) || (p->bidi_class == UTF8PROC_BIDI_CLASS_WS);
+                return 0;
+            }
+            int isPrintableChr(const Character* const chr, bool* result)
+            {
+                *result = utf8proc_charwidth(static_cast<utf8proc_int32_t>(chr->codepoint)) != 0;
+                return 0;
+            }
+            int isAsciiChr(const Character* const chr, bool* result)
+            {
+                *result = chr->codepoint < 128;
+                return 0;
+            }
+            int isDecimalChr(const Character* const chr, bool* result)
+            {
+                *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9'));
+                return 0;
+            }
+            int isIntChr(const Character* const chr, bool* result)
+            {
+                *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9')) || (chr->codepoint == '-');
+                return 0;
+            }
+            int isFloatChr(const Character* const chr, bool* result)
+            {
+                *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9')) || (chr->codepoint == '-') || (chr->codepoint == '.');
+                return 0;
+            }
+            int isAlphaChr(const Character* const chr, bool* result)
+            {
+                const utf8proc_property_t *p = utf8proc_get_property(static_cast<utf8proc_int32_t>(chr->codepoint));
+                *result = (p->category > 0) && (p->category < 6);
+                return 0;
+            }
+            int isAlphaNumericChr(const Character* const chr, bool* result)
+            {
+                const utf8proc_property_t *p = utf8proc_get_property(static_cast<utf8proc_int32_t>(chr->codepoint));
+                *result = ((p->category > 0) && (p->category < 6)) || ((p->category > 8) && (p->category < 12));
+                return 0;
+            }
+            int isNewLineChr(const Character* const chr, bool* result)
+            {
+                *result = (chr->codepoint == '\n') || (chr->codepoint == '\r');
+                return 0;
+            }
+            int isNullChr(const Character* const chr, bool* result)
+            {
+                *result = chr->codepoint == '\0';
+                return 0;
+            }
+
+            int valueEqualityChrChr(const Character* const chr1, const Character* const chr2, bool* result)
+            {
+                *result = chr1->codepoint == chr2->codepoint;
+                return 0;
+            }
+            int valueEqualityChrUnicode(const Character* const chr1, const uint32_t codepoint, bool* result)
+            {
+                *result = chr1->codepoint == codepoint;
+                return 0;
+            }
+
+            int toLowerChr(const Character* const originalChr, Character* const newChr)
+            {
+                *newChr = { static_cast<uint32_t>(utf8proc_tolower(static_cast<utf8proc_int32_t>(originalChr->codepoint))) };
+                return 0;
+            }
+            int toUpperChr(const Character* const originalChr, Character* const newChr)
+            {
+                *newChr = { static_cast<uint32_t>(utf8proc_toupper(static_cast<utf8proc_int32_t>(originalChr->codepoint))) };
+                return 0;
+            }
+
             //================ String iterator ================
+
+            int frontForwardsIterator(const StringRef str, StringIterator* const iterator)
+            {
+                mdpl::common::writeToConstVariable<const mdpl::standardLibrary::String::String*>(&iterator->str, str.s);
+                iterator->byteIndex = 0;
+                iterator->characterIndex = 0;
+                iterator->step = 1;
+                return 0;
+            }
+            int backReverseIterator(const StringRef str, StringIterator* const iterator)
+            {
+                mdpl::common::writeToConstVariable<const mdpl::standardLibrary::String::String*>(&iterator->str, str.s);
+                iterator->byteIndex = str.s->rawStr->numBytes - 1;
+                for(size_t _ = 0; _ < 4; _++)
+                {
+                    if((iterator->str->rawStr->str[iterator->byteIndex] & 0b11000000) != 0b10000000)
+                    {
+                        break;
+                    }
+                    iterator->byteIndex--;
+                }
+                iterator->characterIndex = str.s->numCharacters - 1;
+                iterator->step = -1;
+                return 0;
+            }
 
             int getCurrent(const StringIterator* const it, Character* dst)
             {
-                utf8proc_ssize_t retcode = utf8proc_iterate(reinterpret_cast<const utf8proc_uint8_t*>(it->str->rawStr->str + it->byteIndex), -1, reinterpret_cast<utf8proc_int32_t*>(&(dst->character)));
+                utf8proc_ssize_t retcode = utf8proc_iterate(reinterpret_cast<const utf8proc_uint8_t*>(it->str->rawStr->str + it->byteIndex), -1, reinterpret_cast<utf8proc_int32_t*>(&(dst->codepoint)));
                 if(retcode < 0)
                 {
                     printf("String error: \"%s\" occured during string iterator getCurrrent.\n", utf8proc_errmsg(retcode));
@@ -536,7 +645,7 @@ namespace mdpl
                     }
                     Character c;
                     MDPL_RETERR(getCurrent(it, &c));
-                    if(!utf8proc_codepoint_valid(static_cast<utf8proc_int32_t>(c.character)))
+                    if(!utf8proc_codepoint_valid(static_cast<utf8proc_int32_t>(c.codepoint)))
                     {
                         printf("String error: reverse iteration produced invalid code point.\n");
                         return 1;

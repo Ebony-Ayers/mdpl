@@ -50,7 +50,7 @@ namespace mdpl
             };
             struct Character
             {
-                uint32_t character;
+                uint32_t codepoint;
             };
             struct StringIterator
             {
@@ -72,9 +72,6 @@ namespace mdpl
             int startsWith(const StringRef str, const StringRef prefix, bool* result);
             int endsWith(const StringRef str, const StringRef suffix, bool* result);
 
-            int frontForwardsIterator(const String* const str, size_t* StringIterator);
-            int backReverseIterator(const String* const str, size_t* StringIterator);
-
             int isLower(const StringRef str, bool* result);
             int isUpper(const StringRef str, bool* result);
             int isWhiteSpace(const StringRef str, bool* result);
@@ -86,8 +83,7 @@ namespace mdpl
             int isAlpha(const StringRef str, bool* result);
             int isAlphaNumeric(const StringRef str, bool* result);
 
-            int valueEqualityStrStr(const String* const str1, const String* const str2);
-            int valueEqualityStrChr(const String* const str, const Character* const chr);
+            int valueEqualityStrStr(const String* const str1, const String* const str2, bool* result);
 
             int strip(const String* const str);
             int lStrip(const String* const str);
@@ -101,25 +97,29 @@ namespace mdpl
 
             //================ Character functions ================
 
-            int isLowerChr(const Character* const str, bool* result);
-            int isUpperChr(const Character* const str, bool* result);
-            int isWhiteSpaceChr(const Character* const str, bool* result);
-            int isPrintableChr(const Character* const str, bool* result);
-            int isAsciiChr(const Character* const str, bool* result);
-            int isDecimalChr(const Character* const str, bool* result);
-            int isIntChr(const Character* const str, bool* result);
-            int isFloatChr(const Character* const str, bool* result);
-            int isAlphaChr(const Character* const str, bool* result);
-            int isAlphaNumericChr(const Character* const str, bool* result);
+            int isLowerChr(const Character* const chr, bool* result);
+            int isUpperChr(const Character* const chr, bool* result);
+            int isWhiteSpaceChr(const Character* const chr, bool* result);
+            int isPrintableChr(const Character* const chr, bool* result);
+            int isAsciiChr(const Character* const chr, bool* result);
+            int isDecimalChr(const Character* const chr, bool* result);
+            int isIntChr(const Character* const chr, bool* result);
+            int isFloatChr(const Character* const chr, bool* result);
+            int isAlphaChr(const Character* const chr, bool* result);
+            int isAlphaNumericChr(const Character* const chr, bool* result);
+            int isNewLineChr(const Character* const chr, bool* result);
+            int isNullChr(const Character* const chr, bool* result);
 
-            int valueEqualityChrChr(const Character* const chr1, const Character* const chr2);
-            int valueEqualityChrStr(const Character* const chr, const String* const str);
+            int valueEqualityChrChr(const Character* const chr1, const Character* const chr2, bool* result);
+            int valueEqualityChrUnicode(const Character* const chr1, const uint32_t codepoint, bool* result);
 
-            int replaceChr(const Character* const str, const Character* const oldValue, const Character* const newValue);
-            int toUpperChr(const Character* const str);
-            int toLowerChr(const Character* const str);
+            int toUpperChr(const Character* const originalChr, Character* const newChr);
+            int toLowerChr(const Character* const originalChr, Character* const newChr);
 
             //================ String iterator ================
+
+            int frontForwardsIterator(const StringRef str, StringIterator* const iterator);
+            int backReverseIterator(const StringRef str, StringIterator* const iterator);
 
             int getCurrent(const StringIterator* const it, Character* dst);
             int next(StringIterator* it);
