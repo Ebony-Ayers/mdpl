@@ -258,7 +258,7 @@ void testBasicList()
     printf("Basic list passed all tests.\n");
 }
 
-#define MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(sr) sr.s->flagsSet &= ~mdpl::standardLibrary::String::StringFlags::isAscii; sr.s->flagsData &= ~mdpl::standardLibrary::String::StringFlags::isAscii;
+#define MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(sr) sr.s->flagsSet &= ~MDPL_STDLIB_STRING_FLAGS_isAscii; sr.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isAscii;
 
 void testString()
 {
@@ -282,8 +282,8 @@ void testString()
     bool result;
 
     //test 1: construct string with ascii data and test raw str
-    mdpl::standardLibrary::String::StringRef asciiStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&asciiStr, asciiCStr, asciiCStrNumBytes, asciiCStrNumCharacters);
+    MDPL_STDLIB_STRING_StringRef asciiStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&asciiStr, asciiCStr, asciiCStrNumBytes, asciiCStrNumCharacters);
     if(retcode)
     {
         printf("Failed test 1. Error during constructing ascii str.\n");
@@ -317,8 +317,8 @@ void testString()
     }
 
     //test 2: construct raw string with emoji data and test raw str
-    mdpl::standardLibrary::String::StringRef emojiStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&emojiStr, emojiCStr, emojiCStrNumBytes, emojiCStrNumCharacters);
+    MDPL_STDLIB_STRING_StringRef emojiStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&emojiStr, emojiCStr, emojiCStrNumBytes, emojiCStrNumCharacters);
     if(retcode)
     {
         printf("Failed test 2. Error during constructing emijo string.\n");
@@ -353,8 +353,8 @@ void testString()
     }
 
     //test 3: construct raw string with normalise data
-    mdpl::standardLibrary::String::StringRef normaliseStr1 = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&normaliseStr1, normaliseCStr1, normaliseCStrNumBytes1, normaliseCStrNumCharacters1);
+    MDPL_STDLIB_STRING_StringRef normaliseStr1 = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&normaliseStr1, normaliseCStr1, normaliseCStrNumBytes1, normaliseCStrNumCharacters1);
     if(retcode)
     {
         printf("Failed test 3. Error during constructing normalise str 1.\n");
@@ -389,8 +389,8 @@ void testString()
     }
 
     //test 4: construct raw string with normalise data
-    mdpl::standardLibrary::String::StringRef normaliseStr2 = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&normaliseStr2, normaliseCStr2, normaliseCStrNumBytes2, normaliseCStrNumCharacters2);
+    MDPL_STDLIB_STRING_StringRef normaliseStr2 = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&normaliseStr2, normaliseCStr2, normaliseCStrNumBytes2, normaliseCStrNumCharacters2);
     if(retcode)
     {
         printf("Failed test 4. Error during constructing normalise str 2.\n");
@@ -425,65 +425,65 @@ void testString()
     }
 
     //setup for steps 13-15
-    mdpl::standardLibrary::String::StringRef validDecimalStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validDecimalStr, "123456789", 9, 9);
+    MDPL_STDLIB_STRING_StringRef validDecimalStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validDecimalStr, "123456789", 9, 9);
     if(retcode) { printf("Failed test 13. Error during constructing valid decimal str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef validIntStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validIntStr, "-123456789", 10, 10);
+    MDPL_STDLIB_STRING_StringRef validIntStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validIntStr, "-123456789", 10, 10);
     if(retcode) { printf("Failed test 13. Error during constructing valid int str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef invalidIntStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidIntStr, "-1234567-89", 11, 11);
+    MDPL_STDLIB_STRING_StringRef invalidIntStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidIntStr, "-1234567-89", 11, 11);
     if(retcode) { printf("Failed test 13. Error during constructing invalid int str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef validFloatStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&validFloatStr, "-1234.56789", 11, 11);
+    MDPL_STDLIB_STRING_StringRef validFloatStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validFloatStr, "-1234.56789", 11, 11);
     if(retcode) { printf("Failed test 13. Error during constructing valid float str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef invalidFloatStr1 = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidFloatStr1, "-1234.567.89", 12, 12);
+    MDPL_STDLIB_STRING_StringRef invalidFloatStr1 = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidFloatStr1, "-1234.567.89", 12, 12);
     if(retcode) { printf("Failed test 13. Error during constructing invalid float str 1.\n"); return; }
-    mdpl::standardLibrary::String::StringRef invalidFloatStr2 = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&invalidFloatStr2, "-1234.567-89", 12, 12);
+    MDPL_STDLIB_STRING_StringRef invalidFloatStr2 = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidFloatStr2, "-1234.567-89", 12, 12);
     if(retcode) { printf("Failed test 13. Error during constructing invalid float str 2.\n"); return; }
     //setup for steps 16-17
-    mdpl::standardLibrary::String::StringRef lowerCaseStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCaseStr, "street straße δρόμος", 27, 20);
+    MDPL_STDLIB_STRING_StringRef lowerCaseStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCaseStr, "street straße δρόμος", 27, 20);
     if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef upperCaseStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCaseStr, "STREET STRASSE ΔΡΌΜΟΣ", 27, 21);
+    MDPL_STDLIB_STRING_StringRef upperCaseStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCaseStr, "STREET STRASSE ΔΡΌΜΟΣ", 27, 21);
     if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef mixedCaseStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&mixedCaseStr, "Street Straße Δρόμος", 27, 20);
+    MDPL_STDLIB_STRING_StringRef mixedCaseStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&mixedCaseStr, "Street Straße Δρόμος", 27, 20);
     if(retcode) { printf("Failed test 16. Error during constructing mixed cases str.\n"); return; }
     //setup for test 20-21
-    mdpl::standardLibrary::String::StringRef alphaStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&alphaStr, "helloWorld", 10, 10);
+    MDPL_STDLIB_STRING_StringRef alphaStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&alphaStr, "helloWorld", 10, 10);
     if(retcode) { printf("Failed test 20. Error during constructing alpha str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef alphaNumStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&alphaNumStr, "helloWorld1234", 14, 14);
+    MDPL_STDLIB_STRING_StringRef alphaNumStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&alphaNumStr, "helloWorld1234", 14, 14);
     if(retcode) { printf("Failed test 20. Error during constructing alpha numeric str.\n"); return; }
     //setup for steps 22-23
-    mdpl::standardLibrary::String::StringRef lowerCasePrefixStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCasePrefixStr, "street", 6, 6);
+    MDPL_STDLIB_STRING_StringRef lowerCasePrefixStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCasePrefixStr, "street", 6, 6);
     if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef upperCasePrefixStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCasePrefixStr, "STREET", 6, 6);
+    MDPL_STDLIB_STRING_StringRef upperCasePrefixStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCasePrefixStr, "STREET", 6, 6);
     if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef lowerCaseSuffixStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&lowerCaseSuffixStr, "δρόμος", 12, 6);
+    MDPL_STDLIB_STRING_StringRef lowerCaseSuffixStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCaseSuffixStr, "δρόμος", 12, 6);
     if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
-    mdpl::standardLibrary::String::StringRef upperCaseSuffixStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&upperCaseSuffixStr, "ΔΡΌΜΟΣ", 12, 6);
+    MDPL_STDLIB_STRING_StringRef upperCaseSuffixStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCaseSuffixStr, "ΔΡΌΜΟΣ", 12, 6);
     if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
 
     //setup for test 5 - 8
-    mdpl::standardLibrary::String::StringIterator asciiStrForwardIt = {asciiStr.s, 6, 6, 1};
-    mdpl::standardLibrary::String::StringIterator asciiStrReverseIt = {asciiStr.s, 10, 10, -1};
-    mdpl::standardLibrary::String::StringIterator asciiStrDoubleIt = {asciiStr.s, 0, 0, 2};
-    mdpl::standardLibrary::String::StringIterator normaliseStr1It = {normaliseStr1.s, 0, 0, 1};
-    mdpl::standardLibrary::String::StringIterator nonAsciiStrIt = {lowerCaseStr.s, 7, 7, 1};
-    mdpl::standardLibrary::String::Character c;
+    MDPL_STDLIB_STRING_StringIterator asciiStrForwardIt = {asciiStr.s, 6, 6, 1};
+    MDPL_STDLIB_STRING_StringIterator asciiStrReverseIt = {asciiStr.s, 10, 10, -1};
+    MDPL_STDLIB_STRING_StringIterator asciiStrDoubleIt = {asciiStr.s, 0, 0, 2};
+    MDPL_STDLIB_STRING_StringIterator normaliseStr1It = {normaliseStr1.s, 0, 0, 1};
+    MDPL_STDLIB_STRING_StringIterator nonAsciiStrIt = {lowerCaseStr.s, 7, 7, 1};
+    MDPL_STDLIB_STRING_Character c;
 
     //test 5: getCurrent
-    retcode = mdpl::standardLibrary::String::getCurrent(&asciiStrForwardIt, &c);
+    retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrForwardIt, &c);
     if(retcode)
     {
         printf("failed test 5: Error during getCurrent on asciiStrForwardIt.\n");
@@ -495,7 +495,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::getCurrent(&asciiStrReverseIt, &c);
+    retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrReverseIt, &c);
     if(retcode)
     {
         printf("failed test 5: Error during getCurrent on asciiStrReverseIt.\n");
@@ -507,7 +507,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::getCurrent(&asciiStrDoubleIt, &c);
+    retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrDoubleIt, &c);
     if(retcode)
     {
         printf("failed test 5: Error during getCurrent on asciiStrDoubleIt.\n");
@@ -519,7 +519,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::getCurrent(&normaliseStr1It, &c);
+    retcode = MDPL_STDLIB_STRING_getCurrent(&normaliseStr1It, &c);
     if(retcode)
     {
         printf("failed test 5: Error during getCurrent on normaliseStr1It.\n");
@@ -532,7 +532,7 @@ void testString()
     }
 
     //test 6: next
-    retcode = mdpl::standardLibrary::String::next(&asciiStrForwardIt);
+    retcode = MDPL_STDLIB_STRING_next(&asciiStrForwardIt);
     if(retcode)
     {
         printf("failed test 6: Error during next on asciiStrForwardIt.\n");
@@ -559,7 +559,7 @@ void testString()
         return;
     }
     
-    retcode = mdpl::standardLibrary::String::next(&asciiStrReverseIt);
+    retcode = MDPL_STDLIB_STRING_next(&asciiStrReverseIt);
     if(retcode)
     {
         printf("failed test 6: Error during next on asciiStrReverseIt.\n");
@@ -586,7 +586,7 @@ void testString()
         return;
     }
     
-    retcode = mdpl::standardLibrary::String::next(&asciiStrDoubleIt);
+    retcode = MDPL_STDLIB_STRING_next(&asciiStrDoubleIt);
     if(retcode)
     {
         printf("failed test 6: Error during next on asciiStrDoubleIt.\n");
@@ -613,7 +613,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::next(&normaliseStr1It);
+    retcode = MDPL_STDLIB_STRING_next(&normaliseStr1It);
     if(retcode)
     {
         printf("failed test 6: Error during next on normaliseStr1It.\n");
@@ -642,7 +642,7 @@ void testString()
 
     //temporarily reverse the direction of normaliseStr1It
     normaliseStr1It.step = -1;
-    retcode = mdpl::standardLibrary::String::next(&normaliseStr1It);
+    retcode = MDPL_STDLIB_STRING_next(&normaliseStr1It);
     if(retcode)
     {
         printf("failed test 6: Error during next on reversed normaliseStr1It.\n");
@@ -666,7 +666,7 @@ void testString()
     normaliseStr1It.step = 1;
 
     //test 7: isFinihsed
-    retcode = mdpl::standardLibrary::String::isFinished(&asciiStrForwardIt, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
     if(retcode)
     {
         printf("failed test 7: Error during isFinished in asciiStrForwardIt.\n");
@@ -678,7 +678,7 @@ void testString()
         return;
     }
     
-    retcode = mdpl::standardLibrary::String::isFinished(&asciiStrReverseIt, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrReverseIt, &result);
     if(retcode)
     {
         printf("failed test 7: Error during isFinished in asciiStrReverseIt.\n");
@@ -690,7 +690,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::isFinished(&asciiStrDoubleIt, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrDoubleIt, &result);
     if(retcode)
     {
         printf("failed test 7: Error during isFinished in asciiStrDoubleIt.\n");
@@ -702,7 +702,7 @@ void testString()
         return;
     }
 
-    retcode = mdpl::standardLibrary::String::isFinished(&normaliseStr1It, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&normaliseStr1It, &result);
     if(retcode)
     {
         printf("failed test 7: Error during isFinished in normaliseStr1It.\n");
@@ -714,8 +714,8 @@ void testString()
         return;
     }
 
-    mdpl::standardLibrary::String::StringIterator asciiStrFinishedIt = {asciiStr.s, 11, 11, 1};
-    retcode = mdpl::standardLibrary::String::isFinished(&asciiStrFinishedIt, &result);
+    MDPL_STDLIB_STRING_StringIterator asciiStrFinishedIt = {asciiStr.s, 11, 11, 1};
+    retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrFinishedIt, &result);
     if(retcode)
     {
         printf("failed test 7: Error during isFinished in asciiStrFinishedIt.\n");
@@ -731,7 +731,7 @@ void testString()
     uint32_t asciiExpectedCharacters[] = {'o', 'r', 'l', 'd'};
     for(size_t i = 0; i < 4; i++)
     {
-        retcode = mdpl::standardLibrary::String::isFinished(&asciiStrForwardIt, &result);
+        retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
         if(retcode)
         {
             printf("failed test 8: Error during isFinished in asciiStrForwardIt.\n");
@@ -742,7 +742,7 @@ void testString()
             printf("failed test 8: isFinished returned true too early for asciiStrForwardIt.\n");
             return;
         }
-        retcode = mdpl::standardLibrary::String::getCurrent(&asciiStrForwardIt, &c);
+        retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrForwardIt, &c);
         if(retcode)
         {
             printf("failed test 8: Error during getCurrent in asciiStrForwardIt.\n");
@@ -752,14 +752,14 @@ void testString()
         {
             printf("failed test 8: Incorrect character in asciiStrForwardIt.\n");
         }
-        retcode = mdpl::standardLibrary::String::next(&asciiStrForwardIt);
+        retcode = MDPL_STDLIB_STRING_next(&asciiStrForwardIt);
         if(retcode)
         {
             printf("failed test 8: Error during next in asciiStrForwardIt.\n");
             return;
         }
     }
-    retcode = mdpl::standardLibrary::String::isFinished(&asciiStrForwardIt, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
     if(retcode)
     {
         printf("failed test 8: Error during isFinished in asciiStrForwardIt.\n");
@@ -774,7 +774,7 @@ void testString()
     uint32_t nonAsciiExpectedCharacters[] = {'s', 't', 'r', 'a', 223, 'e', ' ', 948};
     for(size_t i = 0; i < 8; i++)
     {
-        retcode = mdpl::standardLibrary::String::isFinished(&nonAsciiStrIt, &result);
+        retcode = MDPL_STDLIB_STRING_isFinished(&nonAsciiStrIt, &result);
         if(retcode)
         {
             printf("failed test 8: Error during isFinished in nonAsciiStrIt.\n");
@@ -785,7 +785,7 @@ void testString()
             printf("failed test 8: isFinished returned true too early for nonAsciiStrIt.\n");
             return;
         }
-        retcode = mdpl::standardLibrary::String::getCurrent(&nonAsciiStrIt, &c);
+        retcode = MDPL_STDLIB_STRING_getCurrent(&nonAsciiStrIt, &c);
         if(retcode)
         {
             printf("failed test 8: Error during getCurrent in nonAsciiStrIt.\n");
@@ -796,14 +796,14 @@ void testString()
             printf("observed=%d expected=%d\n", c.codepoint, nonAsciiExpectedCharacters[i]);
             printf("failed test 8: Incorrect character in nonAsciiStrIt.\n");
         }
-        retcode = mdpl::standardLibrary::String::next(&nonAsciiStrIt);
+        retcode = MDPL_STDLIB_STRING_next(&nonAsciiStrIt);
         if(retcode)
         {
             printf("failed test 8: Error during next in nonAsciiStrIt.\n");
             return;
         }
     }
-    retcode = mdpl::standardLibrary::String::isFinished(&nonAsciiStrIt, &result);
+    retcode = MDPL_STDLIB_STRING_isFinished(&nonAsciiStrIt, &result);
     if(retcode)
     {
         printf("failed test 8: Error during isFinished in nonAsciiStrIt.\n");
@@ -818,8 +818,8 @@ void testString()
     //test 9: substrIndex
     size_t originalStartByte = asciiStr.s->startByte;
     size_t originalEndByte = asciiStr.s->endByte;
-    mdpl::standardLibrary::String::StringRef asciiIndexSubstr = {};
-    retcode = mdpl::standardLibrary::String::substrIndex(asciiStr, &asciiIndexSubstr, 3, 8);
+    MDPL_STDLIB_STRING_StringRef asciiIndexSubstr = {};
+    retcode = MDPL_STDLIB_STRING_substrIndex(asciiStr, &asciiIndexSubstr, 3, 8);
     if(retcode)
     {
         printf("failed test 9: error during substrIndex on asciiStr.\n");
@@ -883,8 +883,8 @@ void testString()
 
     originalStartByte = lowerCaseStr.s->startByte;
     originalEndByte = lowerCaseStr.s->endByte;
-    mdpl::standardLibrary::String::StringRef nonAsciiIndexSubstr = {};
-    retcode = mdpl::standardLibrary::String::substrIndex(lowerCaseStr, &nonAsciiIndexSubstr, 10, 16);
+    MDPL_STDLIB_STRING_StringRef nonAsciiIndexSubstr = {};
+    retcode = MDPL_STDLIB_STRING_substrIndex(lowerCaseStr, &nonAsciiIndexSubstr, 10, 16);
     if(retcode)
     {
         printf("failed test 9: error during substrIndex on lowerCaseStr.\n");
@@ -949,10 +949,10 @@ void testString()
     //test 10: substrIterator
     originalStartByte = asciiStr.s->startByte;
     originalEndByte = asciiStr.s->endByte;
-    mdpl::standardLibrary::String::StringRef asciiIteratorSubstr = {};
-    mdpl::standardLibrary::String::StringIterator asciiSubstrStartIt = {asciiStr.s, 3, 3, 1};
-    mdpl::standardLibrary::String::StringIterator asciiSubstrEndIt = {asciiStr.s, 8, 8, 1};
-    retcode = mdpl::standardLibrary::String::substrIterator(asciiStr, &asciiIteratorSubstr, asciiSubstrStartIt, asciiSubstrEndIt);
+    MDPL_STDLIB_STRING_StringRef asciiIteratorSubstr = {};
+    MDPL_STDLIB_STRING_StringIterator asciiSubstrStartIt = {asciiStr.s, 3, 3, 1};
+    MDPL_STDLIB_STRING_StringIterator asciiSubstrEndIt = {asciiStr.s, 8, 8, 1};
+    retcode = MDPL_STDLIB_STRING_substrIterator(asciiStr, &asciiIteratorSubstr, asciiSubstrStartIt, asciiSubstrEndIt);
     if(retcode)
     {
         printf("failed test 10: error during substrIterator on asciiStr.\n");
@@ -1016,10 +1016,10 @@ void testString()
     
     originalStartByte = lowerCaseStr.s->startByte;
     originalEndByte = lowerCaseStr.s->endByte;
-    mdpl::standardLibrary::String::StringRef nonAsciiIteratorSubstr = {};
-    mdpl::standardLibrary::String::StringIterator nonAsciiSubstrStartIt = {lowerCaseStr.s, 10, 10, 1};
-    mdpl::standardLibrary::String::StringIterator nonAsciiSubstrEndIt = {lowerCaseStr.s, 19, 16, 1};
-    retcode = mdpl::standardLibrary::String::substrIterator(lowerCaseStr, &nonAsciiIteratorSubstr, nonAsciiSubstrStartIt, nonAsciiSubstrEndIt);
+    MDPL_STDLIB_STRING_StringRef nonAsciiIteratorSubstr = {};
+    MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrStartIt = {lowerCaseStr.s, 10, 10, 1};
+    MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrEndIt = {lowerCaseStr.s, 19, 16, 1};
+    retcode = MDPL_STDLIB_STRING_substrIterator(lowerCaseStr, &nonAsciiIteratorSubstr, nonAsciiSubstrStartIt, nonAsciiSubstrEndIt);
     if(retcode)
     {
         printf("failed test 10: error during substrIterator on lowerCaseStr.\n");
@@ -1082,13 +1082,13 @@ void testString()
     }
 
     //test 11: string normalisation
-    retcode = mdpl::standardLibrary::String::internal::normaliseString(normaliseStr1.s);
+    retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(normaliseStr1.s);
     if(retcode)
     {
         printf("Failed test 11. Error during normalising normalise str 1.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::internal::normaliseString(normaliseStr2.s);
+    retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(normaliseStr2.s);
     if(retcode)
     {
         printf("Failed test 11. Error during normalising normalise str 2.\n");
@@ -1107,7 +1107,7 @@ void testString()
             return;
         }
     }
-    retcode = mdpl::standardLibrary::String::internal::normaliseString(asciiStr.s);
+    retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(asciiStr.s);
     if(retcode)
     {
         printf("Failed test 11. Error during normalising ascii string.\n");
@@ -1126,7 +1126,7 @@ void testString()
             return;
         }
     }
-    retcode = mdpl::standardLibrary::String::internal::normaliseString(emojiStr.s);
+    retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(emojiStr.s);
     if(retcode)
     {
         printf("Failed test 11. Error during normalising emoji string.\n");
@@ -1148,7 +1148,7 @@ void testString()
 
     //test 12: isAscii
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
-    retcode = mdpl::standardLibrary::String::isAscii(asciiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAscii(asciiStr, &result);
     if(retcode)
     {
         printf("Failed test 12. Error during isAscii call on ascii str.\n");
@@ -1159,13 +1159,13 @@ void testString()
         printf("Failed test 12. isAscii result is wrong for ascii str.\n");
         return;
     }
-    if(((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) == 0) || ((asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii) == 0))
+    if(((asciiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0) || ((asciiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0))
     {
         printf("Failed test 12. Flags incorrectly set for ascii str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(emojiStr);
-    retcode = mdpl::standardLibrary::String::isAscii(emojiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAscii(emojiStr, &result);
     if(retcode)
     {
         printf("Failed test 12. Error during isAscii call on emoji str.\n");
@@ -1176,13 +1176,13 @@ void testString()
         printf("Failed test 12. isAscii result is wrong for emoji str.\n");
         return;
     }
-    if(((emojiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) == 0) || ((emojiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii) != 0))
+    if(((emojiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0) || ((emojiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii) != 0))
     {
         printf("Failed test 12. Flags incorrectly set for emoji str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(normaliseStr1);
-    retcode = mdpl::standardLibrary::String::isAscii(normaliseStr1, &result);
+    retcode = MDPL_STDLIB_STRING_isAscii(normaliseStr1, &result);
     if(retcode)
     {
         printf("Failed test 12. Error during isAscii call on normalise str 1.\n");
@@ -1193,14 +1193,14 @@ void testString()
         printf("Failed test 12. isAscii result is wrong for normalise str 1.\n");
         return;
     }
-    if(((normaliseStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) == 0) || ((normaliseStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii) != 0))
+    if(((normaliseStr1.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0) || ((normaliseStr1.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii) != 0))
     {
         printf("Failed test 12. Flags incorrectly set for normalise str 1.\n");
         return;
     }
     //testing substrings on one function should guarentee it works for all as they share the same internat logic for handling substrings
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStr);
-    retcode = mdpl::standardLibrary::String::isAscii(lowerCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAscii(lowerCaseStr, &result);
     if(retcode)
     {
         printf("Failed test 12. Error during isAscii call on lower case str.\n");
@@ -1211,21 +1211,21 @@ void testString()
         printf("Failed test 12. isAscii result is wrong for lower case str.\n");
         return;
     }
-    if(((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) == 0) || ((lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii) != 0))
+    if(((lowerCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0) || ((lowerCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii) != 0))
     {
         printf("Failed test 12. Flags incorrectly set for lower case str.\n");
-        printf("%d %d\n", (lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii), (lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii));
+        printf("%d %d\n", (lowerCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii), (lowerCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii));
         printf("%d %d\n", (lowerCaseStr.s->flagsSet), (lowerCaseStr.s->flagsData));
         return;
     }
-    mdpl::standardLibrary::String::StringRef lowerCaseStrAsciiSubstr = {};
-    if(mdpl::standardLibrary::String::substrIndex(lowerCaseStr, &lowerCaseStrAsciiSubstr, 2, 6))
+    MDPL_STDLIB_STRING_StringRef lowerCaseStrAsciiSubstr = {};
+    if(MDPL_STDLIB_STRING_substrIndex(lowerCaseStr, &lowerCaseStrAsciiSubstr, 2, 6))
     {
         printf("Failed test 12. Error during substrIndex.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStrAsciiSubstr);
-    retcode = mdpl::standardLibrary::String::isAscii(lowerCaseStrAsciiSubstr, &result);
+    retcode = MDPL_STDLIB_STRING_isAscii(lowerCaseStrAsciiSubstr, &result);
     if(retcode)
     {
         printf("Failed test 12. Error during isAscii call on lower case str.\n");
@@ -1236,7 +1236,7 @@ void testString()
         printf("Failed test 12. isAscii result is wrong for lower case str.\n");
         return;
     }
-    if(((lowerCaseStrAsciiSubstr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAscii) == 0) || ((lowerCaseStrAsciiSubstr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAscii) == 0))
+    if(((lowerCaseStrAsciiSubstr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0) || ((lowerCaseStrAsciiSubstr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii) == 0))
     {
         printf("Failed test 12. Flags incorrectly set for lower case str.\n");
         return;
@@ -1245,7 +1245,7 @@ void testString()
     
     //test 13: isValidDecimal
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(validDecimalStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(validDecimalStr, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid decimal str.\n");
@@ -1256,13 +1256,13 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for valid decimal str.\n");
         return;
     }
-    if(((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0))
+    if(((validDecimalStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((validDecimalStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0))
     {
         printf("Failed test 13. Flags incorrectly set for valid decimal str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(validIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(validIntStr, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid int str.\n");
@@ -1273,13 +1273,13 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for valid int str.\n");
         return;
     }
-    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) != 0))
+    if(((validIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((validIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) != 0))
     {
         printf("Failed test 13. Flags incorrectly set for valid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidIntStr, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid int str.\n");
@@ -1290,13 +1290,13 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for invalid int str.\n");
         return;
     }
-    if(((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) != 0))
+    if(((invalidIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((invalidIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) != 0))
     {
         printf("Failed test 13. Flags incorrectly set for invalid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(validFloatStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(validFloatStr, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid float str.\n");
@@ -1307,13 +1307,13 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for valid float str.\n");
         return;
     }
-    if(((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) != 0))
+    if(((validFloatStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((validFloatStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) != 0))
     {
         printf("Failed test 13. Flags incorrectly set for valid float str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidFloatStr1, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidFloatStr1, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid float str 1.\n");
@@ -1324,13 +1324,13 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for invalid float str 1.\n");
         return;
     }
-    if(((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) != 0))
+    if(((invalidFloatStr1.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((invalidFloatStr1.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) != 0))
     {
         printf("Failed test 13. Flags incorrectly set for invalid float str 1.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
-    retcode = mdpl::standardLibrary::String::isValidDecimal(invalidFloatStr2, &result);
+    retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidFloatStr2, &result);
     if(retcode)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid float str 2.\n");
@@ -1341,7 +1341,7 @@ void testString()
         printf("Failed test 13. isValidDecimal result is wrong for invalid float str 2.\n");
         return;
     }
-    if(((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidDecimal) == 0) || ((invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidDecimal) != 0))
+    if(((invalidFloatStr2.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) == 0) || ((invalidFloatStr2.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal) != 0))
     {
         printf("Failed test 13. Flags incorrectly set for invalid float str 2.\n");
         return;
@@ -1349,7 +1349,7 @@ void testString()
 
     //test 14: isValidInt
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
-    retcode = mdpl::standardLibrary::String::isValidInt(validDecimalStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(validDecimalStr, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on valid decimal str.\n");
@@ -1360,13 +1360,13 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for valid decimal str.\n");
         return;
     }
-    if(((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0))
+    if(((validDecimalStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((validDecimalStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0))
     {
         printf("Failed test 14. Flags incorrectly set for valid decimal str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
-    retcode = mdpl::standardLibrary::String::isValidInt(validIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(validIntStr, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on valid int str.\n");
@@ -1377,13 +1377,13 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for valid int str.\n");
         return;
     }
-    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0))
+    if(((validIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((validIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0))
     {
         printf("Failed test 14. Flags incorrectly set for valid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
-    retcode = mdpl::standardLibrary::String::isValidInt(invalidIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(invalidIntStr, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on invalid int str.\n");
@@ -1394,13 +1394,13 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for invalid int str.\n");
         return;
     }
-    if(((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) != 0))
+    if(((invalidIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((invalidIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) != 0))
     {
         printf("Failed test 14. Flags incorrectly set for invalid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
-    retcode = mdpl::standardLibrary::String::isValidInt(validFloatStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(validFloatStr, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on valid float str.\n");
@@ -1411,13 +1411,13 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for valid float str.\n");
         return;
     }
-    if(((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) != 0))
+    if(((validFloatStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((validFloatStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) != 0))
     {
         printf("Failed test 14. Flags incorrectly set for valid float str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
-    retcode = mdpl::standardLibrary::String::isValidInt(invalidFloatStr1, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(invalidFloatStr1, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on invalid float str 1.\n");
@@ -1428,13 +1428,13 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for invalid float str 1.\n");
         return;
     }
-    if(((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) != 0))
+    if(((invalidFloatStr1.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((invalidFloatStr1.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) != 0))
     {
         printf("Failed test 14. Flags incorrectly set for invalid float str 1.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
-    retcode = mdpl::standardLibrary::String::isValidInt(invalidFloatStr2, &result);
+    retcode = MDPL_STDLIB_STRING_isValidInt(invalidFloatStr2, &result);
     if(retcode)
     {
         printf("Failed test 14. Error during isValidInt call on invalid float str 2.\n");
@@ -1445,7 +1445,7 @@ void testString()
         printf("Failed test 14. isValidInt result is wrong for invalid float str 2.\n");
         return;
     }
-    if(((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidInt) == 0) || ((invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidInt) != 0))
+    if(((invalidFloatStr2.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt) == 0) || ((invalidFloatStr2.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt) != 0))
     {
         printf("Failed test 14. Flags incorrectly set for invalid float str 2.\n");
         return;
@@ -1453,7 +1453,7 @@ void testString()
 
     //test 15: isValidFloat
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
-    retcode = mdpl::standardLibrary::String::isValidFloat(validDecimalStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(validDecimalStr, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on valid decimal str.\n");
@@ -1464,13 +1464,13 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for valid decimal str.\n");
         return;
     }
-    if(((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0))
+    if(((validDecimalStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((validDecimalStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0))
     {
         printf("Failed test 15. Flags incorrectly set for valid decimal str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
-    retcode = mdpl::standardLibrary::String::isValidFloat(validIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(validIntStr, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on valid int str.\n");
@@ -1481,13 +1481,13 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for valid int str.\n");
         return;
     }
-    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0))
+    if(((validIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((validIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0))
     {
         printf("Failed test 15. Flags incorrectly set for valid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
-    retcode = mdpl::standardLibrary::String::isValidFloat(invalidIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(invalidIntStr, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid int str.\n");
@@ -1498,13 +1498,13 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for invalid int str.\n");
         return;
     }
-    if(((invalidIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((invalidIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) != 0))
+    if(((invalidIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((invalidIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) != 0))
     {
         printf("Failed test 15. Flags incorrectly set for invalid int str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
-    retcode = mdpl::standardLibrary::String::isValidFloat(validFloatStr, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(validFloatStr, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on valid float str.\n");
@@ -1515,13 +1515,13 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for valid float str.\n");
         return;
     }
-    if(((validFloatStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((validFloatStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0))
+    if(((validFloatStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((validFloatStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0))
     {
         printf("Failed test 15. Flags incorrectly set for valid float str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
-    retcode = mdpl::standardLibrary::String::isValidFloat(invalidFloatStr1, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(invalidFloatStr1, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid float str 1.\n");
@@ -1532,13 +1532,13 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for invalid float str 1.\n");
         return;
     }
-    if(((invalidFloatStr1.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((invalidFloatStr1.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) != 0))
+    if(((invalidFloatStr1.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((invalidFloatStr1.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) != 0))
     {
         printf("Failed test 15. Flags incorrectly set for invalid float str 1.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
-    retcode = mdpl::standardLibrary::String::isValidFloat(invalidFloatStr2, &result);
+    retcode = MDPL_STDLIB_STRING_isValidFloat(invalidFloatStr2, &result);
     if(retcode)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid float str 2.\n");
@@ -1549,7 +1549,7 @@ void testString()
         printf("Failed test 15. isValidFloat result is wrong for invalid float str 2.\n");
         return;
     }
-    if(((invalidFloatStr2.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isValidFloat) == 0) || ((invalidFloatStr2.s->flagsData & mdpl::standardLibrary::String::StringFlags::isValidFloat) != 0))
+    if(((invalidFloatStr2.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat) == 0) || ((invalidFloatStr2.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat) != 0))
     {
         printf("Failed test 15. Flags incorrectly set for invalid float str 2.\n");
         return;
@@ -1557,37 +1557,37 @@ void testString()
 
     //test 16: isLower
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStr);
-    retcode = mdpl::standardLibrary::String::isLower(lowerCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isLower(lowerCaseStr, &result);
     if(result == false)
     {
         printf("Failed test 16. isLower is incorrect for lower case str.\n");
         return;
     }
-    if(((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) == 0) || ((lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower) == 0))
+    if(((lowerCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isLower) == 0) || ((lowerCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isLower) == 0))
     {
         printf("Failed test 16. isLower incorrectly set flags for lower case str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(upperCaseStr);
-    retcode = mdpl::standardLibrary::String::isLower(upperCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isLower(upperCaseStr, &result);
     if(result == true)
     {
         printf("Failed test 16. isLower is incorrect for upper case str.\n");
         return;
     }
-    if(((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) == 0) || ((upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower) != 0))
+    if(((upperCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isLower) == 0) || ((upperCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isLower) != 0))
     {
         printf("Failed test 16. isLower incorrectly set flags for upper case str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(mixedCaseStr);
-    retcode = mdpl::standardLibrary::String::isLower(mixedCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isLower(mixedCaseStr, &result);
     if(result == true)
     {
         printf("Failed test 16. isLower is incorrect for mixed case str.\n");
         return;
     }
-    if(((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isLower) == 0) || ((mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isLower) != 0))
+    if(((mixedCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isLower) == 0) || ((mixedCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isLower) != 0))
     {
         printf("Failed test 16. isLower incorrectly set flags for mixed case str.\n");
         return;
@@ -1595,37 +1595,37 @@ void testString()
 
     //test 17: isUpper
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStr);
-    retcode = mdpl::standardLibrary::String::isUpper(lowerCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpper(lowerCaseStr, &result);
     if(result == true)
     {
         printf("Failed test 17. isUpper is incorrect for lower case str.\n");
         return;
     }
-    if(((lowerCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) == 0) || ((lowerCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper) != 0))
+    if(((lowerCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isUpper) == 0) || ((lowerCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isUpper) != 0))
     {
         printf("Failed test 17. isUpper incorrectly set flags for lower case str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(upperCaseStr);
-    retcode = mdpl::standardLibrary::String::isUpper(upperCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpper(upperCaseStr, &result);
     if(result == false)
     {
         printf("Failed test 17. isUpper is incorrect for upper case str.\n");
         return;
     }
-    if(((upperCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) == 0) || ((upperCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper) == 0))
+    if(((upperCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isUpper) == 0) || ((upperCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isUpper) == 0))
     {
         printf("Failed test 17. isUpper incorrectly set flags for upper case str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(mixedCaseStr);
-    retcode = mdpl::standardLibrary::String::isUpper(mixedCaseStr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpper(mixedCaseStr, &result);
     if(result == true)
     {
         printf("Failed test 17. isUpper is incorrect for mixed case str.\n");
         return;
     }
-    if(((mixedCaseStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isUpper) == 0) || ((mixedCaseStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isUpper) != 0))
+    if(((mixedCaseStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isUpper) == 0) || ((mixedCaseStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isUpper) != 0))
     {
         printf("Failed test 17. isUpper incorrectly set flags for mixed case str.\n");
         return;
@@ -1638,30 +1638,30 @@ void testString()
     utf8proc_ssize_t whiteSpaceCodepointsLength = sizeof(whiteSpaceCodepoints) / sizeof(utf8proc_int32_t);
     utf8proc_ssize_t utf8proc_result = utf8proc_reencode(whiteSpaceCodepoints, whiteSpaceCodepointsLength, static_cast<utf8proc_option_t>(0));
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 18. %s.\n", utf8proc_errmsg(utf8proc_result)); }
-    mdpl::standardLibrary::String::StringRef whitespaceStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&whitespaceStr, reinterpret_cast<const char*>(whiteSpaceCodepoints), strlen(reinterpret_cast<const char*>(whiteSpaceCodepoints)), 19);
+    MDPL_STDLIB_STRING_StringRef whitespaceStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&whitespaceStr, reinterpret_cast<const char*>(whiteSpaceCodepoints), strlen(reinterpret_cast<const char*>(whiteSpaceCodepoints)), 19);
     if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(whitespaceStr);
-    retcode = mdpl::standardLibrary::String::isWhiteSpace(whitespaceStr, &result);
+    retcode = MDPL_STDLIB_STRING_isWhiteSpace(whitespaceStr, &result);
     if(result == false)
     {
         printf("Failed test 18. isWhiteSpace is incorrect for white space str.\n");
         return;
     }
-    if(((whitespaceStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) == 0) || ((whitespaceStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) == 0))
+    if(((whitespaceStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace) == 0) || ((whitespaceStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace) == 0))
     {
         printf("Failed test 18. isWhiteSpace incorrectly set flags for white space str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
-    retcode = mdpl::standardLibrary::String::isWhiteSpace(asciiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isWhiteSpace(asciiStr, &result);
     if(result == true)
     {
         printf("Failed test 18. isWhiteSpace is incorrect for ascii str.\n");
         return;
     }
-    if(((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) == 0) || ((asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isWhiteSpace) != 0))
+    if(((asciiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace) == 0) || ((asciiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace) != 0))
     {
         printf("Failed test 18. isWhiteSpace incorrectly set flags for ascii str.\n");
         return;
@@ -1673,30 +1673,30 @@ void testString()
     utf8proc_ssize_t unprintableCodepointsLength = sizeof(unprintableCodepoints) / sizeof(utf8proc_int32_t);
     utf8proc_result = utf8proc_reencode(unprintableCodepoints, unprintableCodepointsLength, static_cast<utf8proc_option_t>(0));
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 19. %s.\n", utf8proc_errmsg(utf8proc_result)); }
-    mdpl::standardLibrary::String::StringRef unprintableStr = {};
-    retcode = mdpl::standardLibrary::String::createStringRefFromCStr(&unprintableStr, reinterpret_cast<const char*>(unprintableCodepoints), strlen(reinterpret_cast<const char*>(unprintableCodepoints)), 19);
+    MDPL_STDLIB_STRING_StringRef unprintableStr = {};
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&unprintableStr, reinterpret_cast<const char*>(unprintableCodepoints), strlen(reinterpret_cast<const char*>(unprintableCodepoints)), 19);
     if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(unprintableStr);
-    retcode = mdpl::standardLibrary::String::isPrintable(unprintableStr, &result);
+    retcode = MDPL_STDLIB_STRING_isPrintable(unprintableStr, &result);
     if(result == true)
     {
         printf("Failed test 19. isPrintable is incorrect for white space str.\n");
         return;
     }
-    if(((unprintableStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isPrintable) == 0) || ((unprintableStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isPrintable) != 0))
+    if(((unprintableStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isPrintable) == 0) || ((unprintableStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isPrintable) != 0))
     {
         printf("Failed test 19. isPrintable incorrectly set flags for white space str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
-    retcode = mdpl::standardLibrary::String::isPrintable(asciiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isPrintable(asciiStr, &result);
     if(result == false)
     {
         printf("Failed test 19. isPrintable is incorrect for ascii str.\n");
         return;
     }
-    if(((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isPrintable) == 0) || ((asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isPrintable) == 0))
+    if(((asciiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isPrintable) == 0) || ((asciiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isPrintable) == 0))
     {
         printf("Failed test 19. isPrintable incorrectly set flags for ascii str.\n");
         return;
@@ -1704,61 +1704,61 @@ void testString()
 
     //test 20: isAlpha
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
-    retcode = mdpl::standardLibrary::String::isAlpha(asciiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlpha(asciiStr, &result);
     if(result == true)
     {
         printf("Failed test 20. isAlpha is incorrect for ascii str.\n");
         return;
     }
-    if(((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) != 0))
+    if(((asciiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0) || ((asciiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha) != 0))
     {
         printf("Failed test 20. isAlpha incorrectly set flags for ascii str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(alphaStr);
-    retcode = mdpl::standardLibrary::String::isAlpha(alphaStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlpha(alphaStr, &result);
     if(result == false)
     {
         printf("Failed test 20. isAlpha is incorrect for alpha str.\n");
         return;
     }
-    if(((alphaStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((alphaStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0))
+    if(((alphaStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0) || ((alphaStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0))
     {
         printf("Failed test 20. isAlpha incorrectly set flags for alpha str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(alphaNumStr);
-    retcode = mdpl::standardLibrary::String::isAlpha(alphaNumStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlpha(alphaNumStr, &result);
     if(result == true)
     {
         printf("Failed test 20. isAlpha is incorrect for alpha numeric str.\n");
         return;
     }
-    if(((alphaNumStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((alphaNumStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) != 0))
+    if(((alphaNumStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0) || ((alphaNumStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha) != 0))
     {
         printf("Failed test 20. isAlpha incorrectly set flags for alpha numeric str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
-    retcode = mdpl::standardLibrary::String::isAlpha(validDecimalStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlpha(validDecimalStr, &result);
     if(result == true)
     {
         printf("Failed test 20. isAlpha is incorrect for valid decimal str.\n");
         return;
     }
-    if(((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) != 0))
+    if(((validDecimalStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0) || ((validDecimalStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha) != 0))
     {
         printf("Failed test 20. isAlpha incorrectly set flags for valid decimal str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
-    retcode = mdpl::standardLibrary::String::isAlpha(validIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlpha(validIntStr, &result);
     if(result == true)
     {
         printf("Failed test 20. isAlpha is incorrect for valid int str.\n");
         return;
     }
-    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlpha) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlpha) != 0))
+    if(((validIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) == 0) || ((validIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha) != 0))
     {
         printf("Failed test 20. isAlpha incorrectly set flags for valid int str.\n");
         return;
@@ -1766,68 +1766,68 @@ void testString()
 
     //test 21: isAlphaNumeric
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
-    retcode = mdpl::standardLibrary::String::isAlphaNumeric(asciiStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumeric(asciiStr, &result);
     if(result == true)
     {
         printf("Failed test 21. isAlphaNumeric is incorrect for ascii str.\n");
         return;
     }
-    if(((asciiStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((asciiStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) != 0))
+    if(((asciiStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0) || ((asciiStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) != 0))
     {
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for ascii str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(alphaStr);
-    retcode = mdpl::standardLibrary::String::isAlphaNumeric(alphaStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumeric(alphaStr, &result);
     if(result == false)
     {
         printf("Failed test 21. isAlphaNumeric is incorrect for alpha str.\n");
         return;
     }
-    if(((alphaStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((alphaStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0))
+    if(((alphaStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0) || ((alphaStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0))
     {
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for alpha str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(alphaNumStr);
-    retcode = mdpl::standardLibrary::String::isAlphaNumeric(alphaNumStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumeric(alphaNumStr, &result);
     if(result == false)
     {
         printf("Failed test 21. isAlphaNumeric is incorrect for alpha numeric str.\n");
         return;
     }
-    if(((alphaNumStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((alphaNumStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0))
+    if(((alphaNumStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0) || ((alphaNumStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0))
     {
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for alpha numeric str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
-    retcode = mdpl::standardLibrary::String::isAlphaNumeric(validDecimalStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumeric(validDecimalStr, &result);
     if(result == false)
     {
         printf("Failed test 21. isAlphaNumeric is incorrect for valid decimal str.\n");
         return;
     }
-    if(((validDecimalStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((validDecimalStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0))
+    if(((validDecimalStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0) || ((validDecimalStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0))
     {
         printf("Failed test 21. isAlphaNumeric incorrectly set flags for valid decimal str.\n");
         return;
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
-    retcode = mdpl::standardLibrary::String::isAlphaNumeric(validIntStr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumeric(validIntStr, &result);
     if(result == true)
     {
         printf("Failed test 20. isAlphaNumeric is incorrect for valid int str.\n");
         return;
     }
-    if(((validIntStr.s->flagsSet & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) == 0) || ((validIntStr.s->flagsData & mdpl::standardLibrary::String::StringFlags::isAlphaNumeric) != 0))
+    if(((validIntStr.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) == 0) || ((validIntStr.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) != 0))
     {
         printf("Failed test 20. isAlphaNumeric incorrectly set flags for valid int str.\n");
         return;
     }
 
     //test 22: startsWith
-    retcode = mdpl::standardLibrary::String::startsWith(lowerCaseStr, lowerCasePrefixStr, &result);
+    retcode = MDPL_STDLIB_STRING_startsWith(lowerCaseStr, lowerCasePrefixStr, &result);
     if(retcode)
     {
         printf("Failed test 22. error during startsWith on lowerCaseStr with lowerCasePrefixStr.\n");
@@ -1838,7 +1838,7 @@ void testString()
         printf("Failed test 22. lowerCaseStr should start with lowerCasePrefixStr but does not.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::startsWith(lowerCaseStr, upperCasePrefixStr, &result);
+    retcode = MDPL_STDLIB_STRING_startsWith(lowerCaseStr, upperCasePrefixStr, &result);
     if(retcode)
     {
         printf("Failed test 22. error during startsWith on lowerCaseStr with upperCasePrefixStr.\n");
@@ -1849,7 +1849,7 @@ void testString()
         printf("Failed test 22. lowerCaseStr should not start with upperCasePrefixStr but does.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::startsWith(upperCaseStr, lowerCasePrefixStr, &result);
+    retcode = MDPL_STDLIB_STRING_startsWith(upperCaseStr, lowerCasePrefixStr, &result);
     if(retcode)
     {
         printf("Failed test 22. error during startsWith on upperCaseStr with lowerCasePrefixStr.\n");
@@ -1860,7 +1860,7 @@ void testString()
         printf("Failed test 22. upperCaseStr should not start with lowerCasePrefixStr but does.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::startsWith(upperCaseStr, upperCasePrefixStr, &result);
+    retcode = MDPL_STDLIB_STRING_startsWith(upperCaseStr, upperCasePrefixStr, &result);
     if(retcode)
     {
         printf("Failed test 22. error during startsWith on upperCaseStr with upperCasePrefixStr.\n");
@@ -1873,7 +1873,7 @@ void testString()
     }
 
     //test 23: endsWith
-    retcode = mdpl::standardLibrary::String::endsWith(lowerCaseStr, lowerCaseSuffixStr, &result);
+    retcode = MDPL_STDLIB_STRING_endsWith(lowerCaseStr, lowerCaseSuffixStr, &result);
     if(retcode)
     {
         printf("Failed test 23. error during endsWith on lowerCaseStr with lowerCaseSuffixStr.\n");
@@ -1884,7 +1884,7 @@ void testString()
         printf("Failed test 23. lowerCaseStr should start with lowerCaseSuffixStr but does not.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::endsWith(lowerCaseStr, upperCaseSuffixStr, &result);
+    retcode = MDPL_STDLIB_STRING_endsWith(lowerCaseStr, upperCaseSuffixStr, &result);
     if(retcode)
     {
         printf("Failed test 23. error during endsWith on lowerCaseStr with upperCaseSuffixStr.\n");
@@ -1895,7 +1895,7 @@ void testString()
         printf("Failed test 23. lowerCaseStr should not start with upperCaseSuffixStr but does.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::endsWith(upperCaseStr, lowerCaseSuffixStr, &result);
+    retcode = MDPL_STDLIB_STRING_endsWith(upperCaseStr, lowerCaseSuffixStr, &result);
     if(retcode)
     {
         printf("Failed test 23. error during endsWith on upperCaseStr with lowerCaseSuffixStr.\n");
@@ -1905,7 +1905,7 @@ void testString()
     {
         return;
     }
-    retcode = mdpl::standardLibrary::String::endsWith(upperCaseStr, upperCaseSuffixStr, &result);
+    retcode = MDPL_STDLIB_STRING_endsWith(upperCaseStr, upperCaseSuffixStr, &result);
     if(retcode)
     {
         printf("Failed test 23. error during endsWith on upperCaseStr with upperCaseSuffixStr.\n");
@@ -1918,10 +1918,10 @@ void testString()
     }
 
     //setup for test 24-39
-    mdpl::standardLibrary::String::StringIterator it = {};
+    MDPL_STDLIB_STRING_StringIterator it = {};
 
     //test 24: frontForwardsIterator
-    retcode = mdpl::standardLibrary::String::frontForwardsIterator(lowerCaseStr, &it);
+    retcode = MDPL_STDLIB_STRING_frontForwardsIterator(lowerCaseStr, &it);
     if(retcode)
     {
         printf("Failed test 24. error during frontForwardsIterator.\n");
@@ -1949,7 +1949,7 @@ void testString()
     }
 
     //test 25: backReverseIterator
-    retcode = mdpl::standardLibrary::String::backReverseIterator(lowerCaseStr, &it);
+    retcode = MDPL_STDLIB_STRING_backReverseIterator(lowerCaseStr, &it);
     if(retcode)
     {
         printf("Failed test 25. error during backReverseIterator.\n");
@@ -1977,19 +1977,19 @@ void testString()
     }
 
     //setups for test 26-41
-    mdpl::standardLibrary::String::Character lowerCaseAsciiChr = {'h'};
-    mdpl::standardLibrary::String::Character upperCaseAsciiChr = {'H'};
-    mdpl::standardLibrary::String::Character lowerCaseUnicodeChr = {954};
-    mdpl::standardLibrary::String::Character upperCaseUnicodeChr = {922};
-    mdpl::standardLibrary::String::Character numberChr = {'1'};
-    mdpl::standardLibrary::String::Character dashChr = {'-'};
-    mdpl::standardLibrary::String::Character dotChr = {'.'};
-    mdpl::standardLibrary::String::Character spaceChr = {' '};
-    mdpl::standardLibrary::String::Character newLineChr = {'\n'};
-    mdpl::standardLibrary::String::Character nullChr = {'\0'};
+    MDPL_STDLIB_STRING_Character lowerCaseAsciiChr = {'h'};
+    MDPL_STDLIB_STRING_Character upperCaseAsciiChr = {'H'};
+    MDPL_STDLIB_STRING_Character lowerCaseUnicodeChr = {954};
+    MDPL_STDLIB_STRING_Character upperCaseUnicodeChr = {922};
+    MDPL_STDLIB_STRING_Character numberChr = {'1'};
+    MDPL_STDLIB_STRING_Character dashChr = {'-'};
+    MDPL_STDLIB_STRING_Character dotChr = {'.'};
+    MDPL_STDLIB_STRING_Character spaceChr = {' '};
+    MDPL_STDLIB_STRING_Character newLineChr = {'\n'};
+    MDPL_STDLIB_STRING_Character nullChr = {'\0'};
 
     //test 26: isLowerChr
-    retcode = mdpl::standardLibrary::String::isLowerChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isLowerChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 26. error durng isLowerChr with lowerCaseAsciiChr.\n");
@@ -2000,7 +2000,7 @@ void testString()
         printf("Failed test 26. isLowerChr incorrect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isLowerChr(&upperCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isLowerChr(&upperCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 26. error durng isLowerChr with upperCaseAsciiChr.\n");
@@ -2011,7 +2011,7 @@ void testString()
         printf("Failed test 26. isLowerChr incorrect for upperCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isLowerChr(&lowerCaseUnicodeChr, &result);
+    retcode = MDPL_STDLIB_STRING_isLowerChr(&lowerCaseUnicodeChr, &result);
     if(retcode)
     {
         printf("Failed test 26. error durng isLowerChr with lowerCaseUnicodeChr.\n");
@@ -2022,7 +2022,7 @@ void testString()
         printf("Failed test 26. isLowerChr incorrect for lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isLowerChr(&upperCaseUnicodeChr, &result);
+    retcode = MDPL_STDLIB_STRING_isLowerChr(&upperCaseUnicodeChr, &result);
     if(retcode)
     {
         printf("Failed test 26. error durng isLowerChr with upperCaseUnicodeChr.\n");
@@ -2033,7 +2033,7 @@ void testString()
         printf("Failed test 26. isUpperChr isLowerChr for upperCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isLowerChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isLowerChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 26. error durng isLowerChr with dashChr.\n");
@@ -2046,7 +2046,7 @@ void testString()
     }
 
     //test 27: isUpperChr
-    retcode = mdpl::standardLibrary::String::isUpperChr(&upperCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpperChr(&upperCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 27. error durng isUpperChr with upperCaseAsciiChr.\n");
@@ -2057,7 +2057,7 @@ void testString()
         printf("Failed test 27. isUpperChr incorrect for upperCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isUpperChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpperChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 27. error durng isUpperChr with lowerCaseAsciiChr.\n");
@@ -2068,7 +2068,7 @@ void testString()
         printf("Failed test 27. isUpperChr incorrect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isUpperChr(&upperCaseUnicodeChr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpperChr(&upperCaseUnicodeChr, &result);
     if(retcode)
     {
         printf("Failed test 27. error durng isUpperChr with upperCaseUnicodeChr.\n");
@@ -2079,7 +2079,7 @@ void testString()
         printf("Failed test 27. isUpperChr incorrect for upperCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isUpperChr(&lowerCaseUnicodeChr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpperChr(&lowerCaseUnicodeChr, &result);
     if(retcode)
     {
         printf("Failed test 27. error durng isUpperChr with lowerCaseUnicodeChr.\n");
@@ -2090,7 +2090,7 @@ void testString()
         printf("Failed test 27. isUpperChr incorrect for lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isUpperChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isUpperChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 27. error durng isUpperChr with dashChr.\n");
@@ -2103,7 +2103,7 @@ void testString()
     }
     
     //test 28: isWhiteSpaceChr
-    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&spaceChr, &result);
+    retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&spaceChr, &result);
     if(retcode)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with spaceChr.\n");
@@ -2114,7 +2114,7 @@ void testString()
         printf("Failed test 28. isWhiteSpaceChr incorrect for spaceChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&newLineChr, &result);
+    retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&newLineChr, &result);
     if(retcode)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with newLineChr.\n");
@@ -2125,7 +2125,7 @@ void testString()
         printf("Failed test 28. isWhiteSpaceChr incorrect for newLineChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isWhiteSpaceChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with lowerCaseAsciiChr.\n");
@@ -2138,7 +2138,7 @@ void testString()
     }
 
     //test 29: isPrintableChr
-    retcode = mdpl::standardLibrary::String::isPrintableChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isPrintableChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 29. error durng isPrintableChr with lowerCaseAsciiChr.\n");
@@ -2149,7 +2149,7 @@ void testString()
         printf("Failed test 29. isPrintableChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isPrintableChr(&nullChr, &result);
+    retcode = MDPL_STDLIB_STRING_isPrintableChr(&nullChr, &result);
     if(retcode)
     {
         printf("Failed test 29. error durng isPrintableChr with nullChr.\n");
@@ -2162,7 +2162,7 @@ void testString()
     }
 
     //test 30: isAsciiChr
-    retcode = mdpl::standardLibrary::String::isAsciiChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAsciiChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 30. error durng isAsciiChr with lowerCaseAsciiChr.\n");
@@ -2173,7 +2173,7 @@ void testString()
         printf("Failed test 30. isAsciiChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isAsciiChr(&lowerCaseUnicodeChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAsciiChr(&lowerCaseUnicodeChr, &result);
     if(retcode)
     {
         printf("Failed test 30. error durng isAsciiChr with lowerCaseUnicodeChr.\n");
@@ -2186,7 +2186,7 @@ void testString()
     }
 
     //test 31: isDecimalChr
-    retcode = mdpl::standardLibrary::String::isDecimalChr(&numberChr, &result);
+    retcode = MDPL_STDLIB_STRING_isDecimalChr(&numberChr, &result);
     if(retcode)
     {
         printf("Failed test 31. error durng isDecimalChr with numberChr.\n");
@@ -2197,7 +2197,7 @@ void testString()
         printf("Failed test 31. isDecimalChr incorect for numberChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isDecimalChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isDecimalChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 31. error durng isDecimalChr with dashChr.\n");
@@ -2208,7 +2208,7 @@ void testString()
         printf("Failed test 31. isDecimalChr incorect for dashChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isDecimalChr(&dotChr, &result);
+    retcode = MDPL_STDLIB_STRING_isDecimalChr(&dotChr, &result);
     if(retcode)
     {
         printf("Failed test 31. error durng isDecimalChr with dotChr.\n");
@@ -2219,7 +2219,7 @@ void testString()
         printf("Failed test 31. isDecimalChr incorect for dotChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isDecimalChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isDecimalChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 31. error durng isDecimalChr with lowerCaseAsciiChr.\n");
@@ -2232,7 +2232,7 @@ void testString()
     }
 
     //test 32: isIntChr
-    retcode = mdpl::standardLibrary::String::isIntChr(&numberChr, &result);
+    retcode = MDPL_STDLIB_STRING_isIntChr(&numberChr, &result);
     if(retcode)
     {
         printf("Failed test 32. error durng isIntChr with numberChr.\n");
@@ -2243,7 +2243,7 @@ void testString()
         printf("Failed test 32. isIntChr incorect for numberChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isIntChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isIntChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 32. error durng isIntChr with dashChr.\n");
@@ -2254,7 +2254,7 @@ void testString()
         printf("Failed test 32. isIntChr incorect for dashChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isIntChr(&dotChr, &result);
+    retcode = MDPL_STDLIB_STRING_isIntChr(&dotChr, &result);
     if(retcode)
     {
         printf("Failed test 32. error durng isIntChr with dotChr.\n");
@@ -2265,7 +2265,7 @@ void testString()
         printf("Failed test 32. isIntChr incorect for dotChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isIntChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isIntChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 32. error durng isIntChr with lowerCaseAsciiChr.\n");
@@ -2278,7 +2278,7 @@ void testString()
     }
 
     //test 33: isFloatChr
-    retcode = mdpl::standardLibrary::String::isFloatChr(&numberChr, &result);
+    retcode = MDPL_STDLIB_STRING_isFloatChr(&numberChr, &result);
     if(retcode)
     {
         printf("Failed test 33. error durng isFloatChr with numberChr.\n");
@@ -2289,7 +2289,7 @@ void testString()
         printf("Failed test 33. isFloatChr incorect for numberChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isFloatChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isFloatChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 33. error durng isFloatChr with dashChr.\n");
@@ -2300,7 +2300,7 @@ void testString()
         printf("Failed test 33. isFloatChr incorect for dashChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isFloatChr(&dotChr, &result);
+    retcode = MDPL_STDLIB_STRING_isFloatChr(&dotChr, &result);
     if(retcode)
     {
         printf("Failed test 33. error durng isFloatChr with dotChr.\n");
@@ -2311,7 +2311,7 @@ void testString()
         printf("Failed test 33. isFloatChr incorect for dotChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isFloatChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isFloatChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 33. error durng isFloatChr with lowerCaseAsciiChr.\n");
@@ -2324,7 +2324,7 @@ void testString()
     }
 
     //test 34: isAlphaChr
-    retcode = mdpl::standardLibrary::String::isAlphaChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 34. error durng isAlphaChr with lowerCaseAsciiChr.\n");
@@ -2335,7 +2335,7 @@ void testString()
         printf("Failed test 34. isAlphaChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isAlphaChr(&numberChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaChr(&numberChr, &result);
     if(retcode)
     {
         printf("Failed test 34. error durng isAlphaChr with numberChr.\n");
@@ -2346,7 +2346,7 @@ void testString()
         printf("Failed test 34. isAlphaChr incorect for numberChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isAlphaChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 34. error durng isAlphaChr with dashChr.\n");
@@ -2359,7 +2359,7 @@ void testString()
     }
 
     //test 35: isAlphaNumericChr
-    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with lowerCaseAsciiChr.\n");
@@ -2370,7 +2370,7 @@ void testString()
         printf("Failed test 35. isAlphaNumericChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&numberChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&numberChr, &result);
     if(retcode)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with numberChr.\n");
@@ -2381,7 +2381,7 @@ void testString()
         printf("Failed test 35. isAlphaNumericChr incorect for numberChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isAlphaNumericChr(&dashChr, &result);
+    retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&dashChr, &result);
     if(retcode)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with dashChr.\n");
@@ -2394,7 +2394,7 @@ void testString()
     }
 
     //test 36: isNewLineChr
-    retcode = mdpl::standardLibrary::String::isNewLineChr(&newLineChr, &result);
+    retcode = MDPL_STDLIB_STRING_isNewLineChr(&newLineChr, &result);
     if(retcode)
     {
         printf("Failed test 36. error durng isNewLineChr with newLineChr.\n");
@@ -2405,7 +2405,7 @@ void testString()
         printf("Failed test 36. isNewLineChr incorect for newLineChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isNewLineChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isNewLineChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 36. error durng isNewLineChr with lowerCaseAsciiChr.\n");
@@ -2418,7 +2418,7 @@ void testString()
     }
 
     //test 37: isNullChr
-    retcode = mdpl::standardLibrary::String::isNullChr(&nullChr, &result);
+    retcode = MDPL_STDLIB_STRING_isNullChr(&nullChr, &result);
     if(retcode)
     {
         printf("Failed test 37. error durng isNullChr with nullChr.\n");
@@ -2429,7 +2429,7 @@ void testString()
         printf("Failed test 37. isNullChr incorect for nullChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::isNullChr(&lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_isNullChr(&lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 37. error durng isNullChr with lowerCaseAsciiChr.\n");
@@ -2442,7 +2442,7 @@ void testString()
     }
 
     //test 38: valueEqualityChrChr
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &lowerCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &lowerCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and lowerCaseAsciiChr.\n");
@@ -2453,7 +2453,7 @@ void testString()
         printf("Failed test 38. valueEqualityChrChr incorect for lowerCaseAsciiChr and lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &upperCaseAsciiChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &upperCaseAsciiChr, &result);
     if(retcode)
     {
         printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and upperCaseAsciiChr.\n");
@@ -2466,7 +2466,7 @@ void testString()
     }
 
     //test 39: valueEqualityChrUnicode
-    retcode = mdpl::standardLibrary::String::valueEqualityChrUnicode(&lowerCaseAsciiChr, 'h', &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrUnicode(&lowerCaseAsciiChr, 'h', &result);
     if(retcode)
     {
         printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'h\'.\n");
@@ -2477,7 +2477,7 @@ void testString()
         printf("Failed test 39. valueEqualityChrUnicode incorect for lowerCaseAsciiChr and \'h\'.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrUnicode(&lowerCaseAsciiChr, 'H', &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrUnicode(&lowerCaseAsciiChr, 'H', &result);
     if(retcode)
     {
         printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'H\'.\n");
@@ -2490,16 +2490,16 @@ void testString()
     }
     
     //setup for test 40 and 41
-    mdpl::standardLibrary::String::Character newChr;
+    MDPL_STDLIB_STRING_Character newChr;
 
     //test 40: toLowerChr
-    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseAsciiChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseAsciiChr, &newChr);
     if(retcode)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
@@ -2510,13 +2510,13 @@ void testString()
         printf("Failed test 40. toLowerChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseAsciiChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseAsciiChr, &newChr);
     if(retcode)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
@@ -2527,13 +2527,13 @@ void testString()
         printf("Failed test 40. toLowerChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseUnicodeChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseUnicodeChr, &newChr);
     if(retcode)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
@@ -2544,13 +2544,13 @@ void testString()
         printf("Failed test 40. toLowerChr incorect for lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toLowerChr(&lowerCaseUnicodeChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseUnicodeChr, &newChr);
     if(retcode)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
@@ -2563,13 +2563,13 @@ void testString()
     }
 
     //test 41: toUpperChr
-    retcode = mdpl::standardLibrary::String::toUpperChr(&lowerCaseAsciiChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toUpperChr(&lowerCaseAsciiChr, &newChr);
     if(retcode)
     {
         printf("Failed test 41. error durng toUpperChr with lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
@@ -2580,13 +2580,13 @@ void testString()
         printf("Failed test 41. toUpperChr incorect for lowerCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toUpperChr(&upperCaseAsciiChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toUpperChr(&upperCaseAsciiChr, &newChr);
     if(retcode)
     {
         printf("Failed test 41. error durng toUpperChr with upperCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
@@ -2597,13 +2597,13 @@ void testString()
         printf("Failed test 41. toUpperChr incorect for upperCaseAsciiChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toUpperChr(&lowerCaseUnicodeChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toUpperChr(&lowerCaseUnicodeChr, &newChr);
     if(retcode)
     {
         printf("Failed test 41. error durng toUpperChr with lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
@@ -2614,13 +2614,13 @@ void testString()
         printf("Failed test 41. toUpperChr incorect for lowerCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::toUpperChr(&upperCaseUnicodeChr, &newChr);
+    retcode = MDPL_STDLIB_STRING_toUpperChr(&upperCaseUnicodeChr, &newChr);
     if(retcode)
     {
         printf("Failed test 41. error durng toUpperChr with upperCaseUnicodeChr.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
+    retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
     if(retcode)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
@@ -2634,157 +2634,157 @@ void testString()
     
 
     //final test: deconstructions
-    retcode = mdpl::standardLibrary::String::destroyStringRef(asciiStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(emojiStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(emojiStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(normaliseStr1);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(normaliseStr1);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(normaliseStr2);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(normaliseStr2);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(validDecimalStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(validDecimalStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(validIntStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(validIntStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidIntStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidIntStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(validFloatStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(validFloatStr);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidFloatStr1);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidFloatStr1);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(invalidFloatStr2);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidFloatStr2);
     if(retcode)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCaseStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of lower case string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCaseStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCaseStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of upper case string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(mixedCaseStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(mixedCaseStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of mixed case string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(whitespaceStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(whitespaceStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of white space string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(unprintableStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(unprintableStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of white space string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(alphaStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(alphaStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of alpha string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(alphaNumStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(alphaNumStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of alpha numeric string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(asciiIndexSubstr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiIndexSubstr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(nonAsciiIndexSubstr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(nonAsciiIndexSubstr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(asciiIteratorSubstr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiIteratorSubstr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(nonAsciiIteratorSubstr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(nonAsciiIteratorSubstr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of non ascii index substring.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCaseStrAsciiSubstr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseStrAsciiSubstr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of non ascii index substring.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCasePrefixStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCasePrefixStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of lower case prefix string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCasePrefixStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCasePrefixStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of upper case prefix string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(lowerCaseSuffixStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseSuffixStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of lower case suffix string.\n");
         return;
     }
-    retcode = mdpl::standardLibrary::String::destroyStringRef(upperCaseSuffixStr);
+    retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCaseSuffixStr);
     if(retcode)
     {
         printf("Failed final test. Error during deconstruction of upper case suffix string.\n");

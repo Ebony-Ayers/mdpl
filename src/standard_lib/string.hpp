@@ -6,150 +6,139 @@
 #include "../runtime_lib/allocator.hpp"
 #include "../../vendor/utf8proc/utf8proc.h"
 
-namespace mdpl
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isLower        = 1;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isUpper        = 2;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isWhiteSpace   = 4;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isPrintable    = 8;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isAscii        = 16;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidDecimal = 32;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidInt     = 64;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidFloat   = 128;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlpha        = 256;
+const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric = 512;
+
+//RawString
+typedef struct
 {
-    namespace standardLibrary
-    {
-        namespace String
-        {
-            
-            namespace StringFlags
-            {
-                const uint32_t isLower        = 1;
-                const uint32_t isUpper        = 2;
-                const uint32_t isWhiteSpace   = 4;
-                const uint32_t isPrintable    = 8;
-                const uint32_t isAscii        = 16;
-                const uint32_t isValidDecimal = 32;
-                const uint32_t isValidInt     = 64;
-                const uint32_t isValidFloat   = 128;
-                const uint32_t isAlpha        = 256;
-                const uint32_t isAlphaNumeric = 512;
-            };
-            
-            struct RawString
-            {
-                size_t refCount;
-                const size_t numBytes;
-                const char str[1];
-            };
-            struct String
-            {
-                size_t refCount;
-                size_t numCharacters;
-                size_t startByte;
-                size_t endByte; //up to but not including
-                uint32_t flagsData;
-                uint32_t flagsSet;
-                RawString* const rawStr;
-                RawString* normalisedStr;
-            };
-            struct StringRef
-            {
-                String* const s;
-            };
-            struct Character
-            {
-                uint32_t codepoint;
-            };
-            struct StringIterator
-            {
-                const String* const str;
-                size_t byteIndex;
-                size_t characterIndex;
-                int32_t step;
-            };
+    size_t refCount;
+    const size_t numBytes;
+    const char str[1];
+}  MDPL_STDLIB_STRING_RawString;
+//String
+typedef struct
+{
+    size_t refCount;
+    size_t numCharacters;
+    size_t startByte;
+    size_t endByte; //up to but not including
+    uint32_t flagsData;
+    uint32_t flagsSet;
+    MDPL_STDLIB_STRING_RawString* const rawStr;
+    MDPL_STDLIB_STRING_RawString* normalisedStr;
+} MDPL_STDLIB_STRING_String;
+//StringRef
+typedef struct
+{
+    MDPL_STDLIB_STRING_String* const s;
+} MDPL_STDLIB_STRING_StringRef;
+//Character
+typedef struct
+{
+    uint32_t codepoint;
+} MDPL_STDLIB_STRING_Character;
+//StringIterator
+typedef struct
+{
+    const MDPL_STDLIB_STRING_String* const str;
+    size_t byteIndex;
+    size_t characterIndex;
+    int32_t step;
+} MDPL_STDLIB_STRING_StringIterator;
 
-            const size_t npos = static_cast<size_t>(-1);
+const size_t npos = static_cast<size_t>(-1);
 
-            //================ String functions ================
-            
-            int count(const StringRef str, size_t* ocurances);
-            int findIndex(const StringRef str, const String* const target, size_t* characterIndex);
-            int rFindIndex(const StringRef str, const String* const target, size_t* characterIndex);
-            int findForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
-            int rFindForwardsIterator(const StringRef str, const String* const target, size_t* StringIterator);
-            int startsWith(const StringRef str, const StringRef prefix, bool* result);
-            int endsWith(const StringRef str, const StringRef suffix, bool* result);
+//================ String functions ================
 
-            int isLower(const StringRef str, bool* result);
-            int isUpper(const StringRef str, bool* result);
-            int isWhiteSpace(const StringRef str, bool* result);
-            int isPrintable(const StringRef str, bool* result);
-            int isAscii(const StringRef str, bool* result);
-            int isValidDecimal(const StringRef str, bool* result);
-            int isValidInt(const StringRef str, bool* result);
-            int isValidFloat(const StringRef str, bool* result);
-            int isAlpha(const StringRef str, bool* result);
-            int isAlphaNumeric(const StringRef str, bool* result);
+int MDPL_STDLIB_STRING_count(const MDPL_STDLIB_STRING_StringRef str, size_t* ocurances);
+int MDPL_STDLIB_STRING_findIndex(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef target, size_t* characterIndex);
+int MDPL_STDLIB_STRING_rFindIndex(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef target, size_t* characterIndex);
+int MDPL_STDLIB_STRING_findForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef target, size_t* StringIterator);
+int MDPL_STDLIB_STRING_rFindForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef target, size_t* StringIterator);
+int MDPL_STDLIB_STRING_startsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef prefix, bool* result);
+int MDPL_STDLIB_STRING_endsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef suffix, bool* result);
 
-            int valueEqualityStrStr(const String* const str1, const String* const str2, bool* result);
+int MDPL_STDLIB_STRING_isLower(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isUpper(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isWhiteSpace(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isPrintable(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isAscii(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isValidDecimal(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isValidInt(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isAlpha(const MDPL_STDLIB_STRING_StringRef str, bool* result);
+int MDPL_STDLIB_STRING_isAlphaNumeric(const MDPL_STDLIB_STRING_StringRef str, bool* result);
 
-            int strip(const String* const str);
-            int lStrip(const String* const str);
-            int rStrip(const String* const str);
-            int replace(const String* const str, const String* const oldValue, const String* const newValue);
-            int toUpper(const String* const str);
-            int toLower(const String* const str);
-            
-            int substrIndex(const StringRef originalStr, StringRef* const newStr, const size_t& startIndex, const size_t& endIndex);
-            int substrIterator(const StringRef originalStr, StringRef* const newStr, const StringIterator& startIt, const StringIterator& endIt);
+int MDPL_STDLIB_STRING_valueEqualityStrStr(const MDPL_STDLIB_STRING_String* const str1, const MDPL_STDLIB_STRING_String* const str2, bool* result);
 
-            //================ Character functions ================
+int MDPL_STDLIB_STRING_strip(const MDPL_STDLIB_STRING_StringRef str);
+int MDPL_STDLIB_STRING_lStrip(const MDPL_STDLIB_STRING_StringRef str);
+int MDPL_STDLIB_STRING_rStrip(const MDPL_STDLIB_STRING_StringRef str);
+int MDPL_STDLIB_STRING_replace(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef oldValue, const MDPL_STDLIB_STRING_StringRef newValue);
+int MDPL_STDLIB_STRING_toUpper(const MDPL_STDLIB_STRING_StringRef str);
+int MDPL_STDLIB_STRING_toLower(const MDPL_STDLIB_STRING_StringRef str);
 
-            int isLowerChr(const Character* const chr, bool* result);
-            int isUpperChr(const Character* const chr, bool* result);
-            int isWhiteSpaceChr(const Character* const chr, bool* result);
-            int isPrintableChr(const Character* const chr, bool* result);
-            int isAsciiChr(const Character* const chr, bool* result);
-            int isDecimalChr(const Character* const chr, bool* result);
-            int isIntChr(const Character* const chr, bool* result);
-            int isFloatChr(const Character* const chr, bool* result);
-            int isAlphaChr(const Character* const chr, bool* result);
-            int isAlphaNumericChr(const Character* const chr, bool* result);
-            int isNewLineChr(const Character* const chr, bool* result);
-            int isNullChr(const Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t& startIndex, const size_t& endIndex);
+int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator& startIt, const MDPL_STDLIB_STRING_StringIterator& endIt);
 
-            int valueEqualityChrChr(const Character* const chr1, const Character* const chr2, bool* result);
-            int valueEqualityChrUnicode(const Character* const chr1, const uint32_t codepoint, bool* result);
+//================ Character functions ================
 
-            int toUpperChr(const Character* const originalChr, Character* const newChr);
-            int toLowerChr(const Character* const originalChr, Character* const newChr);
+int MDPL_STDLIB_STRING_isLowerChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isUpperChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isWhiteSpaceChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isPrintableChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isAsciiChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isDecimalChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isIntChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isFloatChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isAlphaChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isAlphaNumericChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isNewLineChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
+int MDPL_STDLIB_STRING_isNullChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result);
 
-            //================ String iterator ================
+int MDPL_STDLIB_STRING_valueEqualityChrChr(const MDPL_STDLIB_STRING_Character* const chr1, const MDPL_STDLIB_STRING_Character* const chr2, bool* result);
+int MDPL_STDLIB_STRING_valueEqualityChrUnicode(const MDPL_STDLIB_STRING_Character* const chr1, const uint32_t codepoint, bool* result);
 
-            int frontForwardsIterator(const StringRef str, StringIterator* const iterator);
-            int backReverseIterator(const StringRef str, StringIterator* const iterator);
+int MDPL_STDLIB_STRING_toUpperChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr);
+int MDPL_STDLIB_STRING_toLowerChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr);
 
-            int getCurrent(const StringIterator* const it, Character* dst);
-            int next(StringIterator* it);
-            int isFinished(const StringIterator* const it, bool* finished);
+//================ String iterator ================
 
-            //================ Constructors ================
+int MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator);
+int MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator);
 
-            int createStringRefFromCStr(StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters);
-            int copyStringRef(const StringRef originalStrRef, StringRef* const newStrRef);
-            int destroyStringRef(const StringRef strRef);
+int MDPL_STDLIB_STRING_getCurrent(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst);
+int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it);
+int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const it, bool* finished);
 
-            namespace internal
-            {
-                int createRawString(RawString* const* newStr, const char* data, const size_t& numBytes);
-                int createRawStringNoCopy(RawString* const* newStr, const size_t& numBytes);
-                int destroyRawString(RawString* const str);
+//================ Constructors ================
 
-                int createStringWithRawStr(String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
-                int createStringNoRawStr(String* const* newStr);
-                int initialiseExistingString(String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, RawString* const rawStr);
-                int copyString(const String* const originalStr, String* const* newStr);
-                int destroyString(String* const str);
+int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters);
+int MDPL_STDLIB_STRING_copyStringRef(const MDPL_STDLIB_STRING_StringRef originalStrRef, MDPL_STDLIB_STRING_StringRef* const newStrRef);
+int MDPL_STDLIB_STRING_destroyStringRef(const MDPL_STDLIB_STRING_StringRef strRef);
 
-                int normaliseString(String* const str);
+int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t& numBytes);
+int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t& numBytes);
+int MDPL_STDLIB_STRING_INTERNAL_destroyRawString(MDPL_STDLIB_STRING_RawString* const str);
 
-                int createInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr);
-                int incrementInternalIterator(const StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character);
-            }
-        }
-    }
-}
+int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
+int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* const* newStr);
+int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
+int MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* const originalStr, MDPL_STDLIB_STRING_String* const* newStr);
+int MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const str);
+
+int MDPL_STDLIB_STRING_INTERNAL_normaliseString(MDPL_STDLIB_STRING_String* const str);
+
+int MDPL_STDLIB_STRING_INTERNAL_createInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr);
+int MDPL_STDLIB_STRING_INTERNAL_incrementInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character);
 
 #endif //STRING_HEADER_GUARD
