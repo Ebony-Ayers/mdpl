@@ -1,5 +1,5 @@
-#ifndef BASIC_LIST_HEADER_GUARD
-#define BASIC_LIST_HEADER_GUARD
+#ifndef SHORT_LIST_HEADER_GUARD
+#define SHORT_LIST_HEADER_GUARD
 
 #include "../pch.hpp"
 #include "../common/mdpl_common.hpp"
@@ -7,73 +7,64 @@
 
 #include <cstdint>
 
-#define MDPL_BASIC_LIST_INITIAL_CAPACITY 256
+#define MDPL_SHORT_LIST_INITIAL_CAPACITY 256
+
 
 //to generate a specialisation of the tempate you have to make a header including the tempalte header and defining the two macros MDPL_GENERIC_TYPE_NAME_MACRO and MDPL_GENERIC_TYPE_MACRO
 //the same applies to the cpp file. the hpp and cpp files creates can be used as if they were not generic. MDPL_GENERIC_TYPE_MACRO is the type the list will store. 
 //MDPL_GENERIC_TYPE_NAME_MACRO is the namesapce the specialisation will be in. For clarity it is recomended that this name be associated with the type. If the instructions are followed the
 //code should compile with out error. If you get an something undefined error make sure that the two macros are defined before including both the hpp and cpp for a total of 4 hash defines.
 
-//unless otherwise stated all instance of BasicList** refer to a pointer to a pointer and not an array. This is done as so that a function can return a pointer to the list.
+//unless otherwise stated all instance of ShortList** refer to a pointer to a pointer and not an array. This is done as so that a function can return a pointer to the list.
 
 //positional insert and remove have intentionally not been included. This is to allow reference stability.
 
-namespace mdpl
+//ShortListHeader
+typedef struct
 {
-    namespace standardLibrary
-    {
-        namespace BasicList
-        {
-            namespace MDPL_GENERIC_TYPE_NAME_MACRO
-            {
-                struct BasicListHeader
-                {
-                    size_t size;
-                    size_t capacity;
-                };
+    size_t size;
+    size_t capacity;
+} MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortListHeader);
 
-                struct BasicList
-                {
-                    BasicListHeader header;
-                    MDPL_GENERIC_TYPE_MACRO data[1];
-                };
+//ShortList
+typedef struct
+{
+    MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortListHeader) header;
+    MDPL_GENERIC_TYPE_MACRO data[1];
+} MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList);
 
-                int constructor(BasicList** list);
-                int destructor(BasicList* list);
+int constructor(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list);
+int destructor(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list);
 
-                int front(const BasicList* list, MDPL_GENERIC_TYPE_MACRO* dst);
-                int back(const BasicList* list, MDPL_GENERIC_TYPE_MACRO* dst);
-                int get(const BasicList* list, const size_t& pos, MDPL_GENERIC_TYPE_MACRO* dst);
-                
-                int set(BasicList* list, const size_t& pos, const MDPL_GENERIC_TYPE_MACRO& val);
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, front)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, MDPL_GENERIC_TYPE_MACRO* dst);
+int back(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, MDPL_GENERIC_TYPE_MACRO* dst);
+int get(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const size_t& pos, MDPL_GENERIC_TYPE_MACRO* dst);
 
-                bool isEmpty(const BasicList* const list);
-                size_t size(const BasicList* const list);
-                size_t capacity(const BasicList* const list);
+int set(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const size_t& pos, const MDPL_GENERIC_TYPE_MACRO& val);
 
-                int reserve(BasicList** list, const size_t newCapacity);
-                int clear(BasicList* list);
+bool isEmpty(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list);
+size_t size(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list);
+size_t capacity(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list);
 
-                int append(BasicList** list, const MDPL_GENERIC_TYPE_MACRO& val);
-                int prepend(BasicList** list, const MDPL_GENERIC_TYPE_MACRO& val);
+int reserve(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t newCapacity);
+int clear(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list);
 
-                int removeFront(BasicList* list);
-                int removeBack(BasicList* list);
+int append(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO& val);
+int prepend(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO& val);
 
-                int allocate(BasicList** list, const size_t& capacity);
-                int rellocate(BasicList** list, const size_t& capacity, const size_t& offset);
-                //returns number of bytes
-                size_t runtimeSizeOf(BasicList* list);
-                //converts number of elements to number of bytes
-                size_t calculateNewSizeOf(size_t size);
-                //converts number of bytes to number of bytes
-                size_t trueSizeToUsableSize(size_t size);
-            }
-        }
-    }
-}
+int removeFront(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list);
+int removeBack(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list);
+
+int allocate(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t& capacity);
+int rellocate(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t& capacity, const size_t& offset);
+//returns number of bytes
+size_t runtimeSizeOf(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list);
+//converts number of elements to number of bytes
+size_t calculateNewSizeOf(size_t size);
+//converts number of bytes to number of bytes
+size_t trueSizeToUsableSize(size_t size);
 
 #undef MDPL_GENERIC_TYPE_MACRO
 #undef MDPL_GENERIC_TYPE_NAME_MACRO
 
-#endif //BASIC_LIST_HEADER_GUARD
+#endif //SHORT_LIST_HEADER_GUARD
