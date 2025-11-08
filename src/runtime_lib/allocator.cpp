@@ -1,75 +1,66 @@
 #include "allocator.hpp"
 
-namespace mdpl
+extern MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker;
+
+int MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n)
 {
-    namespace runtimeLib
+    MDPL_RTLIB_ALLOCATOR_allocateAlligned(ptr, actualAllocated, MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT, n);
+    return 0;
+}
+int MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n)
+{
+    //round the size up to the nearest multiple of the allignment
+    *actualAllocated = ((n / allignment) + 1) * allignment;
+    *ptr = aligned_alloc(allignment, *actualAllocated);
+    if(ptr == nullptr)
     {
-        namespace allocator
+        printf("MDPL runtime error: failed to allocate %lu bytes of memory with %lu byte allignment.\n", n, allignment);
+        return 1;
+    }
+    MDPL_RTLIB_ALLOCATION_TRACKER_add(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, *ptr);
+    return 0;
+}
+int MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr)
+{
+    if(ptr == nullptr)
+    {
+        printf("MDPL runtime error: attempted to deallocate nullptr.\n");
+        return 1;
+    }
+    else if(MDPL_RTLIB_ALLOCATION_TRACKER_contains(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, ptr))
+    {
+        MDPL_RTLIB_ALLOCATION_TRACKER_remove(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, ptr);
+        free(ptr);
+        return 0;
+    }
+    else
+    {
+        printf("MDPL runtime error: failed to deallocate memory as no matching allocation exists.\n");
+        return 1;
+    }
+}
+
+int MDPL_RTLIB_ALLOCATOR_initialiseAllocator()
+{
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_constructor(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker));
+    return 0;
+}
+int MDPL_RTLIB_ALLOCATOR_destroyAllocator()
+{
+    MDPL_RTLIB_ALLOCATION_TRACKER_contentsTuple contents = MDPL_RTLIB_ALLOCATION_TRACKER_getContents(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker);
+    for(size_t i = 0; i < contents.size; i++)
+    {
+        if(contents.array[i] != nullptr)
         {
-            allocationTracker::AllocationTrackerStruct globalAllocationTracker;
-
-            int allocate(void** ptr, size_t* actualAllocated, const size_t& n)
-            {
-                allocateAlligned(ptr, actualAllocated, MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT, n);
-                return 0;
-            }
-            int allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t& n)
-            {
-                //round the size up to the nearest multiple of the allignment
-                *actualAllocated = ((n / allignment) + 1) * allignment;
-                *ptr = aligned_alloc(allignment, *actualAllocated);
-                if(ptr == nullptr)
-                {
-                    printf("MDPL runtime error: failed to allocate %lu bytes of memory with %lu byte allignment.\n", n, allignment);
-                    return 1;
-                }
-                allocationTracker::add(&globalAllocationTracker, *ptr);
-                return 0;
-            }
-            int deallocate(void* ptr)
-            {
-                if(ptr == nullptr)
-                {
-                    printf("MDPL runtime error: attempted to deallocate nullptr.\n");
-                    return 1;
-                }
-                else if(allocationTracker::contains(&globalAllocationTracker, ptr))
-                {
-                    allocationTracker::remove(&globalAllocationTracker, ptr);
-                    free(ptr);
-                    return 0;
-                }
-                else
-                {
-                    printf("MDPL runtime error: failed to deallocate memory as no matching allocation exists.\n");
-                    return 1;
-                }
-            }
-
-            int initialiseAllocator()
-            {
-                MDPL_RETERR(allocationTracker::constructor(&globalAllocationTracker));
-                return 0;
-            }
-            int destroyAllocator()
-            {
-                allocationTracker::contentsTuple contents = allocationTracker::getContents(&globalAllocationTracker);
-                for(size_t i = 0; i < contents.size; i++)
-                {
-                    if(contents.array[i] != nullptr)
-                    {
-                        free(contents.array[i]);
-                    }
-                }
-                MDPL_RETERR(allocationTracker::destructor(&globalAllocationTracker));
-                
-                return 0;
-            }
-
-            bool doesAllocatorHaveActiveMemory()
-            {
-                return globalAllocationTracker.size != 0;
-            }
+            free(contents.array[i]);
         }
     }
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker));
+    
+    return 0;
+}
+
+bool MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory()
+{
+    return MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker.size != 0;
 }

@@ -7,13 +7,13 @@ void testTracker()
 {
     printf("Testing allocation tracker.\n");
 
-    mdpl::runtimeLib::allocationTracker::AllocationTrackerStruct tracker;
+    MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct tracker;
 
     int retcode;
     bool res;
 
     //test 1: construct tracker
-    retcode = mdpl::runtimeLib::allocationTracker::constructor(&tracker);
+    retcode = MDPL_RTLIB_ALLOCATION_TRACKER_constructor(&tracker);
     if(retcode)
     {
         printf("failed test 1: error during constructor.\n");
@@ -23,41 +23,41 @@ void testTracker()
     //test 2: add without reallocation
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 2: error during add.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(!res)
         {
             printf("failed test 2: Did not contain %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 2: error during remove.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(res)
         {
             printf("failed test 2: Contains %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
@@ -65,41 +65,41 @@ void testTracker()
     //test 3: add without reallocation
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 3: error during add.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(!res)
         {
             printf("failed test 3: Did not contain %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 3: error during remove.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(res)
         {
             printf("failed test 3: Contains %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
@@ -107,41 +107,41 @@ void testTracker()
     //test 4: add non-consecuative values
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 4: error during add.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(!res)
         {
             printf("failed test 4: Did not contain %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
         if(retcode)
         {
             printf("failed test 4: error during remove.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
         if(res)
         {
             printf("failed test 4: Contains %lu when it should have.\n", i);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
@@ -183,7 +183,7 @@ void testTracker()
                 if(*i == *j)
                 {
                     printf("failed test 5: Randomixed numbers contains duplicates.\n");
-                    mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+                    MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
                     free(insertedValues);
                     return;
                 }
@@ -192,48 +192,48 @@ void testTracker()
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::add(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(insertedValues[i]));
         if(retcode)
         {
             printf("failed test 5: error during add.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
         if(!res)
         {
             printf("failed test 5: Did not contain %lu when it should have.\n", insertedValues[i]);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        retcode = mdpl::runtimeLib::allocationTracker::remove(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(insertedValues[i]));
         if(retcode)
         {
             printf("failed test 5: error during remove.\n");
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        res = mdpl::runtimeLib::allocationTracker::contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
         if(res)
         {
             printf("failed test 5: Contains %lu when it should have.\n", insertedValues[i]);
-            mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+            MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
             return;
         }
     }
     free(insertedValues);
 
     //test 6: destructor
-    retcode = mdpl::runtimeLib::allocationTracker::destructor(&tracker);
+    retcode = MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
     if(retcode)
     {
         printf("failed test 6: error during destructor.\n");
@@ -248,7 +248,7 @@ void testAllocator()
     int retcode;
 
     //test 1: initialiseAllocator
-    retcode = mdpl::runtimeLib::allocator::initialiseAllocator();
+    retcode = MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
     if(retcode)
     {
         printf("failed test 1: Error during initialiseAllocator.\n");
@@ -260,54 +260,54 @@ void testAllocator()
     for(size_t i = 0; i < 10; i++)
     {
         size_t trueCapacity;
-        retcode = mdpl::runtimeLib::allocator::allocate(allocatedPointers + i, &trueCapacity, 8);
+        retcode = MDPL_RTLIB_ALLOCATOR_allocate(allocatedPointers + i, &trueCapacity, 8);
         if(retcode)
         {
             printf("failed test 2: Error during allocate.\n");
-            mdpl::runtimeLib::allocator::destroyAllocator();
+            MDPL_RTLIB_ALLOCATOR_destroyAllocator();
             return;
         }
         else if(trueCapacity < 8)
         {
             printf("failed test 2: Allocated capacity is less than the requirested capcity.\n");
-            mdpl::runtimeLib::allocator::destroyAllocator();
+            MDPL_RTLIB_ALLOCATOR_destroyAllocator();
             return;
         }
     }
 
     //test 3: deallocating unallocated memory
     void* ptr = malloc(8);
-    retcode = mdpl::runtimeLib::allocator::deallocate(ptr);
+    retcode = MDPL_RTLIB_ALLOCATOR_deallocate(ptr);
     free(ptr);
     if(!retcode)
     {
         printf("failed test 3: Successfully deallocated unallocated memory.\n");
-        mdpl::runtimeLib::allocator::destroyAllocator();
+        MDPL_RTLIB_ALLOCATOR_destroyAllocator();
         return;
     }
     
     //test 3: deallocating allocated memory
     for(size_t i = 0; i < 10; i++)
     {
-        retcode = mdpl::runtimeLib::allocator::deallocate(allocatedPointers[i]);
+        retcode = MDPL_RTLIB_ALLOCATOR_deallocate(allocatedPointers[i]);
         if(retcode)
         {
             printf("failed test 3: Error during deallocate.\n");
-            mdpl::runtimeLib::allocator::destroyAllocator();
+            MDPL_RTLIB_ALLOCATOR_destroyAllocator();
             return;
         }
     }
 
     //test 4: deallocating nullptr
-    retcode = mdpl::runtimeLib::allocator::deallocate(nullptr);
+    retcode = MDPL_RTLIB_ALLOCATOR_deallocate(nullptr);
     if(!retcode)
     {
         printf("failed test 4: Successfully deallocated nullptr.\n");
-        mdpl::runtimeLib::allocator::destroyAllocator();
+        MDPL_RTLIB_ALLOCATOR_destroyAllocator();
         return;
     }
 
-    retcode = mdpl::runtimeLib::allocator::destroyAllocator();
+    retcode = MDPL_RTLIB_ALLOCATOR_destroyAllocator();
     if(retcode)
     {
         printf("failed test 4: Error during destroyAllocator.\n");

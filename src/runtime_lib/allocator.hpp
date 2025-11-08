@@ -5,27 +5,18 @@
 #include "../common/mdpl_common.hpp"
 #include "allocation_tracker.hpp"
 
-#include <cstdint>
+#include <stdint.h>
 
 #define MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT 4
 
-namespace mdpl
-{
-    namespace runtimeLib
-    {
-        namespace allocator
-        {
-            int allocate(void** ptr, size_t* actualAllocated, const size_t& n);
-            int allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t& n);
-            int deallocate(void* ptr);
+int MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n);
+int MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n);
+int MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr);
 
-            int initialiseAllocator();
-            int destroyAllocator();
+int MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
+int MDPL_RTLIB_ALLOCATOR_destroyAllocator();
 
-            //used for debugging
-            bool doesAllocatorHaveActiveMemory();
-        }
-    }
-}
+//used for debugging
+bool MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory();
 
 #endif //ALLOCATOR_HEADER_GUARD

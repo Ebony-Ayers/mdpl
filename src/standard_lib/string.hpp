@@ -55,7 +55,7 @@ typedef struct
     int32_t step;
 } MDPL_STDLIB_STRING_StringIterator;
 
-const size_t npos = static_cast<size_t>(-1);
+const size_t npos = (size_t)-1;
 
 //================ String functions ================
 
@@ -87,8 +87,8 @@ int MDPL_STDLIB_STRING_replace(const MDPL_STDLIB_STRING_StringRef str, const MDP
 int MDPL_STDLIB_STRING_toUpper(const MDPL_STDLIB_STRING_StringRef str);
 int MDPL_STDLIB_STRING_toLower(const MDPL_STDLIB_STRING_StringRef str);
 
-int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t& startIndex, const size_t& endIndex);
-int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator& startIt, const MDPL_STDLIB_STRING_StringIterator& endIt);
+int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t startIndex, const size_t endIndex);
+int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator* startIt, const MDPL_STDLIB_STRING_StringIterator* endIt);
 
 //================ Character functions ================
 
@@ -122,17 +122,17 @@ int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const
 
 //================ Constructors ================
 
-int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters);
+int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t numBytes, const size_t numCharacters);
 int MDPL_STDLIB_STRING_copyStringRef(const MDPL_STDLIB_STRING_StringRef originalStrRef, MDPL_STDLIB_STRING_StringRef* const newStrRef);
 int MDPL_STDLIB_STRING_destroyStringRef(const MDPL_STDLIB_STRING_StringRef strRef);
 
-int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t& numBytes);
-int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t& numBytes);
+int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t numBytes);
+int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t numBytes);
 int MDPL_STDLIB_STRING_INTERNAL_destroyRawString(MDPL_STDLIB_STRING_RawString* const str);
 
-int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
+int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
 int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* const* newStr);
-int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
+int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr);
 int MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* const originalStr, MDPL_STDLIB_STRING_String* const* newStr);
 int MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const str);
 

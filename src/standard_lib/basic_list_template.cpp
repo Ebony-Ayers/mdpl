@@ -1,13 +1,13 @@
 #include "basic_list_template.hpp"
 
-int constructor(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, constructor)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list)
 {
-    MDPL_RETERR(allocate(list, MDPL_SHORT_LIST_INITIAL_CAPACITY));
+    MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, allocate)(list, MDPL_SHORT_LIST_INITIAL_CAPACITY));
     return 0;
 }
-int destructor(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, destructor)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
 {
-    MDPL_RETERR(mdpl::runtimeLib::allocator::deallocate((void*)list));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((void*)list));
     return 0;
 }
 
@@ -21,7 +21,7 @@ int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, front)(const MD
     *dst = list->data[0];
     return 0;
 }
-int back(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, MDPL_GENERIC_TYPE_MACRO* dst)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, back)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, MDPL_GENERIC_TYPE_MACRO* dst)
 {
     if(list->header.size == 0)
     {
@@ -31,7 +31,7 @@ int back(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, Shor
     *dst = list->data[list->header.size - 1];
     return 0;
 }
-int get(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const size_t& pos, MDPL_GENERIC_TYPE_MACRO* dst)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, get)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const uint32_t pos, MDPL_GENERIC_TYPE_MACRO* dst)
 {
     if(list->header.size == 0)
     {
@@ -47,115 +47,120 @@ int get(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, Short
     return 0;
 }
 
-int set(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const size_t& pos, const MDPL_GENERIC_TYPE_MACRO& val)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, set)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list, const uint32_t pos, const MDPL_GENERIC_TYPE_MACRO* val)
 {
     if(pos >= list->header.size)
     {
         printf("Out of bounds error: tried to access element outside the bounds of the list.\n");
         return 1;
     }
-    list->data[pos] = val;
+    list->data[pos] = *val;
     return 0;
 }
 
-bool isEmpty(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
+bool MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, isEmpty)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
 {
-    return size(list) == 0;
+    return MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, size)(list) == 0;
 }
-size_t size(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
+uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, size)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
 {
     return list->header.size;
 }
-size_t capacity(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
+uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, capacity)(const MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* const list)
 {
     return list->header.capacity;
 }
 
-int reserve(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t newCapacity)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, reserve)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const uint32_t newCapacity)
 {
     if(newCapacity > (*list)->header.size)
     {
-        MDPL_RETERR(rellocate(list, newCapacity, 0));
+        MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, rellocate)(list, newCapacity, 0));
     }
     return 0;
 }
-int clear(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, clear)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
 {
     list->header.size = 0;
     return 0;
 }
 
-int append(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO& val)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, append)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO* val)
 {
     if((*list)->header.size >= (*list)->header.capacity) [[unlikely]]
     {
-        MDPL_RETERR(rellocate(list, (*list)->header.capacity * 2, 0));
+        MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, rellocate)(list, (*list)->header.capacity * 2, 0));
     }
     //printf("appending at position %lu with size %lu and capacity %lu.\n", (*list)->header.size, (*list)->header.size, (*list)->header.capacity);
-    (*list)->data[(*list)->header.size] = val;
+    (*list)->data[(*list)->header.size] = *val;
     (*list)->header.size++;
     return 0;
 }
-int prepend(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO& val)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, prepend)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const MDPL_GENERIC_TYPE_MACRO* val)
 {
     if((*list)->header.size >= (*list)->header.capacity) [[unlikely]]
     {
-        MDPL_RETERR(rellocate(list, ((*list)->header.capacity * 2), 1));
+        MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, rellocate)(list, ((*list)->header.capacity * 2), 1));
     }
     else
     {
         memcpy((*list)->data + 1, (*list)->data, ((*list)->header.size) * sizeof(MDPL_GENERIC_TYPE_MACRO));
     }
-    (*list)->data[0] = val;
+    (*list)->data[0] = *val;
     (*list)->header.size++;
     return 0;
 }
 
-int removeFront(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, removeFront)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
 {
     memcpy(list->data, list->data + 1, (list->header.size - 1) * sizeof(MDPL_GENERIC_TYPE_MACRO));
     list->header.size--;
     return 0;
 }
-int removeBack(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, removeBack)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
 {
     list->header.size--;
     return 0;
 }
 
-int allocate(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t& capacity)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, allocate)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const uint32_t capacity)
 {
-    size_t trueCapacity;
-    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned((void**)list, &trueCapacity, 64, calculateNewSizeOf(capacity)));
+    uint32_t trueCapacity;
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)list, (size_t*)&trueCapacity, 64, MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, calculateNewSizeOf)((size_t)capacity)));
     (*list)->header.size = 0;
-    (*list)->header.capacity = trueSizeToUsableSize(trueCapacity) / sizeof(MDPL_GENERIC_TYPE_MACRO);
+    (*list)->header.capacity = MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, trueSizeToUsableSize)(trueCapacity) / sizeof(MDPL_GENERIC_TYPE_MACRO);
     return 0;
 }
-int rellocate(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const size_t& capacity, const size_t& offset)
+int MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, rellocate)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)** list, const uint32_t capacity, const uint32_t offset)
 {
+    if(capacity < (*list)->header.size)
+    {
+        printf("Reallocation error: requested reallocation is smaller than existing data.\n");
+        return 1;
+    }
     MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* pNewList;
-    MDPL_RETERR(allocate(&pNewList, capacity));
+    MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, allocate)(&pNewList, capacity));
     pNewList->header.size = (*list)->header.size;
     memcpy(&(pNewList->data[offset]), &((*list)->data), (*list)->header.size * sizeof(MDPL_GENERIC_TYPE_MACRO));
-    MDPL_RETERR(destructor(*list));
+    MDPL_RETERR(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, destructor)(*list));
     *list = pNewList;
     return 0;
 }
 
 //returns number of bytes
-size_t runtimeSizeOf(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
+uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, runtimeSizeOf)(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)* list)
 {
-    return sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)) + (list->header.capacity * sizeof(MDPL_GENERIC_TYPE_MACRO));
+    return (uint32_t)sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)) + (list->header.capacity * (uint32_t)sizeof(MDPL_GENERIC_TYPE_MACRO));
 }
 //converts number of elements to number of bytes
-size_t calculateNewSizeOf(size_t size)
+uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, calculateNewSizeOf)(uint32_t size)
 {
-    return sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)) + (size * sizeof(MDPL_GENERIC_TYPE_MACRO));
+    return (uint32_t)sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList)) + (size * (uint32_t)sizeof(MDPL_GENERIC_TYPE_MACRO));
 }
 //converts number of bytes to number of bytes
-size_t trueSizeToUsableSize(size_t size)
+uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, trueSizeToUsableSize)(uint32_t size)
 {
-    return size - sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList));
+    return size - (uint32_t)sizeof(MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, ShortList));
 }
 
 #undef MDPL_GENERIC_TYPE_MACRO

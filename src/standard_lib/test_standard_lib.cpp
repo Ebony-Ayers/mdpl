@@ -21,7 +21,7 @@ void testShortList()
 
     //test constructor
     MDPL_STDLIB_SHORT_LIST_int_ShortList* pList;
-    retcode = constructor(&pList);
+    retcode = MDPL_STDLIB_SHORT_LIST_int_constructor(&pList);
     if(retcode)
     {
         printf("Failed to construct basic list.\n");
@@ -29,7 +29,7 @@ void testShortList()
     }
 
     //test newly constructed list is empty
-    if(!isEmpty(pList))
+    if(MDPL_STDLIB_SHORT_LIST_int_isEmpty(pList) == false)
     {
         printf("Newly constucted list is not empty.\n");
         return;
@@ -38,7 +38,7 @@ void testShortList()
     //test that append works with out reallocating
     for(int i = 0; i < 100; i++)
     {
-        retcode = append(&pList, i);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
         if(retcode)
         {
             printf("Failed to append to basic list.\n");
@@ -48,7 +48,7 @@ void testShortList()
     for(int i = 0; i < 100; i++)
     {
         int val;
-        retcode = get(pList, static_cast<size_t>(i), &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -63,7 +63,7 @@ void testShortList()
     //test that append works with reallocating
     for(int i = 100; i < 1000; i++)
     {
-        retcode = append(&pList, static_cast<size_t>(i));
+        retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
         if(retcode)
         {
             printf("Failed to append to basic list.\n");
@@ -73,7 +73,7 @@ void testShortList()
     for(int i = 100; i < 1000; i++)
     {
         int val;
-        retcode = get(pList, static_cast<size_t>(i), &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -90,7 +90,7 @@ void testShortList()
     for(int i = 999; i >= 0; i--)
     {
         int val;
-        retcode = back(pList, &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_back(pList, &val);
         if(retcode)
         {
             printf("Failed to get data from back basic list.\n");
@@ -101,14 +101,14 @@ void testShortList()
             printf("basic list did not contain the right data.\n");
             return;
         }
-        retcode = removeBack(pList);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_removeBack(pList);
         if(retcode)
         {
             printf("Failed to remove last element of list.\n");
             return;
         }
     }
-    if(!isEmpty(pList))
+    if(MDPL_STDLIB_SHORT_LIST_int_isEmpty(pList) == false)
     {
         printf("List should be empty but it isn't.\n");
         return;
@@ -117,7 +117,7 @@ void testShortList()
     //test prepend without reallocation
     for(int i = 0; i < 100; i++)
     {
-        retcode = prepend(&pList, i);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_prepend(&pList, &i);
         if(retcode)
         {
             printf("Failed to prepend to basic list.\n");
@@ -127,7 +127,7 @@ void testShortList()
     for(int i = 0; i < 100; i++)
     {
         int val;
-        retcode = get(pList, static_cast<size_t>(i), &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -142,7 +142,7 @@ void testShortList()
     //test prepend with reallocation
     for(int i = 100; i < 2000; i++)
     {
-        retcode = prepend(&pList, i);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_prepend(&pList, &i);
         if(retcode)
         {
             printf("Failed to prepend to basic list.\n");
@@ -152,7 +152,7 @@ void testShortList()
     for(int i = 0; i < 2000; i++)
     {
         int val;
-        retcode = get(pList, static_cast<size_t>(i), &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -180,14 +180,14 @@ void testShortList()
             printf("basic list did not contain the right data.\n");
             return;
         }
-        retcode = removeFront(pList);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_removeFront(pList);
         if(retcode)
         {
             printf("Failed to remove first element of list.\n");
             return;
         }
     }
-    if(!isEmpty(pList))
+    if(MDPL_STDLIB_SHORT_LIST_int_isEmpty(pList) == false)
     {
         printf("List should be empty but it isn't.\n");
         return;
@@ -196,7 +196,7 @@ void testShortList()
     //test setting data
     for(int i = 0; i < 10; i++)
     {
-        retcode = append(&pList, i);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
         if(retcode)
         {
             printf("Failed to append to basic list.\n");
@@ -205,7 +205,8 @@ void testShortList()
     }
     for(int i = 0; i < 10; i++)
     {
-        retcode = set(pList, static_cast<size_t>(i), i + 10);
+        int temp = i + 10;
+        retcode = MDPL_STDLIB_SHORT_LIST_int_set(pList, (uint32_t)i, &temp);
         if(retcode)
         {
             printf("Failed to write to basic list.\n");
@@ -215,7 +216,7 @@ void testShortList()
     for(int i = 0; i < 10; i++)
     {
         int val;
-        retcode = get(pList, static_cast<size_t>(i), &val);
+        retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
         if(retcode)
         {
             printf("Failed to get data from basic list.\n");
@@ -229,27 +230,27 @@ void testShortList()
     }
 
     //test clear
-    retcode = clear(pList);
+    retcode = MDPL_STDLIB_SHORT_LIST_int_clear(pList);
     if(retcode)
     {
         printf("Failed to clear list.\n");
         return;
     }
-    else if(!isEmpty(pList))
+    else if(MDPL_STDLIB_SHORT_LIST_int_isEmpty(pList) == false)
     {
         printf("List is not empty when it should be.\n");
         return;
     }
 
     //test deconstruction
-    retcode = destructor(pList);
+    retcode = MDPL_STDLIB_SHORT_LIST_int_destructor(pList);
     if(retcode)
     {
         printf("Failed to destroy basic list.\n");
         return;
     }
 
-    if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
+    if(MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory())
     {
         printf("Did not deallocate all the memory. Potential memory leak.\n");
         return;
@@ -952,7 +953,7 @@ void testString()
     MDPL_STDLIB_STRING_StringRef asciiIteratorSubstr = {};
     MDPL_STDLIB_STRING_StringIterator asciiSubstrStartIt = {asciiStr.s, 3, 3, 1};
     MDPL_STDLIB_STRING_StringIterator asciiSubstrEndIt = {asciiStr.s, 8, 8, 1};
-    retcode = MDPL_STDLIB_STRING_substrIterator(asciiStr, &asciiIteratorSubstr, asciiSubstrStartIt, asciiSubstrEndIt);
+    retcode = MDPL_STDLIB_STRING_substrIterator(asciiStr, &asciiIteratorSubstr, &asciiSubstrStartIt, &asciiSubstrEndIt);
     if(retcode)
     {
         printf("failed test 10: error during substrIterator on asciiStr.\n");
@@ -1019,7 +1020,7 @@ void testString()
     MDPL_STDLIB_STRING_StringRef nonAsciiIteratorSubstr = {};
     MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrStartIt = {lowerCaseStr.s, 10, 10, 1};
     MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrEndIt = {lowerCaseStr.s, 19, 16, 1};
-    retcode = MDPL_STDLIB_STRING_substrIterator(lowerCaseStr, &nonAsciiIteratorSubstr, nonAsciiSubstrStartIt, nonAsciiSubstrEndIt);
+    retcode = MDPL_STDLIB_STRING_substrIterator(lowerCaseStr, &nonAsciiIteratorSubstr, &nonAsciiSubstrStartIt, &nonAsciiSubstrEndIt);
     if(retcode)
     {
         printf("failed test 10: error during substrIterator on lowerCaseStr.\n");
@@ -1636,10 +1637,10 @@ void testString()
     //as some of these characters are considered non-stnadard some systems may automatically remove them. For example \r. To guarentee this does not break the test the string is created at runtime. 
     utf8proc_int32_t whiteSpaceCodepoints[] = {0x0009, 0x000A, 0x000C, 0x0020, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x2008, 0x2009, 0x200A, 0x2028, 0x205F, 0x3000};
     utf8proc_ssize_t whiteSpaceCodepointsLength = sizeof(whiteSpaceCodepoints) / sizeof(utf8proc_int32_t);
-    utf8proc_ssize_t utf8proc_result = utf8proc_reencode(whiteSpaceCodepoints, whiteSpaceCodepointsLength, static_cast<utf8proc_option_t>(0));
+    utf8proc_ssize_t utf8proc_result = utf8proc_reencode(whiteSpaceCodepoints, whiteSpaceCodepointsLength, (utf8proc_option_t)0);
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 18. %s.\n", utf8proc_errmsg(utf8proc_result)); }
     MDPL_STDLIB_STRING_StringRef whitespaceStr = {};
-    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&whitespaceStr, reinterpret_cast<const char*>(whiteSpaceCodepoints), strlen(reinterpret_cast<const char*>(whiteSpaceCodepoints)), 19);
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&whitespaceStr, (const char*)whiteSpaceCodepoints, strlen((const char*)whiteSpaceCodepoints), 19);
     if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(whitespaceStr);
@@ -1671,10 +1672,10 @@ void testString()
     //these charcters cannot be printed so they have to be stored as hex
     utf8proc_int32_t unprintableCodepoints[] = {0x0001, 0x0002, 0x0003, 0x0004, 0x0888, 0x0889, 0x1328, 0x1515};
     utf8proc_ssize_t unprintableCodepointsLength = sizeof(unprintableCodepoints) / sizeof(utf8proc_int32_t);
-    utf8proc_result = utf8proc_reencode(unprintableCodepoints, unprintableCodepointsLength, static_cast<utf8proc_option_t>(0));
+    utf8proc_result = utf8proc_reencode(unprintableCodepoints, unprintableCodepointsLength, (utf8proc_option_t)0);
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 19. %s.\n", utf8proc_errmsg(utf8proc_result)); }
     MDPL_STDLIB_STRING_StringRef unprintableStr = {};
-    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&unprintableStr, reinterpret_cast<const char*>(unprintableCodepoints), strlen(reinterpret_cast<const char*>(unprintableCodepoints)), 19);
+    retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&unprintableStr, (const char*)unprintableCodepoints, strlen((const char*)unprintableCodepoints), 19);
     if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(unprintableStr);
@@ -2791,7 +2792,7 @@ void testString()
         return;
     }
 
-    if(mdpl::runtimeLib::allocator::doesAllocatorHaveActiveMemory())
+    if(MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory())
     {
         printf("Did not deallocate all the memory. Potential memory leak.\n");
         return;
@@ -2802,13 +2803,13 @@ void testString()
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    mdpl::runtimeLib::allocator::initialiseAllocator();
+    MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
 
     testShortList();
 
     testString();
 
-    mdpl::runtimeLib::allocator::destroyAllocator();
+    MDPL_RTLIB_ALLOCATOR_destroyAllocator();
 
     return 0;
 }

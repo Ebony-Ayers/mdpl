@@ -9,47 +9,49 @@
     #pragma GCC diagnostic ignored "-Wsign-conversion"
     #pragma GCC diagnostic ignored "-Wconversion"
 #endif
+//disable c++ for libdivide
+#ifdef __cplusplus
+    #define TEMP_CPP_MACRO
+    #undef __cplusplus
+#endif
 #include "../../vendor/libdivide/libdivide.h"
+#ifdef TEMP_CPP_MACRO
+    #define __cplusplus 202002L
+    #undef TEMP_CPP_MACRO
+#endif
 #ifdef __GNUC__
     #pragma GCC diagnostic pop
 #endif
 
-#include <cstdint>
+#include <stdint.h>
 
-namespace mdpl
+//MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct
+typedef struct
 {
-    namespace runtimeLib
-    {
-        namespace allocationTracker
-        {
-            struct AllocationTrackerStruct
-            {
-                void** array;
-                size_t size;
-                size_t capacityIndxex;
-                libdivide::libdivide_u64_t divider;
-            };
+    void** array;
+    size_t size;
+    size_t capacityIndxex;
+    struct libdivide_u64_t divider;
+} MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct;
 
-            int constructor(AllocationTrackerStruct* tracker);
-            int destructor(AllocationTrackerStruct* tracker);
+int MDPL_RTLIB_ALLOCATION_TRACKER_constructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker);
+int MDPL_RTLIB_ALLOCATION_TRACKER_destructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker);
 
-            int add(AllocationTrackerStruct* tracker, void* ptr);
-            int remove(AllocationTrackerStruct* tracker, void* ptr);
-            bool contains(AllocationTrackerStruct* tracker, void* ptr);
+int MDPL_RTLIB_ALLOCATION_TRACKER_add(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr);
+int MDPL_RTLIB_ALLOCATION_TRACKER_remove(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr);
+bool MDPL_RTLIB_ALLOCATION_TRACKER_contains(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr);
 
-            struct contentsTuple
-            {
-                void** array;
-                size_t size;
-            };
-            contentsTuple getContents(AllocationTrackerStruct* tracker);
+//MDPL_RTLIB_ALLOCATION_TRACKER_contentsTuple
+typedef struct
+{
+    void** array;
+    size_t size;
+} MDPL_RTLIB_ALLOCATION_TRACKER_contentsTuple;
+MDPL_RTLIB_ALLOCATION_TRACKER_contentsTuple MDPL_RTLIB_ALLOCATION_TRACKER_getContents(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker);
 
-            size_t indexOf(AllocationTrackerStruct* tracker, void* ptr);
-            void initialiseArray(AllocationTrackerStruct* tracker, size_t allocationSize);
-            int addNoReallocationCheck(AllocationTrackerStruct* tracker, void* ptr);
-            int constructorWithCapacity(AllocationTrackerStruct* tracker, size_t initialCapaityIndex);
-        }
-    }
-}
+size_t MDPL_RTLIB_ALLOCATION_TRACKER_indexOf(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr);
+void MDPL_RTLIB_ALLOCATION_TRACKER_initialiseArray(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, size_t allocationSize);
+int MDPL_RTLIB_ALLOCATION_TRACKER_addNoReallocationCheck(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr);
+int MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, size_t initialCapaityIndex);
 
 #endif //ALLOCATION_TRACKER_HEADER_GUARD

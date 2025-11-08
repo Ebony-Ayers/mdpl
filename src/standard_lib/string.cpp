@@ -403,7 +403,7 @@ int MDPL_STDLIB_STRING_isAlphaNumeric(const MDPL_STDLIB_STRING_StringRef str, bo
     }
 }
 
-int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t& startIndex, const size_t& endIndex)
+int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t startIndex, const size_t endIndex)
 {
     if(startIndex > endIndex)
     {
@@ -443,32 +443,32 @@ int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalSt
     newStr->s->normalisedStr = nullptr;
     return 0;
 }
-int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator& startIt, const MDPL_STDLIB_STRING_StringIterator& endIt)
+int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator* startIt, const MDPL_STDLIB_STRING_StringIterator* endIt)
 {
-    if(((startIt.step > 1) || (startIt.step < -1)) && ((endIt.step > 1) || (endIt.step < -1)))
+    if(((startIt->step > 1) || (startIt->step < -1)) && ((endIt->step > 1) || (endIt->step < -1)))
     {
         printf("String error: substrIiterator() steps other than 1 not yet implemented.\n");
         return 1;
     }
-    if((startIt.characterIndex > endIt.characterIndex) && ((startIt.step < 0) || (endIt.step < 0)))
+    if((startIt->characterIndex > endIt->characterIndex) && ((startIt->step < 0) || (endIt->step < 0)))
     {
         printf("String error: substrIiterator() reverse substrings not yet implemented.\n");
         return 1;
     }
-    if(startIt.characterIndex > endIt.characterIndex)
+    if(startIt->characterIndex > endIt->characterIndex)
     {
         printf("String error: substrIiterator() start iterator after end iterator.\n");
         return 1;
     }
-    if(startIt.characterIndex == endIt.characterIndex)
+    if(startIt->characterIndex == endIt->characterIndex)
     {
         printf("String error: substrIiterator() start iterator same as end iterator.\n");
         return 1;
     }
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_copyString(originalStr.s, &newStr->s));
-    newStr->s->numCharacters = endIt.characterIndex - startIt.characterIndex;
-    newStr->s->startByte = startIt.byteIndex;
-    newStr->s->endByte = endIt.byteIndex;
+    newStr->s->numCharacters = endIt->characterIndex - startIt->characterIndex;
+    newStr->s->startByte = startIt->byteIndex;
+    newStr->s->endByte = endIt->byteIndex;
     const uint32_t carryOverFlags = originalStr.s->flagsSet & originalStr.s->flagsData;
     newStr->s->flagsData = carryOverFlags;
     newStr->s->flagsSet = carryOverFlags; 
@@ -657,7 +657,7 @@ int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const
 
 //================ Constructors ================
 
-int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t& numBytes, const size_t& numCharacters)
+int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t numBytes, const size_t numCharacters)
 {
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(&strRef->s));
     MDPL_STDLIB_STRING_RawString* ptr;
@@ -678,22 +678,22 @@ int MDPL_STDLIB_STRING_destroyStringRef(const MDPL_STDLIB_STRING_StringRef strRe
 }
 
 
-int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t& numBytes)
+int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t numBytes)
 {
     //a size_t is required to allocate memory though the information is not needed here 
     size_t notUsed;
-    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned((void**)((void* const*)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_RawString) + numBytes));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)((void* const*)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_RawString) + numBytes));
     //initialise string
     (**newStr).refCount = 0;
     *(size_t*)&(**newStr).numBytes = numBytes;
     memcpy((char*)(**newStr).str, data, numBytes);
     return 0;
 }
-int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t& numBytes)
+int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t numBytes)
 {
     //a size_t is required to allocate memory though the information is not needed here 
     size_t notUsed;
-    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned((void**)((void* const*)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_RawString) + numBytes));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)((void* const*)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_RawString) + numBytes));
     //initialise string
     (**newStr).refCount = 0;
     *(size_t*)&(**newStr).numBytes = numBytes;
@@ -701,12 +701,12 @@ int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawStri
 }
 int MDPL_STDLIB_STRING_INTERNAL_destroyRawString(MDPL_STDLIB_STRING_RawString* const str)
 {
-    MDPL_RETERR(mdpl::runtimeLib::allocator::deallocate((void*)(str)));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((void*)(str)));
 
     return 0;
 }
 
-int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
+int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
 {
     (**newStr).numCharacters = numCharacters;
     (**newStr).startByte = startByte;
@@ -723,7 +723,7 @@ int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* 
     //construct the string and assign it values to make it clear that it is not initialised
     MDPL_STDLIB_STRING_String* ptr;
     size_t notUsed;
-    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned((void**)(&ptr), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_String)));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)(&ptr), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_String)));
     ptr->refCount = 0;
     ptr->numCharacters = npos;
     ptr->startByte = npos;
@@ -737,7 +737,7 @@ int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* 
     ptr->refCount++;
     return 0;
 }
-int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t& numCharacters, const size_t& startByte, const size_t& endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
+int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
 {
     newStr->numCharacters = numCharacters;
     newStr->startByte = startByte;
@@ -752,7 +752,7 @@ int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_Stri
 int MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* const originalStr, MDPL_STDLIB_STRING_String* const* newStr)
 {
     size_t notUsed;
-    MDPL_RETERR(mdpl::runtimeLib::allocator::allocateAlligned((void**)((MDPL_STDLIB_STRING_String**)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_String)));
+    MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)((MDPL_STDLIB_STRING_String**)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_String)));
     (**newStr).refCount = 1;
     (**newStr).numCharacters = originalStr->numCharacters;
     (**newStr).startByte = originalStr->startByte;
@@ -785,7 +785,7 @@ int MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const s
     str->refCount--;
     if(str->refCount == 0)
     {
-        MDPL_RETERR(mdpl::runtimeLib::allocator::deallocate(str));
+        MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate(str));
     }
     return 0;
 }
