@@ -54,6 +54,13 @@ typedef struct
     size_t characterIndex;
     int32_t step;
 } MDPL_STDLIB_STRING_StringIterator;
+//ByteIterator
+typedef struct
+{
+    const MDPL_STDLIB_STRING_String* const str;
+    const uint8_t* ptr;
+    const uint8_t* const end;
+} MDPL_STDLIB_STRING_ByteIterator;
 
 const size_t npos = (size_t)-1;
 
@@ -117,8 +124,22 @@ int MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef 
 int MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator);
 
 int MDPL_STDLIB_STRING_getCurrent(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst);
+int MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst);
 int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it);
 int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const it, bool* finished);
+
+int MDPL_STDLIB_STRING_destroyIterator(MDPL_STDLIB_STRING_StringIterator* const iterator);
+
+//================ Byte iterator ================
+
+int MDPL_STDLIB_STRING_byteIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_ByteIterator* const iterator);
+
+int MDPL_STDLIB_STRING_getCurrentByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst);
+int MDPL_STDLIB_STRING_peakNextByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst);
+int MDPL_STDLIB_STRING_nextByte(MDPL_STDLIB_STRING_ByteIterator* it);
+int MDPL_STDLIB_STRING_isFinishedByte(const MDPL_STDLIB_STRING_ByteIterator* const it, bool* finished);
+
+int MDPL_STDLIB_STRING_destroyByteIterator(MDPL_STDLIB_STRING_ByteIterator* const iterator);
 
 //================ Constructors ================
 

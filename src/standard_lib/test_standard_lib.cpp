@@ -666,6 +666,104 @@ void testString()
     }
     normaliseStr1It.step = 1;
 
+    //test 6.1: peakNext
+    //maybe cobol programers were onto something when assigning line numbers
+    retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrForwardIt, &c);
+    if(retcode)
+    {
+        printf("failed test 6.1: Error during next on asciiStrForwardIt.\n");
+        return;
+    }
+    if(c.codepoint != 'o')
+    {
+        printf("failed test 6.1: Character did not contain the correct information for asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrForwardIt.str != asciiStr.s)
+    {
+        printf("failed test 6.1: String reference changed in asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrForwardIt.byteIndex != 7)
+    {
+        printf("failed test 6.1: New byte index is incorrect for asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrForwardIt.characterIndex != 7)
+    {
+        printf("failed test 6.1: New character index is incorrect for asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrForwardIt.step != 1)
+    {
+        printf("failed test 6.1: Step changed in asciiStrForwardIt.\n");
+        return;
+    }
+    
+    retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrReverseIt, &c);
+    if(retcode)
+    {
+        printf("failed test 6.1: Error during next on asciiStrReverseIt.\n");
+        return;
+    }
+    if(c.codepoint != 'l')
+    {
+        printf("failed test 6.1: Character did not contain the correct information for asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrReverseIt.str != asciiStr.s)
+    {
+        printf("failed test 6.1: String reference changed in asciiStrReverseIt.\n");
+        return;
+    }
+    if(asciiStrReverseIt.byteIndex != 9)
+    {
+        printf("failed test 6.1: New byte index is incorrect for asciiStrReverseIt.\n");
+        return;
+    }
+    if(asciiStrReverseIt.characterIndex != 9)
+    {
+        printf("failed test 6.1: New character index is incorrect for asciiStrReverseIt.\n");
+        return;
+    }
+    if(asciiStrReverseIt.step != -1)
+    {
+        printf("failed test 6.1: Step changed in asciiStrReverseIt.\n");
+        return;
+    }
+    
+    retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrDoubleIt, &c);
+    if(retcode)
+    {
+        printf("failed test 6.1: Error during next on asciiStrDoubleIt.\n");
+        return;
+    }
+    if(c.codepoint != 'l')
+    {
+        printf("failed test 6.1: Character did not contain the correct information for asciiStrForwardIt.\n");
+        return;
+    }
+    if(asciiStrDoubleIt.str != asciiStr.s)
+    {
+        printf("failed test 6.1: String reference changed in asciiStrDoubleIt.\n");
+        return;
+    }
+    if(asciiStrDoubleIt.byteIndex != 2)
+    {
+        printf("failed test 6.1: New byte index is incorrect for asciiStrDoubleIt.\n");
+        return;
+    }
+    if(asciiStrDoubleIt.characterIndex != 2)
+    {
+        printf("failed test 6.1: New character index is incorrect for asciiStrDoubleIt.\n");
+        return;
+    }
+    if(asciiStrDoubleIt.step != 2)
+    {
+        printf("failed test 6.1: Step changed in asciiStrDoubleIt.\n");
+        return;
+    }
+    
     //test 7: isFinihsed
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
     if(retcode)
@@ -2632,7 +2730,197 @@ void testString()
         printf("Failed test 41. toUpperChr incorect for upperCaseUnicodeChr.\n");
         return;
     }
+
+    //setup test 42 - 47
+    MDPL_STDLIB_STRING_ByteIterator byteIt = {};
+    uint8_t byte;
     
+    //test 42: byteIterator
+    retcode = MDPL_STDLIB_STRING_byteIterator(asciiIndexSubstr, &byteIt);
+    if(retcode)
+    {
+        printf("Failed test 42. error during MDPL_STDLIB_STRING_byteIterator with asciiIndexSubstr.\n");
+        return;
+    }
+    if(byteIt.str != asciiIndexSubstr.s)
+    {
+        printf("Failed test 42. byteIt has incorrect str memeber.\n");
+    }
+    if(byteIt.ptr != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->startByte)
+    {
+        printf("Failed test 42. byteIt has incorrect ptr memeber.\n");
+    }
+    if(byteIt.end != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->endByte)
+    {
+        printf("Failed test 42. byteIt has incorrect end memeber.\n");
+    }
+
+    //test 43: getCurrentByte
+    retcode = MDPL_STDLIB_STRING_getCurrentByte(&byteIt, &byte);
+    if(retcode)
+    {
+        printf("Failed test 43. error during MDPL_STDLIB_STRING_getCurrentByte.\n");
+        return;
+    }
+    if(byte != 'l')
+    {
+        printf("Failed test 43. MDPL_STDLIB_STRING_getCurrentByte returned incrrect data.\n");
+        return;
+    }
+    if(byteIt.str != asciiIndexSubstr.s)
+    {
+        printf("Failed test 43. MDPL_STDLIB_STRING_getCurrentByte modified str memeber.\n");
+    }
+    if(byteIt.ptr != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->startByte)
+    {
+        printf("Failed test 43. MDPL_STDLIB_STRING_getCurrentByte modified ptr memeber.\n");
+    }
+    if(byteIt.end != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->endByte)
+    {
+        printf("Failed test 43. MDPL_STDLIB_STRING_getCurrentByte modified end memeber.\n");
+    }
+
+    //test 44: peakNextByte
+    retcode = MDPL_STDLIB_STRING_getCurrentByte(&byteIt, &byte);
+    if(retcode)
+    {
+        printf("Failed test 44. error during MDPL_STDLIB_STRING_peakNextByte.\n");
+        return;
+    }
+    if(byte != 'l')
+    {
+        printf("Failed test 44. MDPL_STDLIB_STRING_peakNextByte returned incrrect data.\n");
+        return;
+    }
+    if(byteIt.str != asciiIndexSubstr.s)
+    {
+        printf("Failed test 44. MDPL_STDLIB_STRING_getCurrentByte modified str memeber.\n");
+    }
+    if(byteIt.ptr != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->startByte)
+    {
+        printf("Failed test 44. MDPL_STDLIB_STRING_getCurrentByte modified ptr memeber.\n");
+    }
+    if(byteIt.end != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->endByte)
+    {
+        printf("Failed test 44. MDPL_STDLIB_STRING_getCurrentByte modified end memeber.\n");
+    }
+
+    //test 45: nextByte
+    retcode = MDPL_STDLIB_STRING_nextByte(&byteIt);
+    if(retcode)
+    {
+        printf("Failed test 45. error during MDPL_STDLIB_STRING_nextByte.\n");
+        return;
+    }
+    if(byteIt.str != asciiIndexSubstr.s)
+    {
+        printf("Failed test 45. MDPL_STDLIB_STRING_getCurrentByte modified str memeber.\n");
+    }
+    if(byteIt.ptr != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->startByte + 1)
+    {
+        printf("Failed test 45. MDPL_STDLIB_STRING_getCurrentByte incorrectly updated ptr memeber.\n");
+    }
+    if(byteIt.end != (const uint8_t*)asciiIndexSubstr.s->rawStr->str + asciiIndexSubstr.s->endByte)
+    {
+        printf("Failed test 45. MDPL_STDLIB_STRING_getCurrentByte modified end memeber.\n");
+    }
+
+    //test 46: isFinishedByte
+    retcode = MDPL_STDLIB_STRING_isFinishedByte(&byteIt, &result);
+    if(retcode)
+    {
+        printf("Failed test 46. error during MDPL_STDLIB_STRING_isFinishedByte.\n");
+        return;
+    }
+    if(result != false)
+    {
+        printf("Failed test 46. MDPL_STDLIB_STRING_isFinishedByte returned incorrect result with unfinished iterator.\n");
+        return;
+    }
+    //manually force finished condition
+    byteIt.ptr = byteIt.end;
+    retcode = MDPL_STDLIB_STRING_isFinishedByte(&byteIt, &result);
+    if(result != true)
+    {
+        printf("Failed test 46. MDPL_STDLIB_STRING_isFinishedByte returned incorrect result with finished iterator.\n");
+        return;
+    }
+    
+    //test 47: destroyByteIterator
+    retcode = MDPL_STDLIB_STRING_destroyByteIterator(&byteIt);
+    if(retcode)
+    {
+        printf("Failed test 47. error during MDPL_STDLIB_STRING_destroyByteIterator.\n");
+        return;
+    }
+
+    //penultimate test: destroyIterator
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrForwardIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiStrForwardIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrReverseIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiStrReverseIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrDoubleIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiStrDoubleIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&normaliseStr1It);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of normaliseStr1It.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiStrIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of nonAsciiStrIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrFinishedIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiStrFinishedIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiSubstrStartIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiSubstrStartIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiSubstrEndIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of asciiSubstrEndIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiSubstrStartIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of nonAsciiSubstrStartIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiSubstrEndIt);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of nonAsciiSubstrEndIt.\n");
+        return;
+    }
+    retcode = MDPL_STDLIB_STRING_destroyIterator(&it);
+    if(retcode)
+    {
+        printf("Failed penultimate test. Error during destuction of it.\n");
+        return;
+    }
 
     //final test: deconstructions
     retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiStr);

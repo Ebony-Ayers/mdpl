@@ -571,6 +571,7 @@ int MDPL_STDLIB_STRING_toUpperChr(const MDPL_STDLIB_STRING_Character* const orig
 int MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
 {
     *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
+    str.s->refCount++;
     iterator->byteIndex = 0;
     iterator->characterIndex = 0;
     iterator->step = 1;
@@ -579,6 +580,7 @@ int MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef 
 int MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
 {
     *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
+    str.s->refCount++;
     iterator->byteIndex = str.s->rawStr->numBytes - 1;
     for(size_t _ = 0; _ < 4; _++)
     {
@@ -600,6 +602,49 @@ int MDPL_STDLIB_STRING_getCurrent(const MDPL_STDLIB_STRING_StringIterator* const
     {
         printf("String error: \"%s\" occured during string iterator getCurrrent.\n", utf8proc_errmsg(retcode));
         return 1;
+    }
+    return 0;
+}
+int MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst)
+{
+    size_t tempByteIndex = it->byteIndex;
+    if(it->step == 0) [[unlikely]]
+    {
+        printf("String error: iterator step size set to 0.\n");
+        return 1;
+    }
+    else if(it->step > 0)
+    {
+        for(int32_t i = 0; i < it->step; i++)
+        {
+            utf8proc_ssize_t retcode = utf8proc_iterate((const utf8proc_uint8_t*)(it->str->rawStr->str + tempByteIndex), -1, (utf8proc_int32_t*)(&(dst->codepoint)));
+            if(retcode < 0)
+            {
+                printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
+                return 1;
+            }
+            tempByteIndex += (size_t)(retcode);
+        }
+        return 0;
+    }
+    else
+    {
+        for(int32_t i = 0; i < -(it->step); i++)
+        {
+            //as we will be pointing to the first byte decrement by one so that we either go to the previous ascii and skip or we go to the previous multibyte and loop bakwards
+            tempByteIndex--;
+            while((it->str->rawStr->str[tempByteIndex] & 0b11000000) == 0b10000000)
+            {
+                tempByteIndex--;
+            }
+        }
+        MDPL_RETERR(MDPL_STDLIB_STRING_getCurrent(it, dst));
+        if(!utf8proc_codepoint_valid((utf8proc_int32_t)(dst->codepoint)))
+        {
+            printf("String error: reverse iteration produced invalid code point.\n");
+            return 1;
+        }
+        return 0;
     }
     return 0;
 }
@@ -652,6 +697,58 @@ int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it)
 int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const it, bool* finished)
 {
     *finished = it->byteIndex >= it->str->rawStr->numBytes;
+    return 0;
+}
+
+int MDPL_STDLIB_STRING_destroyIterator(MDPL_STDLIB_STRING_StringIterator* const iterator)
+{
+    ((MDPL_STDLIB_STRING_String*)iterator->str)->refCount--;
+    if(iterator->str->refCount == 0)
+    {
+        MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((MDPL_STDLIB_STRING_String*)iterator->str));
+    }
+    return 0;
+}
+
+//================ Byte iterator ================
+
+int MDPL_STDLIB_STRING_byteIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_ByteIterator* const iterator)
+{
+    *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
+    str.s->refCount++;
+    iterator->ptr = (const uint8_t*)str.s->rawStr->str + str.s->startByte;
+    *((const uint8_t**)(&(iterator->end))) = (const uint8_t*)str.s->rawStr->str + str.s->endByte;
+    return 0;
+}
+
+int MDPL_STDLIB_STRING_getCurrentByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
+{
+    *dst = it->ptr[0];
+    return 0;
+}
+int MDPL_STDLIB_STRING_peakNextByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
+{
+    *dst = it->ptr[1];
+    return 0;
+}
+int MDPL_STDLIB_STRING_nextByte(MDPL_STDLIB_STRING_ByteIterator* it)
+{
+    it->ptr++;
+    return 0;
+}
+int MDPL_STDLIB_STRING_isFinishedByte(const MDPL_STDLIB_STRING_ByteIterator* const it, bool* finished)
+{
+    *finished = it->ptr >= it->end;
+    return 0;
+}
+
+int MDPL_STDLIB_STRING_destroyByteIterator(MDPL_STDLIB_STRING_ByteIterator* const iterator)
+{
+    ((MDPL_STDLIB_STRING_String*)iterator->str)->refCount--;
+    if(iterator->str->refCount == 0)
+    {
+        MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((MDPL_STDLIB_STRING_String*)iterator->str));
+    }
     return 0;
 }
 
