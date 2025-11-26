@@ -23,13 +23,13 @@ namespace mdpl
 			while (cag_option_fetch(&context)) {
 				switch (cag_option_get_identifier(&context)) {
 					case 'c':
-						{ MDPL_RETERR(setMode(cliOptions, Operation::Compile)); }
+						{ MDPL_C_RETERR(setMode(cliOptions, Operation::Compile)); }
 						break;
 					case 'l':
-						{ MDPL_RETERR(setMode(cliOptions, Operation::Link)); }
+						{ MDPL_C_RETERR(setMode(cliOptions, Operation::Link)); }
 						break;
 					case 'b':
-						{ MDPL_RETERR(setMode(cliOptions, Operation::Build)); }
+						{ MDPL_C_RETERR(setMode(cliOptions, Operation::Build)); }
 						break;
 					case 'o':
 						{
@@ -183,8 +183,8 @@ namespace mdpl
 					const char* fileExtension = common::reverseStrChr(cliOptions->files[0], '.');
 					const size_t fileNameLength = static_cast<size_t>(fileExtension - cliOptions->files[0]);
 					//outputName is currently a unallocated pointer so we need to alocate it
-					if(cliOptions->op == Operation::Compile) { MDPL_RETERR(outputName->allocate(fileNameLength + 3)); }
-					else                                     { MDPL_RETERR(outputName->allocate(fileNameLength)); }
+					if(cliOptions->op == Operation::Compile) { MDPL_C_RETERR(outputName->allocate(fileNameLength + 3)); }
+					else                                     { MDPL_C_RETERR(outputName->allocate(fileNameLength)); }
 					//copy the file name sans the extension
 					memcpy(outputName->getBuff(), cliOptions->files[0], fileNameLength);
 					//copy the extension and the null terminating character

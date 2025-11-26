@@ -8,31 +8,29 @@ MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct MDPL_RTLIB_ALLOCATION_TRAC
 const size_t tablePrimes[] = {101, 1009, 10007, 100003, 1000003, 10000019, 100000007, 1000000007, 10000000019, 100000000003, 1000000000039, 10000000000037, 100000000000031, 1000000000000037, 10000000000000061, 100000000000000003, 1000000000000000003, 10000000000000000051};
 const size_t tablePrimesSize = sizeof(tablePrimes) / sizeof(size_t);
 
-int MDPL_RTLIB_ALLOCATION_TRACKER_constructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_constructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker)
 {
     MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(tracker, 0));
-    return 0;
+    return nullptr;
 }
-int MDPL_RTLIB_ALLOCATION_TRACKER_destructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_destructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker)
 {
     free(tracker->array);
 
-    return 0;
+    return nullptr;
 }
 
-int MDPL_RTLIB_ALLOCATION_TRACKER_add(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_add(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
 {
     //just some fun memory safety things
     if(tracker == nullptr) [[unlikely]]
     {
-        printf("MDPL runtime error: addNoReallocationCheck() called with null tracker.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "tracker is null");
     }
     
     if(ptr == nullptr)
     {
-        printf("MDPL runtime error: attempting to add nullptr to the tracker.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "attempting to add nullptr to the tracker");
     }
     
     //check if reallocation is required. Reallocation load factor is 75%.
@@ -41,8 +39,7 @@ int MDPL_RTLIB_ALLOCATION_TRACKER_add(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTr
         //check for max table size
         if(tracker->capacityIndxex == tablePrimesSize - 1)
         {
-            printf("MDPL runtime error: maximum number of tracked allocations exceded. MDPL does not allow more than %lu allocations. Note that a data strcture containing n elements only requires one alloication. Consider checking your code for infinite loops. If seeing this error message is not the result of a bug, on behalf of the MDPL comunity, congratulations.\n", tracker->size);
-            return 1;
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_MAXIMUM_SIZE_EXCEDED, "maximum number of tracked allocations exceded. Note that a data strcture containing n elements only requires one alloication. Consider checking your code for infinite loops. If seeing this error message is not the result of a bug, on behalf of the MDPL comunity, congratulations");
         }
         
         MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct newTracker;
@@ -65,27 +62,26 @@ int MDPL_RTLIB_ALLOCATION_TRACKER_add(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTr
         tracker->capacityIndxex = newTracker.capacityIndxex;
         tracker->divider = newTracker.divider;
 
-        return 0;
+        return nullptr;
     }
     else
     {
         MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_addNoReallocationCheck(tracker, ptr));
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_RTLIB_ALLOCATION_TRACKER_remove(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_remove(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
 {
     const size_t index = MDPL_RTLIB_ALLOCATION_TRACKER_indexOf(tracker, ptr);
     if(index != tablePrimes[tracker->capacityIndxex])
     {
         tracker->array[index] = nullptr;
         tracker->size--;
-        return 0;
+        return nullptr;
     }
     else
     {
-        printf("MDPL runtime error: attempted to remove pointer not in tracker from tracker.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "attempted to remove pointer not in tracker from tracker");
     }
 }
 bool MDPL_RTLIB_ALLOCATION_TRACKER_contains(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
@@ -144,18 +140,16 @@ void MDPL_RTLIB_ALLOCATION_TRACKER_initialiseArray(MDPL_RTLIB_ALLOCATION_TRACKER
         }
     }
 }
-int MDPL_RTLIB_ALLOCATION_TRACKER_addNoReallocationCheck(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_addNoReallocationCheck(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, void* ptr)
 {
     //just some fun memory safety things
     if(tracker == nullptr) [[unlikely]]
     {
-        printf("MDPL runtime error: addNoReallocationCheck() called with null tracker.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "tracker is null");
     }
     if(tracker->array == nullptr) [[unlikely]]
     {
-        printf("MDPL runtime error: addNoReallocationCheck() called with null tracker->array.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "tracker->array is null");
     }
 
     //compute ptr mod capacity
@@ -182,22 +176,20 @@ int MDPL_RTLIB_ALLOCATION_TRACKER_addNoReallocationCheck(MDPL_RTLIB_ALLOCATION_T
     //we have three cases, found pointer, found empty space, exceded size of container
     if(tracker->array[index] == ptr)
     {
-        printf("MDPL runtime error: attempted to add pointer already in tracker to tracker.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "attempted to add pointer already in tracker to tracker");
     }
     else if(counter == capacity)
     {
-        printf("MDPL runtime error: attempted to add pointer to full tracker. Please submit a bug report as this should be impossible.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "attempted to add pointer to full tracker. Please submit a bug report as this should be impossible");
     }
     else
     {
         tracker->array[index] = ptr;
         tracker->size++;
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, size_t initialCapaityIndex)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, size_t initialCapaityIndex)
 {
     tracker->size = 0;
     tracker->capacityIndxex = initialCapaityIndex;
@@ -208,8 +200,7 @@ int MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(MDPL_RTLIB_ALLOCATION_
     tracker->array = (void**)malloc(allocationSize);
     if(tracker->array == nullptr)
     {
-        printf("MDPL runtime error: could not allocate enough memory for allocation tracker. Attempted to allocate %lu byhtes.\n", allocationSize);
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "could not allocate enough memory for allocation tracker");
     }
     //initialise the array. This is done here rather than in a function do make valgrind stop complaining
     for(size_t i = 0; i < capacity; i++)
@@ -217,5 +208,5 @@ int MDPL_RTLIB_ALLOCATION_TRACKER_constructorWithCapacity(MDPL_RTLIB_ALLOCATION_
         tracker->array[i] = nullptr;
     }
     //initialiseArray(tracker, capacity);
-    return 0;
+    return nullptr;
 }

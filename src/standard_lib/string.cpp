@@ -2,13 +2,13 @@
 
 //================ String functions ================
 
-int MDPL_STDLIB_STRING_startsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef prefix, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_startsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef prefix, bool* result)
 {
     //if the prefix is longer than the string then by definition it cannot be a prefix
     if(prefix.s->numCharacters > str.s->numCharacters)
     {
         *result = false;
-        return 0;
+        return nullptr;
     }
 
     //make sure the strings are normalised for comparison
@@ -19,7 +19,7 @@ int MDPL_STDLIB_STRING_startsWith(const MDPL_STDLIB_STRING_StringRef str, const 
     if(prefix.s->normalisedStr->numBytes > str.s->normalisedStr->numBytes)
     {
         *result = false;
-        return 0;
+        return nullptr;
     }
 
     //compare the normalised strings byte by byte. As the strings are normalised this is a valid way to compare them.
@@ -30,19 +30,19 @@ int MDPL_STDLIB_STRING_startsWith(const MDPL_STDLIB_STRING_StringRef str, const 
         if(str.s->normalisedStr->str[i] != prefix.s->normalisedStr->str[i])
         {
             *result = false;
-            return 0;
+            return nullptr;
         }
     }
     *result = true;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_endsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef suffix, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_endsWith(const MDPL_STDLIB_STRING_StringRef str, const MDPL_STDLIB_STRING_StringRef suffix, bool* result)
 {
     //if the prefix is longer than the string then by definition it cannot be a prefix
     if(suffix.s->numCharacters > str.s->numCharacters)
     {
         *result = false;
-        return 0;
+        return nullptr;
     }
 
     //make sure the strings are normalised for comparison
@@ -53,7 +53,7 @@ int MDPL_STDLIB_STRING_endsWith(const MDPL_STDLIB_STRING_StringRef str, const MD
     if(suffix.s->normalisedStr->numBytes > str.s->normalisedStr->numBytes)
     {
         *result = false;
-        return 0;
+        return nullptr;
     }
 
     //compare the normalised strings byte by byte. As the strings are normalised this is a valid way to compare them.
@@ -66,19 +66,19 @@ int MDPL_STDLIB_STRING_endsWith(const MDPL_STDLIB_STRING_StringRef str, const MD
         if(str.s->normalisedStr->str[iStr] != suffix.s->normalisedStr->str[iSuffix])
         {
             *result = false;
-            return 0;
+            return nullptr;
         }
     }
     *result = true;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_isLower(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isLower(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isLower) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isLower ? true : false;
-        return 0;
+        return nullptr;
     }
 
     *result = true;
@@ -94,19 +94,19 @@ int MDPL_STDLIB_STRING_isLower(const MDPL_STDLIB_STRING_StringRef str, bool* res
             *result = false;
             str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isLower;
             str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isLower;
-            return 0;
+            return nullptr;
         }
     }
     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isLower;
     str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isLower;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isUpper(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isUpper(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isUpper) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isUpper ? true : false;
-        return 0;
+        return nullptr;
     }
 
     *result = true;
@@ -122,19 +122,19 @@ int MDPL_STDLIB_STRING_isUpper(const MDPL_STDLIB_STRING_StringRef str, bool* res
             *result = false;
             str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isUpper;
             str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isUpper;
-            return 0;
+            return nullptr;
         }
     }
     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isUpper;
     str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isUpper;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isWhiteSpace(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isWhiteSpace(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isWhiteSpace ? true : false;
-        return 0;
+        return nullptr;
     }
 
     *result = true;
@@ -150,19 +150,19 @@ int MDPL_STDLIB_STRING_isWhiteSpace(const MDPL_STDLIB_STRING_StringRef str, bool
             *result = false;
             str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isWhiteSpace;
             str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isWhiteSpace;
-            return 0;
+            return nullptr;
         }
     }
     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isWhiteSpace;
     str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isWhiteSpace;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isPrintable(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isPrintable(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isPrintable) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isPrintable ? true : false;
-        return 0;
+        return nullptr;
     }
 
     *result = true;
@@ -178,19 +178,19 @@ int MDPL_STDLIB_STRING_isPrintable(const MDPL_STDLIB_STRING_StringRef str, bool*
             *result = false;
             str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isPrintable;
             str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isPrintable;
-            return 0;
+            return nullptr;
         }
     }
     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isPrintable;
     str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isPrintable;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isAscii(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAscii(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAscii) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAscii ? true : false;
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -201,22 +201,22 @@ int MDPL_STDLIB_STRING_isAscii(const MDPL_STDLIB_STRING_StringRef str, bool* res
                 *result = false;
                 str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAscii;
                 str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isAscii;
-                return 0;
+                return nullptr;
             }
         }
         *result = true;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAscii;
         str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isAscii;
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_STDLIB_STRING_isValidDecimal(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isValidDecimal(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     //check if a previous call to this function has been done
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidDecimal)
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidDecimal ? true : false;
-        return 0;
+        return nullptr;
     }
     //if the stirng is not ascii then by definition it cannot be a decimal
     bool ascii;
@@ -226,7 +226,7 @@ int MDPL_STDLIB_STRING_isValidDecimal(const MDPL_STDLIB_STRING_StringRef str, bo
         *result = false;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
         str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -238,22 +238,22 @@ int MDPL_STDLIB_STRING_isValidDecimal(const MDPL_STDLIB_STRING_StringRef str, bo
                 *result = false;
                 str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
                 str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
-                return 0;
+                return nullptr;
             }
         }
         *result = true;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
         str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isValidDecimal;
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_STDLIB_STRING_isValidInt(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isValidInt(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     //check if a previous call to this function has been done
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidInt)
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidInt ? true : false;
-        return 0;
+        return nullptr;
     }
     //if the stirng is not ascii then by definition it cannot be an int
     bool ascii;
@@ -263,7 +263,7 @@ int MDPL_STDLIB_STRING_isValidInt(const MDPL_STDLIB_STRING_StringRef str, bool* 
         *result = false;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidInt;
         str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidInt;
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -277,22 +277,22 @@ int MDPL_STDLIB_STRING_isValidInt(const MDPL_STDLIB_STRING_StringRef str, bool* 
                 *result = false;
                 str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidInt;
                 str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidInt;
-                return 0;
+                return nullptr;
             }
         }
         *result = true;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidInt;
         str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isValidInt;
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     //check if a previous call to this function has been done
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isValidFloat)
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isValidFloat ? true : false;
-        return 0;
+        return nullptr;
     }
     //if the stirng is not ascii then by definition it cannot be an int
     bool ascii;
@@ -302,7 +302,7 @@ int MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool
         *result = false;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidFloat;
         str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidFloat;
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -316,13 +316,13 @@ int MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool
             {
                 if(c == '.')
                 {
-                    //a float can only have a single decimal point so if we have already found it, it is not valid
+                    //a float can only have a single decimal poMDPL_ERROR_Error* so if we have already found it, it is not valid
                     if(alreadyFoundDecimalPoint)
                     {
                         *result = false;
                         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidFloat;
                         str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidFloat;
-                        return 0;
+                        return nullptr;
                     }
                     else
                     {
@@ -334,22 +334,22 @@ int MDPL_STDLIB_STRING_isValidFloat(const MDPL_STDLIB_STRING_StringRef str, bool
                     *result = false;
                     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidFloat;
                     str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isValidFloat;
-                    return 0;
+                    return nullptr;
                 }
             }
         }
         *result = true;
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isValidFloat;
         str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isValidFloat;
-        return 0;
+        return nullptr;
     }
 }
-int MDPL_STDLIB_STRING_isAlpha(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAlpha(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlpha) [[likely]]
     {
         *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlpha ? true : false;
-        return 0;
+        return nullptr;
     }
 
     *result = true;
@@ -365,20 +365,20 @@ int MDPL_STDLIB_STRING_isAlpha(const MDPL_STDLIB_STRING_StringRef str, bool* res
             *result = false;
             str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAlpha;
             str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isAlpha;
-            return 0;
+            return nullptr;
         }
     }
     str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAlpha;
     str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isAlpha;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isAlphaNumeric(const MDPL_STDLIB_STRING_StringRef str, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAlphaNumeric(const MDPL_STDLIB_STRING_StringRef str, bool* result)
 {
     {
         if(str.s->flagsSet & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric) [[likely]]
         {
             *result = str.s->flagsData & MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric ? true : false;
-            return 0;
+            return nullptr;
         }
 
         *result = true;
@@ -394,26 +394,24 @@ int MDPL_STDLIB_STRING_isAlphaNumeric(const MDPL_STDLIB_STRING_StringRef str, bo
                 *result = false;
                 str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric;
                 str.s->flagsData &= ~MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric;
-                return 0;
+                return nullptr;
             }
         }
         str.s->flagsSet |= MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric;
         str.s->flagsData |= MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric;
-        return 0;
+        return nullptr;
     }
 }
 
-int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t startIndex, const size_t endIndex)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const size_t startIndex, const size_t endIndex)
 {
     if(startIndex > endIndex)
     {
-        printf("String error: substrIndex() start index greater than end index.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_OUT_OF_RANGE, "start index greater than end index");
     }
     if(startIndex == endIndex)
     {
-        printf("String error: substrIndex() start index same as end index.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_OUT_OF_RANGE, "start index same as end index");
     }
 
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_copyString(originalStr.s, &newStr->s));
@@ -441,29 +439,25 @@ int MDPL_STDLIB_STRING_substrIndex(const MDPL_STDLIB_STRING_StringRef originalSt
     newStr->s->flagsData = carryOverFlags;
     newStr->s->flagsSet = carryOverFlags; 
     newStr->s->normalisedStr = nullptr;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator* startIt, const MDPL_STDLIB_STRING_StringIterator* endIt)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef originalStr, MDPL_STDLIB_STRING_StringRef* const newStr, const MDPL_STDLIB_STRING_StringIterator* startIt, const MDPL_STDLIB_STRING_StringIterator* endIt)
 {
     if(((startIt->step > 1) || (startIt->step < -1)) && ((endIt->step > 1) || (endIt->step < -1)))
     {
-        printf("String error: substrIiterator() steps other than 1 not yet implemented.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_NOT_IMPLEMENTED, "steps other than 1 not yet implemented");
     }
     if((startIt->characterIndex > endIt->characterIndex) && ((startIt->step < 0) || (endIt->step < 0)))
     {
-        printf("String error: substrIiterator() reverse substrings not yet implemented.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_NOT_IMPLEMENTED, "reverse substrings not yet implemented");
     }
     if(startIt->characterIndex > endIt->characterIndex)
     {
-        printf("String error: substrIiterator() start iterator after end iterator.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_OUT_OF_RANGE, "start iterator after end iterator");
     }
     if(startIt->characterIndex == endIt->characterIndex)
     {
-        printf("String error: substrIiterator() start iterator same as end iterator.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_OUT_OF_RANGE, "start iterator same as end iterator");
     }
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_copyString(originalStr.s, &newStr->s));
     newStr->s->numCharacters = endIt->characterIndex - startIt->characterIndex;
@@ -473,111 +467,111 @@ int MDPL_STDLIB_STRING_substrIterator(const MDPL_STDLIB_STRING_StringRef origina
     newStr->s->flagsData = carryOverFlags;
     newStr->s->flagsSet = carryOverFlags; 
     newStr->s->normalisedStr = nullptr;
-    return 0;
+    return nullptr;
 }
 
 //================ Character functions ================
 
-int MDPL_STDLIB_STRING_isLowerChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isLowerChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     const utf8proc_property_t *p = utf8proc_get_property((utf8proc_int32_t)(chr->codepoint));
     *result = (p->lowercase_seqindex == UINT16_MAX) && (p->uppercase_seqindex != UINT16_MAX);
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isUpperChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isUpperChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     const utf8proc_property_t *p = utf8proc_get_property((utf8proc_int32_t)(chr->codepoint));
     *result = (p->lowercase_seqindex != UINT16_MAX) && (p->uppercase_seqindex == UINT16_MAX);
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isWhiteSpaceChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isWhiteSpaceChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     const utf8proc_property_t *p = utf8proc_get_property((utf8proc_int32_t)(chr->codepoint));
     *result = (p->bidi_class == UTF8PROC_BIDI_CLASS_B) || (p->bidi_class == UTF8PROC_BIDI_CLASS_S) || (p->bidi_class == UTF8PROC_BIDI_CLASS_WS);
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isPrintableChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isPrintableChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = utf8proc_charwidth((utf8proc_int32_t)(chr->codepoint)) != 0;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isAsciiChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAsciiChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = chr->codepoint < 128;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isDecimalChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isDecimalChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9'));
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isIntChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isIntChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9')) || (chr->codepoint == '-');
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isFloatChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isFloatChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = ((chr->codepoint >= '0') && (chr->codepoint <= '9')) || (chr->codepoint == '-') || (chr->codepoint == '.');
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isAlphaChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAlphaChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     const utf8proc_property_t *p = utf8proc_get_property((utf8proc_int32_t)(chr->codepoint));
     *result = (p->category > 0) && (p->category < 6);
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isAlphaNumericChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isAlphaNumericChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     const utf8proc_property_t *p = utf8proc_get_property((utf8proc_int32_t)(chr->codepoint));
     *result = ((p->category > 0) && (p->category < 6)) || ((p->category > 8) && (p->category < 12));
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isNewLineChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isNewLineChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = (chr->codepoint == '\n') || (chr->codepoint == '\r');
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isNullChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isNullChr(const MDPL_STDLIB_STRING_Character* const chr, bool* result)
 {
     *result = chr->codepoint == '\0';
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_valueEqualityChrChr(const MDPL_STDLIB_STRING_Character* const chr1, const MDPL_STDLIB_STRING_Character* const chr2, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_valueEqualityChrChr(const MDPL_STDLIB_STRING_Character* const chr1, const MDPL_STDLIB_STRING_Character* const chr2, bool* result)
 {
     *result = chr1->codepoint == chr2->codepoint;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_valueEqualityChrUnicode(const MDPL_STDLIB_STRING_Character* const chr1, const uint32_t codepoint, bool* result)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_valueEqualityChrUnicode(const MDPL_STDLIB_STRING_Character* const chr1, const uint32_t codepoint, bool* result)
 {
     *result = chr1->codepoint == codepoint;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_toLowerChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_toLowerChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
 {
     *newChr = { (uint32_t)(utf8proc_tolower((utf8proc_int32_t)(originalChr->codepoint))) };
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_toUpperChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_toUpperChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
 {
     *newChr = { (uint32_t)(utf8proc_toupper((utf8proc_int32_t)(originalChr->codepoint))) };
-    return 0;
+    return nullptr;
 }
 
 //================ String iterator ================
 
-int MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_frontForwardsIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
 {
     *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
     str.s->refCount++;
     iterator->byteIndex = 0;
     iterator->characterIndex = 0;
     iterator->step = 1;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_StringIterator* const iterator)
 {
     *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
     str.s->refCount++;
@@ -592,26 +586,25 @@ int MDPL_STDLIB_STRING_backReverseIterator(const MDPL_STDLIB_STRING_StringRef st
     }
     iterator->characterIndex = str.s->numCharacters - 1;
     iterator->step = -1;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_getCurrent(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_getCurrent(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst)
 {
     utf8proc_ssize_t retcode = utf8proc_iterate((const utf8proc_uint8_t*)(it->str->rawStr->str + it->byteIndex), -1, (utf8proc_int32_t*)(&(dst->codepoint)));
     if(retcode < 0)
     {
-        printf("String error: \"%s\" occured during string iterator getCurrrent.\n", utf8proc_errmsg(retcode));
-        return 1;
+        //printf("String error: \"%s\" occured during string iterator getCurrrent.\n", utf8proc_errmsg(retcode));
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error");
     }
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const it, MDPL_STDLIB_STRING_Character* dst)
 {
     size_t tempByteIndex = it->byteIndex;
     if(it->step == 0) [[unlikely]]
     {
-        printf("String error: iterator step size set to 0.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "step size set to 0");
     }
     else if(it->step > 0)
     {
@@ -620,12 +613,12 @@ int MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const i
             utf8proc_ssize_t retcode = utf8proc_iterate((const utf8proc_uint8_t*)(it->str->rawStr->str + tempByteIndex), -1, (utf8proc_int32_t*)(&(dst->codepoint)));
             if(retcode < 0)
             {
-                printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
-                return 1;
+                //printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
+                return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error");
             }
             tempByteIndex += (size_t)(retcode);
         }
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -641,20 +634,18 @@ int MDPL_STDLIB_STRING_peakNext(const MDPL_STDLIB_STRING_StringIterator* const i
         MDPL_RETERR(MDPL_STDLIB_STRING_getCurrent(it, dst));
         if(!utf8proc_codepoint_valid((utf8proc_int32_t)(dst->codepoint)))
         {
-            printf("String error: reverse iteration produced invalid code point.\n");
-            return 1;
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_GENERIC, "reverse iteration produced invalid code point");
         }
-        return 0;
+        return nullptr;
     }
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it)
 {
     utf8proc_int32_t chracter;
     if(it->step == 0) [[unlikely]]
     {
-        printf("String error: iterator step size set to 0.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "step size set to 0");
     }
     else if(it->step > 0)
     {
@@ -663,13 +654,13 @@ int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it)
             utf8proc_ssize_t retcode = utf8proc_iterate((const utf8proc_uint8_t*)(it->str->rawStr->str + it->byteIndex), -1, &chracter);
             if(retcode < 0)
             {
-                printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
-                return 1;
+                //printf("String error: \"%s\" occured during string iterator next.\n", utf8proc_errmsg(retcode));
+                return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error");
             }
             it->byteIndex += (size_t)(retcode);
         }
         it->characterIndex += (size_t)(it->step);
-        return 0;
+        return nullptr;
     }
     else
     {
@@ -686,96 +677,95 @@ int MDPL_STDLIB_STRING_next(MDPL_STDLIB_STRING_StringIterator* it)
         MDPL_RETERR(MDPL_STDLIB_STRING_getCurrent(it, &c));
         if(!utf8proc_codepoint_valid((utf8proc_int32_t)(c.codepoint)))
         {
-            printf("String error: reverse iteration produced invalid code point.\n");
-            return 1;
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_GENERIC, "reverse iteration produced invalid code point");
         }
         it->characterIndex += (size_t)(it->step);
-        return 0;
+        return nullptr;
     }
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const it, bool* finished)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isFinished(const MDPL_STDLIB_STRING_StringIterator* const it, bool* finished)
 {
     *finished = it->byteIndex >= it->str->rawStr->numBytes;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_destroyIterator(MDPL_STDLIB_STRING_StringIterator* const iterator)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_destroyIterator(MDPL_STDLIB_STRING_StringIterator* const iterator)
 {
     ((MDPL_STDLIB_STRING_String*)iterator->str)->refCount--;
     if(iterator->str->refCount == 0)
     {
         MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((MDPL_STDLIB_STRING_String*)iterator->str));
     }
-    return 0;
+    return nullptr;
 }
 
 //================ Byte iterator ================
 
-int MDPL_STDLIB_STRING_byteIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_ByteIterator* const iterator)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_byteIterator(const MDPL_STDLIB_STRING_StringRef str, MDPL_STDLIB_STRING_ByteIterator* const iterator)
 {
     *((MDPL_STDLIB_STRING_String**)&iterator->str) = str.s;
     str.s->refCount++;
     iterator->ptr = (const uint8_t*)str.s->rawStr->str + str.s->startByte;
     *((const uint8_t**)(&(iterator->end))) = (const uint8_t*)str.s->rawStr->str + str.s->endByte;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_getCurrentByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_getCurrentByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
 {
     *dst = it->ptr[0];
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_peakNextByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_peakNextByte(const MDPL_STDLIB_STRING_ByteIterator* const it, uint8_t* dst)
 {
     *dst = it->ptr[1];
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_nextByte(MDPL_STDLIB_STRING_ByteIterator* it)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_nextByte(MDPL_STDLIB_STRING_ByteIterator* it)
 {
     it->ptr++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_isFinishedByte(const MDPL_STDLIB_STRING_ByteIterator* const it, bool* finished)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_isFinishedByte(const MDPL_STDLIB_STRING_ByteIterator* const it, bool* finished)
 {
     *finished = it->ptr >= it->end;
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_destroyByteIterator(MDPL_STDLIB_STRING_ByteIterator* const iterator)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_destroyByteIterator(MDPL_STDLIB_STRING_ByteIterator* const iterator)
 {
     ((MDPL_STDLIB_STRING_String*)iterator->str)->refCount--;
     if(iterator->str->refCount == 0)
     {
         MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((MDPL_STDLIB_STRING_String*)iterator->str));
     }
-    return 0;
+    return nullptr;
 }
 
 //================ Constructors ================
 
-int MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t numBytes, const size_t numCharacters)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_createStringRefFromCStr(MDPL_STDLIB_STRING_StringRef* const strRef, const char* cStr, const size_t numBytes, const size_t numCharacters)
 {
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(&strRef->s));
     MDPL_STDLIB_STRING_RawString* ptr;
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_createRawString(&ptr, cStr, numBytes));
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(strRef->s, numCharacters, 0, numBytes, ptr));
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_copyStringRef(const MDPL_STDLIB_STRING_StringRef originalStrRef, MDPL_STDLIB_STRING_StringRef* const newStrRef)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_copyStringRef(const MDPL_STDLIB_STRING_StringRef originalStrRef, MDPL_STDLIB_STRING_StringRef* const newStrRef)
 {
     *((MDPL_STDLIB_STRING_String**)&newStrRef->s) = originalStrRef.s;
     newStrRef->s->refCount++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_destroyStringRef(const MDPL_STDLIB_STRING_StringRef strRef)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_destroyStringRef(const MDPL_STDLIB_STRING_StringRef strRef)
 {
     MDPL_RETERR(MDPL_STDLIB_STRING_INTERNAL_destroyString(strRef.s));
-    return 0;
+    return nullptr;
 }
 
 
-int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t numBytes)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* const* newStr, const char* data, const size_t numBytes)
 {
     //a size_t is required to allocate memory though the information is not needed here 
     size_t notUsed;
@@ -784,9 +774,9 @@ int MDPL_STDLIB_STRING_INTERNAL_createRawString(MDPL_STDLIB_STRING_RawString* co
     (**newStr).refCount = 0;
     *(size_t*)&(**newStr).numBytes = numBytes;
     memcpy((char*)(**newStr).str, data, numBytes);
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t numBytes)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawString* const* newStr, const size_t numBytes)
 {
     //a size_t is required to allocate memory though the information is not needed here 
     size_t notUsed;
@@ -794,16 +784,16 @@ int MDPL_STDLIB_STRING_INTERNAL_createRawStringNoCopy(MDPL_STDLIB_STRING_RawStri
     //initialise string
     (**newStr).refCount = 0;
     *(size_t*)&(**newStr).numBytes = numBytes;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_destroyRawString(MDPL_STDLIB_STRING_RawString* const str)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_destroyRawString(MDPL_STDLIB_STRING_RawString* const str)
 {
     MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate((void*)(str)));
 
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String* const* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
 {
     (**newStr).numCharacters = numCharacters;
     (**newStr).startByte = startByte;
@@ -813,9 +803,9 @@ int MDPL_STDLIB_STRING_INTERNAL_createStringWithRawStr(MDPL_STDLIB_STRING_String
     *(MDPL_STDLIB_STRING_RawString**)&(**newStr).rawStr = rawStr;
     (**newStr).normalisedStr = nullptr;
     (**newStr).rawStr->refCount++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* const* newStr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* const* newStr)
 {
     //construct the string and assign it values to make it clear that it is not initialised
     MDPL_STDLIB_STRING_String* ptr;
@@ -832,9 +822,9 @@ int MDPL_STDLIB_STRING_INTERNAL_createStringNoRawStr(MDPL_STDLIB_STRING_String* 
     //copy the string taking a reference and then manually increment refCount
     *(MDPL_STDLIB_STRING_String**)newStr = ptr;
     ptr->refCount++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_String* newStr, const size_t numCharacters, const size_t startByte, const size_t endByte, MDPL_STDLIB_STRING_RawString* const rawStr)
 {
     newStr->numCharacters = numCharacters;
     newStr->startByte = startByte;
@@ -844,9 +834,9 @@ int MDPL_STDLIB_STRING_INTERNAL_initialiseExistingString(MDPL_STDLIB_STRING_Stri
     *(MDPL_STDLIB_STRING_RawString**)&newStr->rawStr = rawStr;
     newStr->normalisedStr = nullptr;
     newStr->rawStr->refCount++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* const originalStr, MDPL_STDLIB_STRING_String* const* newStr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* const originalStr, MDPL_STDLIB_STRING_String* const* newStr)
 {
     size_t notUsed;
     MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_allocateAlligned((void**)((MDPL_STDLIB_STRING_String**)(newStr)), &notUsed, 4, sizeof(MDPL_STDLIB_STRING_String)));
@@ -859,9 +849,9 @@ int MDPL_STDLIB_STRING_INTERNAL_copyString(const MDPL_STDLIB_STRING_String* cons
     *(MDPL_STDLIB_STRING_RawString**)&(**newStr).rawStr = originalStr->rawStr;
     (**newStr).normalisedStr = originalStr->normalisedStr;
     (**newStr).rawStr->refCount++;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const str)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const str)
 {
     if(str->rawStr != nullptr)
     {
@@ -884,10 +874,10 @@ int MDPL_STDLIB_STRING_INTERNAL_destroyString(MDPL_STDLIB_STRING_String* const s
     {
         MDPL_RETERR(MDPL_RTLIB_ALLOCATOR_deallocate(str));
     }
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_INTERNAL_normaliseString(MDPL_STDLIB_STRING_String* const str)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_normaliseString(MDPL_STDLIB_STRING_String* const str)
 {
     //TODO: skip normalising if the string is ascii
     if(str->normalisedStr == nullptr)
@@ -905,8 +895,8 @@ int MDPL_STDLIB_STRING_INTERNAL_normaliseString(MDPL_STDLIB_STRING_String* const
         utf8proc_ssize_t result = utf8proc_decompose_custom(originalCStr, originalNumBytes, nullptr, 0, options, nullptr, nullptr);
         if(result < 0)
         {
-            printf("String error: \"%s\" occured during counting number of bytes for normalisation.\n", utf8proc_errmsg(result));
-            return 1;
+            //printf("String error: \"%s\" occured during counting number of bytes for normalisation.\n", utf8proc_errmsg(result));
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error during counting number of bytes for normalisation");
         }
         //for reasons I don't understand we must assume that each bytes will be the maximum length of 4 bytes. An extra byte is added for null terminating the string to determine it's length.
         size_t numBytesRequiredForDecomposition = (utf8proc_size_t)(result) * sizeof(utf8proc_int32_t);
@@ -918,31 +908,31 @@ int MDPL_STDLIB_STRING_INTERNAL_normaliseString(MDPL_STDLIB_STRING_String* const
         result = utf8proc_decompose_custom(originalCStr, originalNumBytes, buffer, result, options, nullptr, nullptr);
         if(result < 0)
         {
-            printf("String error: \"%s\" occured during decomposing string for normalisation.\n", utf8proc_errmsg(result));
-            return 1;
+            //printf("String error: \"%s\" occured during decomposing string for normalisation.\n", utf8proc_errmsg(result));
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error during decomposing string for normalisation");
         }
         //I have no idea what result represents
         //this functions takes the fully decomposed string and composes it into the normalised form
         result = utf8proc_reencode(buffer, result, options);
         if(result < 0)
         {
-            printf("String error: \"%s\" occured during composing string for normalisation.\n", utf8proc_errmsg(result));
-            return 1;
+            //printf("String error: \"%s\" occured during composing string for normalisation.\n", utf8proc_errmsg(result));
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error during composing string for normalisation");
         }
         //finish initialising the string
         str->normalisedStr->refCount++;
         *(size_t*)&str->normalisedStr->numBytes = (size_t)result;
     }
 
-    return 0;
+    return nullptr;
 }
 
-int MDPL_STDLIB_STRING_INTERNAL_createInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_createInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr)
 {
     *ptr = (const utf8proc_uint8_t*)(str.s->rawStr->str) + str.s->startByte;
-    return 0;
+    return nullptr;
 }
-int MDPL_STDLIB_STRING_INTERNAL_incrementInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character)
+MDPL_ERROR_Error* MDPL_STDLIB_STRING_INTERNAL_incrementInternalIterator(const MDPL_STDLIB_STRING_StringRef str, const utf8proc_uint8_t** ptr, utf8proc_int32_t* character)
 {
     if(*ptr < (const utf8proc_uint8_t*)(str.s->rawStr->str) + str.s->endByte)
     {
@@ -950,14 +940,14 @@ int MDPL_STDLIB_STRING_INTERNAL_incrementInternalIterator(const MDPL_STDLIB_STRI
         if(retcode < 0)
         {
             printf("String error: \"%s\" occured during incrementInternalIterator.\n", utf8proc_errmsg(retcode));
-            return 1;
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_EXTERNAL, "utf8proc error");
         }
         *ptr += retcode;
     }
     else
     {
         printf("String error: Internal iterator exceeded bounds of string.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_OUT_OF_RANGE, "iterator exceeded bounds of string");
     }
-    return 0;
+    return nullptr;
 }

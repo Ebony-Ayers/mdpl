@@ -11,10 +11,10 @@ int main(int argc, char** argv)
 	{
 		//process the cli arguments
 		mdpl::args::CLIOptions cliOptions;
-		MDPL_RETERR(mdpl::args::passArgs(&cliOptions, argc, argv));
-		MDPL_RETERR(mdpl::args::checkArgs(&cliOptions));
+		MDPL_C_RETERR(mdpl::args::passArgs(&cliOptions, argc, argv));
+		MDPL_C_RETERR(mdpl::args::checkArgs(&cliOptions));
 		mdpl::common::RAIIBuffer<char> outputName;
-		MDPL_RETERR(mdpl::args::defaultArgs(&cliOptions, &outputName));
+		MDPL_C_RETERR(mdpl::args::defaultArgs(&cliOptions, &outputName));
 
 		if(cliOptions.hasHelp)
 		{
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			if(cliOptions.isCompilerDebug) { MDPL_RETERR(mdpl::args::debugPrintCLIOptionsStruct(&cliOptions)); }
+			if(cliOptions.isCompilerDebug) { MDPL_C_RETERR(mdpl::args::debugPrintCLIOptionsStruct(&cliOptions)); }
 
 			if(cliOptions.op == mdpl::args::Operation::Compile)
 			{

@@ -2,12 +2,12 @@
 
 extern MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker;
 
-int MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n)
 {
     MDPL_RTLIB_ALLOCATOR_allocateAlligned(ptr, actualAllocated, MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT, n);
-    return 0;
+    return nullptr;
 }
-int MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n)
 {
     //round the size up to the nearest multiple of the allignment
     *actualAllocated = ((n / allignment) + 1) * allignment;
@@ -15,37 +15,35 @@ int MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, c
     if(ptr == nullptr)
     {
         printf("MDPL runtime error: failed to allocate %lu bytes of memory with %lu byte allignment.\n", n, allignment);
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "failed to allocate requested memory");
     }
     MDPL_RTLIB_ALLOCATION_TRACKER_add(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, *ptr);
-    return 0;
+    return nullptr;
 }
-int MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr)
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr)
 {
     if(ptr == nullptr)
     {
-        printf("MDPL runtime error: attempted to deallocate nullptr.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "attempted to deallocate nullptr");
     }
     else if(MDPL_RTLIB_ALLOCATION_TRACKER_contains(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, ptr))
     {
         MDPL_RTLIB_ALLOCATION_TRACKER_remove(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker, ptr);
         free(ptr);
-        return 0;
+        return nullptr;
     }
     else
     {
-        printf("MDPL runtime error: failed to deallocate memory as no matching allocation exists.\n");
-        return 1;
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "failed to deallocate memory as no matching allocation exists");
     }
 }
 
-int MDPL_RTLIB_ALLOCATOR_initialiseAllocator()
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_initialiseAllocator()
 {
     MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_constructor(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker));
-    return 0;
+    return nullptr;
 }
-int MDPL_RTLIB_ALLOCATOR_destroyAllocator()
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_destroyAllocator()
 {
     MDPL_RTLIB_ALLOCATION_TRACKER_contentsTuple contents = MDPL_RTLIB_ALLOCATION_TRACKER_getContents(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker);
     for(size_t i = 0; i < contents.size; i++)
@@ -57,7 +55,7 @@ int MDPL_RTLIB_ALLOCATOR_destroyAllocator()
     }
     MDPL_RETERR(MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker));
     
-    return 0;
+    return nullptr;
 }
 
 bool MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory()

@@ -29,41 +29,41 @@ namespace mdpl
                 fread(buff.getBuff() + 1, 1, fileSize, fileHandle);
 
                 //step 1: clean up bad characters
-                MDPL_RETERR(replaceBadChars(&buff, fileSize));
+                MDPL_C_RETERR(replaceBadChars(&buff, fileSize));
                 //step 2: isolate strings and remove them
                 size_t staticStringsLength;
-                MDPL_RETERR(getNumStrings(&buff, fileSize, &staticStringsLength, fileName));
+                MDPL_C_RETERR(getNumStrings(&buff, fileSize, &staticStringsLength, fileName));
                 mdpl::common::RAIIBuffer<mdpl::common::RAIIBuffer<char>> staticStrings;
-                MDPL_RETERR(staticStrings.allocate(staticStringsLength));
-                MDPL_RETERR(isolateStrings(&buff, fileSize, staticStrings, staticStringsLength));
-                MDPL_RETERR(removeStrings(&buff, fileSize));
+                MDPL_C_RETERR(staticStrings.allocate(staticStringsLength));
+                MDPL_C_RETERR(isolateStrings(&buff, fileSize, staticStrings, staticStringsLength));
+                MDPL_C_RETERR(removeStrings(&buff, fileSize));
                 //step 3: convert all sapces to null terminating characters
-                MDPL_RETERR(spacesToNull(&buff, fileSize));
+                MDPL_C_RETERR(spacesToNull(&buff, fileSize));
                 //step 4: remove comments
-                MDPL_RETERR(validateComments(&buff, fileSize, fileName));
-                MDPL_RETERR(removeComments(&buff, fileSize));
+                MDPL_C_RETERR(validateComments(&buff, fileSize, fileName));
+                MDPL_C_RETERR(removeComments(&buff, fileSize));
                 //step 5: create the token list
                 size_t numFlatTokens;
-                MDPL_RETERR(getNumFlatTokens(&buff, fileSize, &numFlatTokens));
+                MDPL_C_RETERR(getNumFlatTokens(&buff, fileSize, &numFlatTokens));
                 mdpl::common::RAIIBuffer<SourceToken> flatTokens;
-                MDPL_RETERR(createTokenList(&buff, fileSize, &flatTokens, numFlatTokens));
+                MDPL_C_RETERR(createTokenList(&buff, fileSize, &flatTokens, numFlatTokens));
                 //step 6: clasify the tokens
-                MDPL_RETERR(validateDoubleSymbols(&flatTokens, numFlatTokens, fileName));
-                MDPL_RETERR(createHeirechy(&flatTokens, numFlatTokens));
-                MDPL_RETERR(identityStrings(&flatTokens, numFlatTokens, &staticStrings, staticStringsLength));
-                MDPL_RETERR(identityKeywords(&flatTokens, numFlatTokens));
-                MDPL_RETERR(identityFunctions(&flatTokens, numFlatTokens));
-                MDPL_RETERR(identityTypes(&flatTokens, numFlatTokens, fileName));
+                MDPL_C_RETERR(validateDoubleSymbols(&flatTokens, numFlatTokens, fileName));
+                MDPL_C_RETERR(createHeirechy(&flatTokens, numFlatTokens));
+                MDPL_C_RETERR(identityStrings(&flatTokens, numFlatTokens, &staticStrings, staticStringsLength));
+                MDPL_C_RETERR(identityKeywords(&flatTokens, numFlatTokens));
+                MDPL_C_RETERR(identityFunctions(&flatTokens, numFlatTokens));
+                MDPL_C_RETERR(identityTypes(&flatTokens, numFlatTokens, fileName));
                 //step 7: group tokens
                 size_t numScopes;
-                MDPL_RETERR(getNumScopes(&flatTokens, numFlatTokens, &numScopes));
+                MDPL_C_RETERR(getNumScopes(&flatTokens, numFlatTokens, &numScopes));
                 mdpl::common::RAIIBuffer<Scope> scopeList;
-                MDPL_RETERR(groupScopes(&flatTokens, numFlatTokens, numScopes, &scopeList));
+                MDPL_C_RETERR(groupScopes(&flatTokens, numFlatTokens, numScopes, &scopeList));
                 size_t numStatments;
-                MDPL_RETERR(getNumStatments(&flatTokens, numFlatTokens, &numStatments));
+                MDPL_C_RETERR(getNumStatments(&flatTokens, numFlatTokens, &numStatments));
                 mdpl::common::RAIIBuffer<Statment> statmentList;
-                MDPL_RETERR(groupStatments(&flatTokens, numFlatTokens, numStatments, &statmentList));
-                MDPL_RETERR(linkScopesToStatments(numFlatTokens, numStatments, &statmentList, numScopes, &scopeList));
+                MDPL_C_RETERR(groupStatments(&flatTokens, numFlatTokens, numStatments, &statmentList));
+                MDPL_C_RETERR(linkScopesToStatments(numFlatTokens, numStatments, &statmentList, numScopes, &scopeList));
 
                 //when debuging dump the clasified symbols for each file
                 if(cliOptions->isCompilerDebug)
@@ -266,7 +266,7 @@ namespace mdpl
             //in the event that the very first character is a dounble quote
             if(str[0] == '\"')
             {
-                MDPL_RETERR(internal::copyStringLiteral(&(staticStrings[0]), &(str[0])));
+                MDPL_C_RETERR(internal::copyStringLiteral(&(staticStrings[0]), &(str[0])));
                 staticStringsIndex++;
                 isOpeningQuote = false;
             }
@@ -281,7 +281,7 @@ namespace mdpl
                             printf("Error: isolateStrings exceded length of staticStrings.\n");
                             return 1;
                         }
-                        MDPL_RETERR(internal::copyStringLiteral(&(staticStrings[staticStringsIndex]), &(str[i])));
+                        MDPL_C_RETERR(internal::copyStringLiteral(&(staticStrings[staticStringsIndex]), &(str[i])));
                         staticStringsIndex++;
                         isOpeningQuote = false;
                     }
@@ -513,7 +513,7 @@ namespace mdpl
         }
         int createTokenList(common::RAIIBuffer<char>* buff, const size_t& bufferLength, common::RAIIBuffer<SourceToken>* tokenList, const size_t& tokenListSize)
         {
-            MDPL_RETERR(tokenList->allocate(tokenListSize));
+            MDPL_C_RETERR(tokenList->allocate(tokenListSize));
             char* str = buff->getBuff();
 
             size_t tokenIndex = 0;
@@ -832,7 +832,7 @@ namespace mdpl
                     {
                         Scope scope;
                         scope.startTokenIndex = i;
-                        MDPL_RETERR(internal::findCorespondingScopeClose(tokenList, numTokens, i, &scope.stopTokenIndex));
+                        MDPL_C_RETERR(internal::findCorespondingScopeClose(tokenList, numTokens, i, &scope.stopTokenIndex));
                         scope.startStatmentIndex = 0;
                         scope.stopStatmentIndex = 0;
                         if(scopeListIndex >= numScopes)

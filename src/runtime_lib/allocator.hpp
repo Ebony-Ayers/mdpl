@@ -9,12 +9,12 @@
 
 #define MDPL_RUNTIME_ALLOCATOR_MINIMAL_ALLIGNMENT 4
 
-int MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n);
-int MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n);
-int MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr);
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_allocate(void** ptr, size_t* actualAllocated, const size_t n);
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_allocateAlligned(void** ptr, size_t* actualAllocated, const size_t allignment, const size_t n);
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_deallocate(void* ptr);
 
-int MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
-int MDPL_RTLIB_ALLOCATOR_destroyAllocator();
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
+MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATOR_destroyAllocator();
 
 //used for debugging
 bool MDPL_RTLIB_ALLOCATOR_doesAllocatorHaveActiveMemory();

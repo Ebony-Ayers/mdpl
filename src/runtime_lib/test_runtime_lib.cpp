@@ -9,14 +9,15 @@ void testTracker()
 
     MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct tracker;
 
-    int retcode;
+    MDPL_ERROR_Error* retcode;
     bool res;
 
     //test 1: construct tracker
     retcode = MDPL_RTLIB_ALLOCATION_TRACKER_constructor(&tracker);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 1: error during constructor.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
@@ -24,10 +25,11 @@ void testTracker()
     for(uint64_t i = 1000; i < 1050; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 2: error during add.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -44,10 +46,11 @@ void testTracker()
     for(uint64_t i = 1000; i < 1050; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 2: error during remove.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -66,10 +69,11 @@ void testTracker()
     for(uint64_t i = 1000; i < 2000; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 3: error during add.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -86,10 +90,11 @@ void testTracker()
     for(uint64_t i = 1000; i < 2000; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 3: error during remove.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -108,10 +113,11 @@ void testTracker()
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 4: error during add.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -128,10 +134,11 @@ void testTracker()
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 4: error during remove.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -193,10 +200,11 @@ void testTracker()
     for(size_t i = 0; i < 5000; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(insertedValues[i]));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 5: error during add.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -213,10 +221,11 @@ void testTracker()
     for(size_t i = 0; i < 5000; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(insertedValues[i]));
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 5: error during remove.\n");
             MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -234,9 +243,10 @@ void testTracker()
 
     //test 6: destructor
     retcode = MDPL_RTLIB_ALLOCATION_TRACKER_destructor(&tracker);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: error during destructor.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
@@ -245,13 +255,14 @@ void testTracker()
 
 void testAllocator()
 {
-    int retcode;
+    MDPL_ERROR_Error* retcode;
 
     //test 1: initialiseAllocator
     retcode = MDPL_RTLIB_ALLOCATOR_initialiseAllocator();
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 1: Error during initialiseAllocator.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
@@ -261,7 +272,8 @@ void testAllocator()
     {
         size_t trueCapacity;
         retcode = MDPL_RTLIB_ALLOCATOR_allocate(allocatedPointers + i, &trueCapacity, 8);
-        if(retcode)
+        MDPL_ERROR_destroyError(retcode);
+        if(retcode != nullptr)
         {
             printf("failed test 2: Error during allocate.\n");
             MDPL_RTLIB_ALLOCATOR_destroyAllocator();
@@ -283,6 +295,7 @@ void testAllocator()
     {
         printf("failed test 3: Successfully deallocated unallocated memory.\n");
         MDPL_RTLIB_ALLOCATOR_destroyAllocator();
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     
@@ -290,10 +303,11 @@ void testAllocator()
     for(size_t i = 0; i < 10; i++)
     {
         retcode = MDPL_RTLIB_ALLOCATOR_deallocate(allocatedPointers[i]);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 3: Error during deallocate.\n");
             MDPL_RTLIB_ALLOCATOR_destroyAllocator();
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -304,13 +318,15 @@ void testAllocator()
     {
         printf("failed test 4: Successfully deallocated nullptr.\n");
         MDPL_RTLIB_ALLOCATOR_destroyAllocator();
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
     retcode = MDPL_RTLIB_ALLOCATOR_destroyAllocator();
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 4: Error during destroyAllocator.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 

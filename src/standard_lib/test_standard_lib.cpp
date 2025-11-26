@@ -9,6 +9,7 @@
 #include "basic_list_template.cpp"
 
 #include "string.hpp"
+#include "../runtime_lib/error.hpp"
 
 //this is not required in general use for use however is needed for debugging
 #include "../runtime_lib/allocator.hpp"
@@ -17,14 +18,15 @@
 
 void testShortList()
 {
-    int retcode;
+    MDPL_ERROR_Error* retcode;
 
     //test constructor
     MDPL_STDLIB_SHORT_LIST_int_ShortList* pList;
     retcode = MDPL_STDLIB_SHORT_LIST_int_constructor(&pList);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed to construct basic list.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
@@ -39,9 +41,10 @@ void testShortList()
     for(int i = 0; i < 100; i++)
     {
         retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to append to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -49,9 +52,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != i)
@@ -64,9 +68,10 @@ void testShortList()
     for(int i = 100; i < 1000; i++)
     {
         retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to append to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -74,9 +79,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != i)
@@ -91,9 +97,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_back(pList, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from back basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != i)
@@ -102,9 +109,10 @@ void testShortList()
             return;
         }
         retcode = MDPL_STDLIB_SHORT_LIST_int_removeBack(pList);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to remove last element of list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -118,9 +126,10 @@ void testShortList()
     for(int i = 0; i < 100; i++)
     {
         retcode = MDPL_STDLIB_SHORT_LIST_int_prepend(&pList, &i);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to prepend to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -128,9 +137,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != 99 - i)
@@ -143,9 +153,10 @@ void testShortList()
     for(int i = 100; i < 2000; i++)
     {
         retcode = MDPL_STDLIB_SHORT_LIST_int_prepend(&pList, &i);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to prepend to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -153,9 +164,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != 1999 - i)
@@ -170,9 +182,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_front(pList, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from front basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != i)
@@ -181,9 +194,10 @@ void testShortList()
             return;
         }
         retcode = MDPL_STDLIB_SHORT_LIST_int_removeFront(pList);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to remove first element of list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -197,9 +211,10 @@ void testShortList()
     for(int i = 0; i < 10; i++)
     {
         retcode = MDPL_STDLIB_SHORT_LIST_int_append(&pList, &i);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to append to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -207,9 +222,10 @@ void testShortList()
     {
         int temp = i + 10;
         retcode = MDPL_STDLIB_SHORT_LIST_int_set(pList, (uint32_t)i, &temp);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to write to basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
@@ -217,9 +233,10 @@ void testShortList()
     {
         int val;
         retcode = MDPL_STDLIB_SHORT_LIST_int_get(pList, (uint32_t)i, &val);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("Failed to get data from basic list.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(val != i + 10)
@@ -231,9 +248,10 @@ void testShortList()
 
     //test clear
     retcode = MDPL_STDLIB_SHORT_LIST_int_clear(pList);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed to clear list.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     else if(MDPL_STDLIB_SHORT_LIST_int_isEmpty(pList) == false)
@@ -244,9 +262,10 @@ void testShortList()
 
     //test deconstruction
     retcode = MDPL_STDLIB_SHORT_LIST_int_destructor(pList);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed to destroy basic list.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
@@ -279,15 +298,17 @@ void testString()
     const size_t normaliseCStrNumCharacters2 = 2;
     const size_t normaliseCStrNumBytes2 = 6;
     
-    int retcode;
+    MDPL_ERROR_Error* retcode;
     bool result;
 
     //test 1: construct string with ascii data and test raw str
     MDPL_STDLIB_STRING_StringRef asciiStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&asciiStr, asciiCStr, asciiCStrNumBytes, asciiCStrNumCharacters);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 1. Error during constructing ascii str.\n");
+        MDPL_ERROR_destroyError(retcode);
+        return;
     }
     if(asciiStr.s->rawStr->numBytes != asciiCStrNumBytes)
     {
@@ -320,9 +341,10 @@ void testString()
     //test 2: construct raw string with emoji data and test raw str
     MDPL_STDLIB_STRING_StringRef emojiStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&emojiStr, emojiCStr, emojiCStrNumBytes, emojiCStrNumCharacters);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 2. Error during constructing emijo string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(emojiStr.s->rawStr->numBytes != emojiCStrNumBytes)
@@ -356,9 +378,10 @@ void testString()
     //test 3: construct raw string with normalise data
     MDPL_STDLIB_STRING_StringRef normaliseStr1 = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&normaliseStr1, normaliseCStr1, normaliseCStrNumBytes1, normaliseCStrNumCharacters1);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 3. Error during constructing normalise str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(normaliseStr1.s->rawStr->numBytes != normaliseCStrNumBytes1)
@@ -392,9 +415,10 @@ void testString()
     //test 4: construct raw string with normalise data
     MDPL_STDLIB_STRING_StringRef normaliseStr2 = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&normaliseStr2, normaliseCStr2, normaliseCStrNumBytes2, normaliseCStrNumCharacters2);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 4. Error during constructing normalise str 2.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(normaliseStr2.s->rawStr->numBytes != normaliseCStrNumBytes2)
@@ -428,52 +452,52 @@ void testString()
     //setup for steps 13-15
     MDPL_STDLIB_STRING_StringRef validDecimalStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validDecimalStr, "123456789", 9, 9);
-    if(retcode) { printf("Failed test 13. Error during constructing valid decimal str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing valid decimal str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef validIntStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validIntStr, "-123456789", 10, 10);
-    if(retcode) { printf("Failed test 13. Error during constructing valid int str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing valid int str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef invalidIntStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidIntStr, "-1234567-89", 11, 11);
-    if(retcode) { printf("Failed test 13. Error during constructing invalid int str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing invalid int str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef validFloatStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&validFloatStr, "-1234.56789", 11, 11);
-    if(retcode) { printf("Failed test 13. Error during constructing valid float str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing valid float str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef invalidFloatStr1 = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidFloatStr1, "-1234.567.89", 12, 12);
-    if(retcode) { printf("Failed test 13. Error during constructing invalid float str 1.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing invalid float str 1.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef invalidFloatStr2 = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&invalidFloatStr2, "-1234.567-89", 12, 12);
-    if(retcode) { printf("Failed test 13. Error during constructing invalid float str 2.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 13. Error during constructing invalid float str 2.\n"); MDPL_ERROR_destroyError(retcode); return; }
     //setup for steps 16-17
     MDPL_STDLIB_STRING_StringRef lowerCaseStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCaseStr, "street straße δρόμος", 27, 20);
-    if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing lower cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef upperCaseStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCaseStr, "STREET STRASSE ΔΡΌΜΟΣ", 27, 21);
-    if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing upper cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef mixedCaseStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&mixedCaseStr, "Street Straße Δρόμος", 27, 20);
-    if(retcode) { printf("Failed test 16. Error during constructing mixed cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing mixed cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     //setup for test 20-21
     MDPL_STDLIB_STRING_StringRef alphaStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&alphaStr, "helloWorld", 10, 10);
-    if(retcode) { printf("Failed test 20. Error during constructing alpha str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 20. Error during constructing alpha str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef alphaNumStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&alphaNumStr, "helloWorld1234", 14, 14);
-    if(retcode) { printf("Failed test 20. Error during constructing alpha numeric str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 20. Error during constructing alpha numeric str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     //setup for steps 22-23
     MDPL_STDLIB_STRING_StringRef lowerCasePrefixStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCasePrefixStr, "street", 6, 6);
-    if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing lower cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef upperCasePrefixStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCasePrefixStr, "STREET", 6, 6);
-    if(retcode) { printf("Failed test 16. Error during constructing lower cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing lower cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef lowerCaseSuffixStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&lowerCaseSuffixStr, "δρόμος", 12, 6);
-    if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing upper cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
     MDPL_STDLIB_STRING_StringRef upperCaseSuffixStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&upperCaseSuffixStr, "ΔΡΌΜΟΣ", 12, 6);
-    if(retcode) { printf("Failed test 16. Error during constructing upper cases str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 16. Error during constructing upper cases str.\n"); MDPL_ERROR_destroyError(retcode); return; }
 
     //setup for test 5 - 8
     MDPL_STDLIB_STRING_StringIterator asciiStrForwardIt = {asciiStr.s, 6, 6, 1};
@@ -485,9 +509,10 @@ void testString()
 
     //test 5: getCurrent
     retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrForwardIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 5: Error during getCurrent on asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'w')
@@ -497,9 +522,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrReverseIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 5: Error during getCurrent on asciiStrReverseIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'd')
@@ -509,9 +535,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrDoubleIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 5: Error during getCurrent on asciiStrDoubleIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'H')
@@ -521,9 +548,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_getCurrent(&normaliseStr1It, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 5: Error during getCurrent on normaliseStr1It.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 197)
@@ -534,9 +562,10 @@ void testString()
 
     //test 6: next
     retcode = MDPL_STDLIB_STRING_next(&asciiStrForwardIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: Error during next on asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiStrForwardIt.str != asciiStr.s)
@@ -561,9 +590,10 @@ void testString()
     }
     
     retcode = MDPL_STDLIB_STRING_next(&asciiStrReverseIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: Error during next on asciiStrReverseIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiStrReverseIt.str != asciiStr.s)
@@ -588,9 +618,10 @@ void testString()
     }
     
     retcode = MDPL_STDLIB_STRING_next(&asciiStrDoubleIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: Error during next on asciiStrDoubleIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiStrDoubleIt.str != asciiStr.s)
@@ -615,9 +646,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_next(&normaliseStr1It);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: Error during next on normaliseStr1It.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(normaliseStr1It.str != normaliseStr1.s)
@@ -644,9 +676,10 @@ void testString()
     //temporarily reverse the direction of normaliseStr1It
     normaliseStr1It.step = -1;
     retcode = MDPL_STDLIB_STRING_next(&normaliseStr1It);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6: Error during next on reversed normaliseStr1It.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(normaliseStr1It.str != normaliseStr1.s)
@@ -669,9 +702,10 @@ void testString()
     //test 6.1: peakNext
     //maybe cobol programers were onto something when assigning line numbers
     retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrForwardIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6.1: Error during next on asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'o')
@@ -701,9 +735,10 @@ void testString()
     }
     
     retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrReverseIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6.1: Error during next on asciiStrReverseIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'l')
@@ -733,9 +768,10 @@ void testString()
     }
     
     retcode = MDPL_STDLIB_STRING_peakNext(&asciiStrDoubleIt, &c);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 6.1: Error during next on asciiStrDoubleIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(c.codepoint != 'l')
@@ -766,9 +802,10 @@ void testString()
     
     //test 7: isFinihsed
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 7: Error during isFinished in asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -778,9 +815,10 @@ void testString()
     }
     
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrReverseIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 7: Error during isFinished in asciiStrReverseIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -790,9 +828,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrDoubleIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 7: Error during isFinished in asciiStrDoubleIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -802,9 +841,10 @@ void testString()
     }
 
     retcode = MDPL_STDLIB_STRING_isFinished(&normaliseStr1It, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 7: Error during isFinished in normaliseStr1It.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -815,9 +855,10 @@ void testString()
 
     MDPL_STDLIB_STRING_StringIterator asciiStrFinishedIt = {asciiStr.s, 11, 11, 1};
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrFinishedIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 7: Error during isFinished in asciiStrFinishedIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -831,9 +872,10 @@ void testString()
     for(size_t i = 0; i < 4; i++)
     {
         retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during isFinished in asciiStrForwardIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(result == true)
@@ -842,9 +884,10 @@ void testString()
             return;
         }
         retcode = MDPL_STDLIB_STRING_getCurrent(&asciiStrForwardIt, &c);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during getCurrent in asciiStrForwardIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(c.codepoint != asciiExpectedCharacters[i])
@@ -852,16 +895,18 @@ void testString()
             printf("failed test 8: Incorrect character in asciiStrForwardIt.\n");
         }
         retcode = MDPL_STDLIB_STRING_next(&asciiStrForwardIt);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during next in asciiStrForwardIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
     retcode = MDPL_STDLIB_STRING_isFinished(&asciiStrForwardIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 8: Error during isFinished in asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -874,9 +919,10 @@ void testString()
     for(size_t i = 0; i < 8; i++)
     {
         retcode = MDPL_STDLIB_STRING_isFinished(&nonAsciiStrIt, &result);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during isFinished in nonAsciiStrIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(result == true)
@@ -885,9 +931,10 @@ void testString()
             return;
         }
         retcode = MDPL_STDLIB_STRING_getCurrent(&nonAsciiStrIt, &c);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during getCurrent in nonAsciiStrIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
         if(c.codepoint != nonAsciiExpectedCharacters[i])
@@ -896,16 +943,18 @@ void testString()
             printf("failed test 8: Incorrect character in nonAsciiStrIt.\n");
         }
         retcode = MDPL_STDLIB_STRING_next(&nonAsciiStrIt);
-        if(retcode)
+        if(retcode != nullptr)
         {
             printf("failed test 8: Error during next in nonAsciiStrIt.\n");
+            MDPL_ERROR_destroyError(retcode);
             return;
         }
     }
     retcode = MDPL_STDLIB_STRING_isFinished(&nonAsciiStrIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 8: Error during isFinished in nonAsciiStrIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -919,9 +968,10 @@ void testString()
     size_t originalEndByte = asciiStr.s->endByte;
     MDPL_STDLIB_STRING_StringRef asciiIndexSubstr = {};
     retcode = MDPL_STDLIB_STRING_substrIndex(asciiStr, &asciiIndexSubstr, 3, 8);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 9: error during substrIndex on asciiStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiIndexSubstr.s == asciiStr.s)
@@ -984,9 +1034,10 @@ void testString()
     originalEndByte = lowerCaseStr.s->endByte;
     MDPL_STDLIB_STRING_StringRef nonAsciiIndexSubstr = {};
     retcode = MDPL_STDLIB_STRING_substrIndex(lowerCaseStr, &nonAsciiIndexSubstr, 10, 16);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 9: error during substrIndex on lowerCaseStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(nonAsciiIndexSubstr.s == lowerCaseStr.s)
@@ -1052,9 +1103,10 @@ void testString()
     MDPL_STDLIB_STRING_StringIterator asciiSubstrStartIt = {asciiStr.s, 3, 3, 1};
     MDPL_STDLIB_STRING_StringIterator asciiSubstrEndIt = {asciiStr.s, 8, 8, 1};
     retcode = MDPL_STDLIB_STRING_substrIterator(asciiStr, &asciiIteratorSubstr, &asciiSubstrStartIt, &asciiSubstrEndIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 10: error during substrIterator on asciiStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiIteratorSubstr.s == asciiStr.s)
@@ -1119,9 +1171,10 @@ void testString()
     MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrStartIt = {lowerCaseStr.s, 10, 10, 1};
     MDPL_STDLIB_STRING_StringIterator nonAsciiSubstrEndIt = {lowerCaseStr.s, 19, 16, 1};
     retcode = MDPL_STDLIB_STRING_substrIterator(lowerCaseStr, &nonAsciiIteratorSubstr, &nonAsciiSubstrStartIt, &nonAsciiSubstrEndIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("failed test 10: error during substrIterator on lowerCaseStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(nonAsciiIteratorSubstr.s == lowerCaseStr.s)
@@ -1182,15 +1235,17 @@ void testString()
 
     //test 11: string normalisation
     retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(normaliseStr1.s);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 11. Error during normalising normalise str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(normaliseStr2.s);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 11. Error during normalising normalise str 2.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(normaliseStr1.s->normalisedStr->numBytes != normaliseStr2.s->normalisedStr->numBytes)
@@ -1207,9 +1262,10 @@ void testString()
         }
     }
     retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(asciiStr.s);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 11. Error during normalising ascii string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(asciiStr.s->normalisedStr->numBytes != asciiCStrNumBytes)
@@ -1226,9 +1282,10 @@ void testString()
         }
     }
     retcode = MDPL_STDLIB_STRING_INTERNAL_normaliseString(emojiStr.s);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 11. Error during normalising emoji string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(emojiStr.s->normalisedStr->numBytes != emojiCStrNumBytes)
@@ -1248,9 +1305,10 @@ void testString()
     //test 12: isAscii
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(asciiStr);
     retcode = MDPL_STDLIB_STRING_isAscii(asciiStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 12. Error during isAscii call on ascii str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1265,9 +1323,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(emojiStr);
     retcode = MDPL_STDLIB_STRING_isAscii(emojiStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 12. Error during isAscii call on emoji str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1282,9 +1341,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(normaliseStr1);
     retcode = MDPL_STDLIB_STRING_isAscii(normaliseStr1, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 12. Error during isAscii call on normalise str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1300,9 +1360,10 @@ void testString()
     //testing substrings on one function should guarentee it works for all as they share the same internat logic for handling substrings
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStr);
     retcode = MDPL_STDLIB_STRING_isAscii(lowerCaseStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 12. Error during isAscii call on lower case str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1325,9 +1386,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(lowerCaseStrAsciiSubstr);
     retcode = MDPL_STDLIB_STRING_isAscii(lowerCaseStrAsciiSubstr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 12. Error during isAscii call on lower case str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1345,9 +1407,10 @@ void testString()
     //test 13: isValidDecimal
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(validDecimalStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid decimal str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1362,9 +1425,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(validIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1379,9 +1443,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1396,9 +1461,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(validFloatStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on valid float str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1413,9 +1479,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidFloatStr1, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid float str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1430,9 +1497,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
     retcode = MDPL_STDLIB_STRING_isValidDecimal(invalidFloatStr2, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 13. Error during isValidDecimal call on invalid float str 2.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1449,9 +1517,10 @@ void testString()
     //test 14: isValidInt
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
     retcode = MDPL_STDLIB_STRING_isValidInt(validDecimalStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on valid decimal str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1466,9 +1535,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
     retcode = MDPL_STDLIB_STRING_isValidInt(validIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on valid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1483,9 +1553,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
     retcode = MDPL_STDLIB_STRING_isValidInt(invalidIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on invalid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1500,9 +1571,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
     retcode = MDPL_STDLIB_STRING_isValidInt(validFloatStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on valid float str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1517,9 +1589,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
     retcode = MDPL_STDLIB_STRING_isValidInt(invalidFloatStr1, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on invalid float str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1534,9 +1607,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
     retcode = MDPL_STDLIB_STRING_isValidInt(invalidFloatStr2, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 14. Error during isValidInt call on invalid float str 2.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1553,9 +1627,10 @@ void testString()
     //test 15: isValidFloat
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validDecimalStr);
     retcode = MDPL_STDLIB_STRING_isValidFloat(validDecimalStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on valid decimal str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1570,9 +1645,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validIntStr);
     retcode = MDPL_STDLIB_STRING_isValidFloat(validIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on valid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1587,9 +1663,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidIntStr);
     retcode = MDPL_STDLIB_STRING_isValidFloat(invalidIntStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid int str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1604,9 +1681,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(validFloatStr);
     retcode = MDPL_STDLIB_STRING_isValidFloat(validFloatStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on valid float str.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1621,9 +1699,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr1);
     retcode = MDPL_STDLIB_STRING_isValidFloat(invalidFloatStr1, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid float str 1.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1638,9 +1717,10 @@ void testString()
     }
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(invalidFloatStr2);
     retcode = MDPL_STDLIB_STRING_isValidFloat(invalidFloatStr2, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 15. Error during isValidFloat call on invalid float str 2.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1739,7 +1819,7 @@ void testString()
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 18. %s.\n", utf8proc_errmsg(utf8proc_result)); }
     MDPL_STDLIB_STRING_StringRef whitespaceStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&whitespaceStr, (const char*)whiteSpaceCodepoints, strlen((const char*)whiteSpaceCodepoints), 19);
-    if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 18. Error during constructing whitespace str.\n"); MDPL_ERROR_destroyError(retcode); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(whitespaceStr);
     retcode = MDPL_STDLIB_STRING_isWhiteSpace(whitespaceStr, &result);
@@ -1774,7 +1854,7 @@ void testString()
     if(utf8proc_result < 0) { printf("Something went wrong during setup for test 19. %s.\n", utf8proc_errmsg(utf8proc_result)); }
     MDPL_STDLIB_STRING_StringRef unprintableStr = {};
     retcode = MDPL_STDLIB_STRING_createStringRefFromCStr(&unprintableStr, (const char*)unprintableCodepoints, strlen((const char*)unprintableCodepoints), 19);
-    if(retcode) { printf("Failed test 18. Error during constructing whitespace str.\n"); return; }
+    if(retcode != nullptr) { printf("Failed test 18. Error during constructing whitespace str.\n"); MDPL_ERROR_destroyError(retcode); return; }
 
     MDPL_STRING_TESTER_DISABLE_ASCII_OPTIMISATION(unprintableStr);
     retcode = MDPL_STDLIB_STRING_isPrintable(unprintableStr, &result);
@@ -1927,9 +2007,10 @@ void testString()
 
     //test 22: startsWith
     retcode = MDPL_STDLIB_STRING_startsWith(lowerCaseStr, lowerCasePrefixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 22. error during startsWith on lowerCaseStr with lowerCasePrefixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1938,9 +2019,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_startsWith(lowerCaseStr, upperCasePrefixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 22. error during startsWith on lowerCaseStr with upperCasePrefixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1949,9 +2031,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_startsWith(upperCaseStr, lowerCasePrefixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 22. error during startsWith on upperCaseStr with lowerCasePrefixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1960,9 +2043,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_startsWith(upperCaseStr, upperCasePrefixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 22. error during startsWith on upperCaseStr with upperCasePrefixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1973,9 +2057,10 @@ void testString()
 
     //test 23: endsWith
     retcode = MDPL_STDLIB_STRING_endsWith(lowerCaseStr, lowerCaseSuffixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 23. error during endsWith on lowerCaseStr with lowerCaseSuffixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -1984,9 +2069,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_endsWith(lowerCaseStr, upperCaseSuffixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 23. error during endsWith on lowerCaseStr with upperCaseSuffixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -1995,9 +2081,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_endsWith(upperCaseStr, lowerCaseSuffixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 23. error during endsWith on upperCaseStr with lowerCaseSuffixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2005,9 +2092,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_endsWith(upperCaseStr, upperCaseSuffixStr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 23. error during endsWith on upperCaseStr with upperCaseSuffixStr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2021,9 +2109,10 @@ void testString()
 
     //test 24: frontForwardsIterator
     retcode = MDPL_STDLIB_STRING_frontForwardsIterator(lowerCaseStr, &it);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 24. error during frontForwardsIterator.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(it.str != lowerCaseStr.s)
@@ -2049,9 +2138,10 @@ void testString()
 
     //test 25: backReverseIterator
     retcode = MDPL_STDLIB_STRING_backReverseIterator(lowerCaseStr, &it);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 25. error during backReverseIterator.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(it.str != lowerCaseStr.s)
@@ -2089,9 +2179,10 @@ void testString()
 
     //test 26: isLowerChr
     retcode = MDPL_STDLIB_STRING_isLowerChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 26. error durng isLowerChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2100,9 +2191,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isLowerChr(&upperCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 26. error durng isLowerChr with upperCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2111,9 +2203,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isLowerChr(&lowerCaseUnicodeChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 26. error durng isLowerChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2122,9 +2215,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isLowerChr(&upperCaseUnicodeChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 26. error durng isLowerChr with upperCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2133,9 +2227,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isLowerChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 26. error durng isLowerChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2146,9 +2241,10 @@ void testString()
 
     //test 27: isUpperChr
     retcode = MDPL_STDLIB_STRING_isUpperChr(&upperCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 27. error durng isUpperChr with upperCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2157,9 +2253,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isUpperChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 27. error durng isUpperChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2168,9 +2265,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isUpperChr(&upperCaseUnicodeChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 27. error durng isUpperChr with upperCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2179,9 +2277,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isUpperChr(&lowerCaseUnicodeChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 27. error durng isUpperChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2190,9 +2289,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isUpperChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 27. error durng isUpperChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2203,9 +2303,10 @@ void testString()
     
     //test 28: isWhiteSpaceChr
     retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&spaceChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with spaceChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2214,9 +2315,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&newLineChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with newLineChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2225,9 +2327,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isWhiteSpaceChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 28. error durng isWhiteSpaceChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2238,9 +2341,10 @@ void testString()
 
     //test 29: isPrintableChr
     retcode = MDPL_STDLIB_STRING_isPrintableChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 29. error durng isPrintableChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2249,9 +2353,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isPrintableChr(&nullChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 29. error durng isPrintableChr with nullChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2262,9 +2367,10 @@ void testString()
 
     //test 30: isAsciiChr
     retcode = MDPL_STDLIB_STRING_isAsciiChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 30. error durng isAsciiChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2273,9 +2379,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isAsciiChr(&lowerCaseUnicodeChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 30. error durng isAsciiChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2286,9 +2393,10 @@ void testString()
 
     //test 31: isDecimalChr
     retcode = MDPL_STDLIB_STRING_isDecimalChr(&numberChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 31. error durng isDecimalChr with numberChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2297,9 +2405,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isDecimalChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 31. error durng isDecimalChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2308,9 +2417,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isDecimalChr(&dotChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 31. error durng isDecimalChr with dotChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2319,9 +2429,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isDecimalChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 31. error durng isDecimalChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2332,9 +2443,10 @@ void testString()
 
     //test 32: isIntChr
     retcode = MDPL_STDLIB_STRING_isIntChr(&numberChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 32. error durng isIntChr with numberChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2343,9 +2455,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isIntChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 32. error durng isIntChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2354,9 +2467,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isIntChr(&dotChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 32. error durng isIntChr with dotChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2365,9 +2479,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isIntChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 32. error durng isIntChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2378,9 +2493,10 @@ void testString()
 
     //test 33: isFloatChr
     retcode = MDPL_STDLIB_STRING_isFloatChr(&numberChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 33. error durng isFloatChr with numberChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2389,9 +2505,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isFloatChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 33. error durng isFloatChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2400,9 +2517,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isFloatChr(&dotChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 33. error durng isFloatChr with dotChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2411,9 +2529,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isFloatChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 33. error durng isFloatChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2424,9 +2543,10 @@ void testString()
 
     //test 34: isAlphaChr
     retcode = MDPL_STDLIB_STRING_isAlphaChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 34. error durng isAlphaChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2435,9 +2555,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isAlphaChr(&numberChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 34. error durng isAlphaChr with numberChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2446,9 +2567,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isAlphaChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 34. error durng isAlphaChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2459,9 +2581,10 @@ void testString()
 
     //test 35: isAlphaNumericChr
     retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2470,9 +2593,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&numberChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with numberChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2481,9 +2605,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isAlphaNumericChr(&dashChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 35. error durng isAlphaNumericChr with dashChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2494,9 +2619,10 @@ void testString()
 
     //test 36: isNewLineChr
     retcode = MDPL_STDLIB_STRING_isNewLineChr(&newLineChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 36. error durng isNewLineChr with newLineChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2505,9 +2631,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isNewLineChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 36. error durng isNewLineChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2518,9 +2645,10 @@ void testString()
 
     //test 37: isNullChr
     retcode = MDPL_STDLIB_STRING_isNullChr(&nullChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 37. error durng isNullChr with nullChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2529,9 +2657,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_isNullChr(&lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 37. error durng isNullChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2542,9 +2671,10 @@ void testString()
 
     //test 38: valueEqualityChrChr
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &lowerCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2553,9 +2683,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &upperCaseAsciiChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 38. error durng valueEqualityChrChr with lowerCaseAsciiChr and upperCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2566,9 +2697,10 @@ void testString()
 
     //test 39: valueEqualityChrUnicode
     retcode = MDPL_STDLIB_STRING_valueEqualityChrUnicode(&lowerCaseAsciiChr, 'h', &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'h\'.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2577,9 +2709,10 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrUnicode(&lowerCaseAsciiChr, 'H', &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 39. error durng valueEqualityChrUnicode with lowerCaseAsciiChr and \'H\'.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == true)
@@ -2593,15 +2726,17 @@ void testString()
 
     //test 40: toLowerChr
     retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseAsciiChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2610,15 +2745,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseAsciiChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseAsciiChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseAsciiChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2627,15 +2764,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseUnicodeChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2644,15 +2783,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toLowerChr(&lowerCaseUnicodeChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng toLowerChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&lowerCaseUnicodeChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 40. error durng valueEqualityChrChr with lowerCaseUnicodeChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2663,15 +2804,17 @@ void testString()
 
     //test 41: toUpperChr
     retcode = MDPL_STDLIB_STRING_toUpperChr(&lowerCaseAsciiChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng toUpperChr with lowerCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2680,15 +2823,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toUpperChr(&upperCaseAsciiChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng toUpperChr with upperCaseAsciiChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseAsciiChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseAsciiChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2697,15 +2842,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toUpperChr(&lowerCaseUnicodeChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng toUpperChr with lowerCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2714,15 +2861,17 @@ void testString()
         return;
     }
     retcode = MDPL_STDLIB_STRING_toUpperChr(&upperCaseUnicodeChr, &newChr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng toUpperChr with upperCaseUnicodeChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_valueEqualityChrChr(&upperCaseUnicodeChr, &newChr, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 41. error durng valueEqualityChrChr with upperCaseUnicodeChr and newChr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result == false)
@@ -2737,9 +2886,10 @@ void testString()
     
     //test 42: byteIterator
     retcode = MDPL_STDLIB_STRING_byteIterator(asciiIndexSubstr, &byteIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 42. error during MDPL_STDLIB_STRING_byteIterator with asciiIndexSubstr.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(byteIt.str != asciiIndexSubstr.s)
@@ -2757,9 +2907,10 @@ void testString()
 
     //test 43: getCurrentByte
     retcode = MDPL_STDLIB_STRING_getCurrentByte(&byteIt, &byte);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 43. error during MDPL_STDLIB_STRING_getCurrentByte.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(byte != 'l')
@@ -2782,9 +2933,10 @@ void testString()
 
     //test 44: peakNextByte
     retcode = MDPL_STDLIB_STRING_getCurrentByte(&byteIt, &byte);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 44. error during MDPL_STDLIB_STRING_peakNextByte.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(byte != 'l')
@@ -2807,9 +2959,10 @@ void testString()
 
     //test 45: nextByte
     retcode = MDPL_STDLIB_STRING_nextByte(&byteIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 45. error during MDPL_STDLIB_STRING_nextByte.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(byteIt.str != asciiIndexSubstr.s)
@@ -2827,9 +2980,10 @@ void testString()
 
     //test 46: isFinishedByte
     retcode = MDPL_STDLIB_STRING_isFinishedByte(&byteIt, &result);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 46. error during MDPL_STDLIB_STRING_isFinishedByte.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     if(result != false)
@@ -2848,235 +3002,273 @@ void testString()
     
     //test 47: destroyByteIterator
     retcode = MDPL_STDLIB_STRING_destroyByteIterator(&byteIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed test 47. error during MDPL_STDLIB_STRING_destroyByteIterator.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
     //penultimate test: destroyIterator
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrForwardIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiStrForwardIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrReverseIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiStrReverseIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrDoubleIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiStrDoubleIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&normaliseStr1It);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of normaliseStr1It.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiStrIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of nonAsciiStrIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiStrFinishedIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiStrFinishedIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiSubstrStartIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiSubstrStartIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&asciiSubstrEndIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of asciiSubstrEndIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiSubstrStartIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of nonAsciiSubstrStartIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&nonAsciiSubstrEndIt);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of nonAsciiSubstrEndIt.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyIterator(&it);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed penultimate test. Error during destuction of it.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
     //final test: deconstructions
     retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(emojiStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(normaliseStr1);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(normaliseStr2);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(validDecimalStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(validIntStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidIntStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(validFloatStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidFloatStr1);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(invalidFloatStr2);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during destuction of string containing ascii data.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of lower case string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCaseStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of upper case string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(mixedCaseStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of mixed case string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(whitespaceStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of white space string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(unprintableStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of white space string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(alphaStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of alpha string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(alphaNumStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of alpha numeric string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiIndexSubstr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(nonAsciiIndexSubstr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(asciiIteratorSubstr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of ascii index substring.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(nonAsciiIteratorSubstr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of non ascii index substring.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseStrAsciiSubstr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of non ascii index substring.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCasePrefixStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of lower case prefix string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCasePrefixStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of upper case prefix string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(lowerCaseSuffixStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of lower case suffix string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
     retcode = MDPL_STDLIB_STRING_destroyStringRef(upperCaseSuffixStr);
-    if(retcode)
+    if(retcode != nullptr)
     {
         printf("Failed final test. Error during deconstruction of upper case suffix string.\n");
+        MDPL_ERROR_destroyError(retcode);
         return;
     }
 
