@@ -5,6 +5,9 @@ public
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
     fn imul(int32 a, int32 b) -> (int32 c)
     sub incremenet(int32 ref a) -> ()
+    sub decremenet(int32 ref a) -> ()
+    fn noop() -> ()
+    fn fHalf(float32 a) -> (float32 b)
 
     string str = "Hello world"
 }
@@ -35,7 +38,8 @@ code
         rem = a
         ret error:sucess
     }
-    fn imul(int32 a, int32 b) -> (int32 c)
+    fn imul(int32 a, 
+    int32 b) -> (int32 c)
     {
         c = 0
         for int32 i from 0 to b
@@ -56,5 +60,20 @@ code
     /*
     //block comment containing a line comment
     */
+    /*block commend imidiatly followed by a statment*/sub decremenet(int32 ref a) -> ()
+    {
+    	prop a = add(a, -1)
+    	prop noop()
+        ret error:success
+    }
     //line comment /* with a block comment
+    fn noop() -> ()
+    {
+    	ret error:success
+    }
+    fn fHalf(float32 a) -> (float32 b)
+    {
+        b = 0.5 * a
+        ret error:success
+    }
 }

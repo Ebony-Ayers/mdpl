@@ -7,7 +7,7 @@
 #include "file_access.hpp"
 #include "buffer.hpp"
 #include "str_functions.hpp"
-#include "../runtime_lib/error.hpp"
+#include "../runtime_lib/mdpl_error.hpp"
 
 //return if the integer return code is non-zero
 #define MDPL_C_RETERR(rc) {int MDPL_RETCODE; if((MDPL_RETCODE = rc) != 0) return MDPL_RETCODE;}

@@ -1,7 +1,7 @@
 set(library_compiler_source_files
   allocation_tracker.cpp
   allocator.cpp
-  error.cpp
+  mdpl_error.cpp
 )
 set(tester_compiler_source_files
   test_runtime_lib.cpp
