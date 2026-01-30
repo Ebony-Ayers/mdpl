@@ -1,9 +1,9 @@
 #ifndef ALLOCATOR_HEADER_GUARD
 #define ALLOCATOR_HEADER_GUARD
 
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
-#include "allocation_tracker.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
+#include "allocation_tracker.h"
 
 #include <stdint.h>
 

@@ -1,9 +1,9 @@
 #ifndef SHORT_LIST_HEADER_GUARD
 #define SHORT_LIST_HEADER_GUARD
 
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
-#include "../runtime_lib/allocator.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
+#include "../runtime_lib/allocator.h"
 
 #include <stdint.h>
 

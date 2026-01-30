@@ -1,4 +1,4 @@
-#include "allocator.hpp"
+#include "allocator.h"
 
 extern MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker;
 

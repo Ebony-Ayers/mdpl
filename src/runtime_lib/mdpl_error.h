@@ -1,8 +1,8 @@
 #ifndef ERROR_HEADER_GUARD
 #define ERROR_HEADER_GUARD
 
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
 
 #include <stdint.h>
 

@@ -7,7 +7,7 @@ endif()
 set(project_name mdpl)
 
 # Set the project name to your project name, "my project" isn't very descriptive as a project can contain multiple distinct targets all grouped under an umbrella
-project(${project_name} CXX)
+project(${project_name} LANGUAGES C CXX)
 
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
@@ -17,7 +17,8 @@ string(CONCAT project_options_library ${project_name} _project_options)
 add_library(${project_options_library} INTERFACE)
 
 #set the c++ standard required
-target_compile_features(${project_options_library} INTERFACE cxx_std_20)
+target_compile_features(${project_options_library} INTERFACE c_std_23)
+set_property(TARGET ${project_options_library} PROPERTY C_STANDARD 23)
 
 #link pthreads for multithreading
 option(ENABLE_MULTITHREADING "Adds required linker option for using std::thread" ON)
@@ -26,7 +27,7 @@ if(ENABLE_MULTITHREADING)
   target_link_libraries(${project_options_library} INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+if(CMAKE_C_COMPILER_ID MATCHES ".*Clang")
   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
   if(ENABLE_BUILD_WITH_TIME_TRACE)
     target_compile_options(${project_options_library} INTERFACE -ftime-trace)
@@ -61,7 +62,7 @@ if(ENABLE_PCH)
   target_precompile_headers(
     ${project_options_library}
     INTERFACE
-    src/pch.hpp)
+    src/pch.h)
 endif()
 
 add_subdirectory(src/common)

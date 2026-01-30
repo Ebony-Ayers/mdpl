@@ -1,22 +1,22 @@
 #ifndef STRING_HEADER_GUARD
 #define STRING_HEADER_GUARD
 
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
-#include "../runtime_lib/allocator.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
+#include "../runtime_lib/allocator.h"
 #include "../../vendor/utf8proc/utf8proc.h"
-#include "../runtime_lib/error.hpp"
+#include "../runtime_lib/mdpl_error.h"
 
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isLower        = 1;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isUpper        = 2;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isWhiteSpace   = 4;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isPrintable    = 8;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isAscii        = 16;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidDecimal = 32;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidInt     = 64;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidFloat   = 128;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlpha        = 256;
-const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric = 512;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isLower        = 1;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isUpper        = 2;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isWhiteSpace   = 4;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isPrintable    = 8;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isAscii        = 16;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidDecimal = 32;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidInt     = 64;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isValidFloat   = 128;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlpha        = 256;
+static const uint32_t MDPL_STDLIB_STRING_FLAGS_isAlphaNumeric = 512;
 
 //RawString
 typedef struct
@@ -63,7 +63,7 @@ typedef struct
     const uint8_t* const end;
 } MDPL_STDLIB_STRING_ByteIterator;
 
-const size_t npos = (size_t)-1;
+static const size_t npos = (size_t)-1;
 
 //================ String functions ================
 

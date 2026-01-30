@@ -1,13 +1,11 @@
 namespace exampleTwo
-public
-{
+public:
 	fn main() -> ();
-}
 
-protected
-{
+protected:
+
+code:
 	fn main() -> ()
 	{
 		print("Hello world")
 	}
-}

@@ -1,6 +1,5 @@
 namespace exampleOne
-public
-{
+public:
     fn add(int32 a, int32 b) -> (int32 c)
     fn idiv(int32 a, int32 b) -> (int32 c, int32 rem)
     fn imul(int32 a, int32 b) -> (int32 c)
@@ -10,15 +9,11 @@ public
     fn fHalf(float32 a) -> (float32 b)
 
     string str = "Hello world"
-}
 
-protected
-{
+protected:
     //functons in the ptotected block are only accessible in the same namespace
-}
 
-code
-{
+code:
     fn add(int32 a, int32 b) -> (int32 c)
     {
         c = a + b
@@ -76,4 +71,3 @@ code
         b = 0.5 * a
         ret error:success
     }
-}

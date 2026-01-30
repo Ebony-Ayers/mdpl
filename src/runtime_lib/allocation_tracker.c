@@ -1,11 +1,11 @@
-#include "allocation_tracker.hpp"
+#include "allocation_tracker.h"
 
 MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct MDPL_RTLIB_ALLOCATION_TRACKER_globalAllocationTracker;
 
 //currently this allocator is limited to approximatly 7.5 quintillion allocations.
 //this would approximatly half that which is possibe with raw 64 bit addressing.
 //I view this as an adequit limitation as no sensible code should ever reach this.
-const size_t tablePrimes[] = {101, 1009, 10007, 100003, 1000003, 10000019, 100000007, 1000000007, 10000000019, 100000000003, 1000000000039, 10000000000037, 100000000000031, 1000000000000037, 10000000000000061, 100000000000000003, 1000000000000000003, 10000000000000000051};
+const size_t tablePrimes[] = {101ULL, 1009ULL, 10007ULL, 100003ULL, 1000003ULL, 10000019ULL, 100000007ULL, 1000000007ULL, 10000000019ULL, 100000000003ULL, 1000000000039ULL, 10000000000037ULL, 100000000000031ULL, 1000000000000037ULL, 10000000000000061ULL, 100000000000000003ULL, 1000000000000000003ULL, 10000000000000000051ULL};
 const size_t tablePrimesSize = sizeof(tablePrimes) / sizeof(size_t);
 
 MDPL_ERROR_Error* MDPL_RTLIB_ALLOCATION_TRACKER_constructor(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker)
@@ -128,9 +128,9 @@ size_t MDPL_RTLIB_ALLOCATION_TRACKER_indexOf(MDPL_RTLIB_ALLOCATION_TRACKER_Alloc
 }
 void MDPL_RTLIB_ALLOCATION_TRACKER_initialiseArray(MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct* tracker, size_t allocationSize)
 {
-    if((uint64_t)nullptr < 256)
+    if((uint64_t)(void*)nullptr < 256)
     {
-        memset(tracker->array, (int)((uint64_t)nullptr), allocationSize);
+        memset(tracker->array, (int)((uint64_t)(void*)nullptr), allocationSize);
     }
     else
     {

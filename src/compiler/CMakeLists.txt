@@ -1,8 +1,5 @@
 set(compiler_source_files
-  args.cpp
-  compile.cpp
-  link.cpp
-  main.cpp
+  main.c
 )
 
 add_executable(mdpl_compiler ${compiler_source_files})

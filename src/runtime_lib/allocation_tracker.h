@@ -1,24 +1,14 @@
 #ifndef ALLOCATION_TRACKER_HEADER_GUARD
 #define ALLOCATION_TRACKER_HEADER_GUARD
 
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
 #ifdef __GNUC__
     #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
     #pragma GCC diagnostic ignored "-Wsign-conversion"
     #pragma GCC diagnostic ignored "-Wconversion"
 #endif
-//disable c++ for libdivide
-#ifdef __cplusplus
-    #define TEMP_CPP_MACRO
-    #undef __cplusplus
-#endif
 #include "../../vendor/libdivide/libdivide.h"
-#ifdef TEMP_CPP_MACRO
-    #define __cplusplus 202002L
-    #undef TEMP_CPP_MACRO
-#endif
 #ifdef __GNUC__
     #pragma GCC diagnostic pop
 #endif

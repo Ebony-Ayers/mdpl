@@ -1,4 +1,4 @@
-#include "error.hpp"
+#include "mdpl_error.h"
 
 MDPL_ERROR_Error* MDPL_ERROR_createError(const char* type, const char* msg, const char* file, const char* function, size_t lineNum, int exitCode)
 {

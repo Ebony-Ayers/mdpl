@@ -1,6 +1,6 @@
 function(enable_sanitizers project_name)
 
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES ".*Clang")
     option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
 
     if(ENABLE_COVERAGE)
@@ -35,7 +35,7 @@ function(enable_sanitizers project_name)
     endif()
 
     option(ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" FALSE)
-    if(ENABLE_SANITIZER_MEMORY AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    if(ENABLE_SANITIZER_MEMORY AND CMAKE_C_COMPILER_ID MATCHES ".*Clang")
       if("address" IN_LIST SANITIZERS
          OR "thread" IN_LIST SANITIZERS
          OR "leak" IN_LIST SANITIZERS)

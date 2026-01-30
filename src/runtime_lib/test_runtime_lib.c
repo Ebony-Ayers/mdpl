@@ -1,7 +1,7 @@
-#include "../pch.hpp"
+#include "../pch.h"
 #include<time.h>
-#include "../common/mdpl_common.hpp"
-#include "allocator.hpp"
+#include "../common/mdpl_common.h"
+#include "allocator.h"
 
 void testTracker()
 {
@@ -24,7 +24,7 @@ void testTracker()
     //test 2: add without reallocation
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 2: error during add.\n");
@@ -35,7 +35,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(!res)
         {
             printf("failed test 2: Did not contain %lu when it should have.\n", i);
@@ -45,7 +45,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 2: error during remove.\n");
@@ -56,7 +56,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 1050; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(res)
         {
             printf("failed test 2: Contains %lu when it should have.\n", i);
@@ -68,7 +68,7 @@ void testTracker()
     //test 3: add without reallocation
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 3: error during add.\n");
@@ -79,7 +79,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(!res)
         {
             printf("failed test 3: Did not contain %lu when it should have.\n", i);
@@ -89,7 +89,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 3: error during remove.\n");
@@ -100,7 +100,7 @@ void testTracker()
     }
     for(uint64_t i = 1000; i < 2000; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(res)
         {
             printf("failed test 3: Contains %lu when it should have.\n", i);
@@ -112,7 +112,7 @@ void testTracker()
     //test 4: add non-consecuative values
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 4: error during add.\n");
@@ -123,7 +123,7 @@ void testTracker()
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(!res)
         {
             printf("failed test 4: Did not contain %lu when it should have.\n", i);
@@ -133,7 +133,7 @@ void testTracker()
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(i));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, (void*)i);
         if(retcode != nullptr)
         {
             printf("failed test 4: error during remove.\n");
@@ -144,7 +144,7 @@ void testTracker()
     }
     for(uint64_t i = 1109; i < 113996; i+=113)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(i));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)i);
         if(res)
         {
             printf("failed test 4: Contains %lu when it should have.\n", i);
@@ -154,14 +154,14 @@ void testTracker()
     }
     
     //test 5: randomised values
-    uint64_t* insertedValues = reinterpret_cast<uint64_t*>(malloc(5000 * sizeof(uint64_t)));
+    uint64_t* insertedValues = (uint64_t*)malloc(5000 * sizeof(uint64_t));
     srand(time(nullptr));
     for(size_t i = 0; i < 5000; i++)
     {
         while(1)
         {
-            insertedValues[i] = static_cast<uint64_t>(rand());
-            if(insertedValues[i] == reinterpret_cast<uint64_t>(nullptr))
+            insertedValues[i] = (uint64_t)rand();
+            if(insertedValues[i] == (uint64_t)(void*)nullptr)
             {
                 break;
             }
@@ -199,7 +199,7 @@ void testTracker()
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_add(&tracker, (void*)insertedValues[i]);
         if(retcode != nullptr)
         {
             printf("failed test 5: error during add.\n");
@@ -210,7 +210,7 @@ void testTracker()
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)insertedValues[i]);
         if(!res)
         {
             printf("failed test 5: Did not contain %lu when it should have.\n", insertedValues[i]);
@@ -220,7 +220,7 @@ void testTracker()
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        retcode = MDPL_RTLIB_ALLOCATION_TRACKER_remove(&tracker, (void*)insertedValues[i]);
         if(retcode != nullptr)
         {
             printf("failed test 5: error during remove.\n");
@@ -231,7 +231,7 @@ void testTracker()
     }
     for(size_t i = 0; i < 5000; i++)
     {
-        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, reinterpret_cast<void*>(insertedValues[i]));
+        res = MDPL_RTLIB_ALLOCATION_TRACKER_contains(&tracker, (void*)insertedValues[i]);
         if(res)
         {
             printf("failed test 5: Contains %lu when it should have.\n", insertedValues[i]);

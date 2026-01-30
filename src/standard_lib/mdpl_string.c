@@ -1,4 +1,4 @@
-#include "string.h"
+#include "mdpl_string.h"
 
 //================ String functions ================
 
@@ -551,12 +551,12 @@ MDPL_ERROR_Error* MDPL_STDLIB_STRING_valueEqualityChrUnicode(const MDPL_STDLIB_S
 
 MDPL_ERROR_Error* MDPL_STDLIB_STRING_toLowerChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
 {
-    *newChr = { (uint32_t)(utf8proc_tolower((utf8proc_int32_t)(originalChr->codepoint))) };
+    newChr->codepoint = (uint32_t)utf8proc_tolower((utf8proc_int32_t)(originalChr->codepoint));
     return nullptr;
 }
 MDPL_ERROR_Error* MDPL_STDLIB_STRING_toUpperChr(const MDPL_STDLIB_STRING_Character* const originalChr, MDPL_STDLIB_STRING_Character* const newChr)
 {
-    *newChr = { (uint32_t)(utf8proc_toupper((utf8proc_int32_t)(originalChr->codepoint))) };
+    newChr->codepoint = (uint32_t)utf8proc_toupper((utf8proc_int32_t)(originalChr->codepoint));
     return nullptr;
 }
 

@@ -1,18 +1,18 @@
-#include "../pch.hpp"
-#include "../common/mdpl_common.hpp"
+#include "../pch.h"
+#include "../common/mdpl_common.h"
 
 #define MDPL_GENERIC_TYPE_MACRO int
 #define MDPL_GENERIC_TYPE_NAME_MACRO t_int
 #include "short_list_template.h"
 #define MDPL_GENERIC_TYPE_MACRO int
 #define MDPL_GENERIC_TYPE_NAME_MACRO t_int
-#include "short_list_template.cpp"
+#include "short_list_template.c"
 
 #include "mdpl_string.h"
-#include "../runtime_lib/error.hpp"
+#include "../runtime_lib/mdpl_error.h"
 
 //this is not required in general use for use however is needed for debugging
-#include "../runtime_lib/allocator.hpp"
+#include "../runtime_lib/allocator.h"
 
 #include "../../vendor/utf8proc/utf8proc.h"
 
