@@ -13,8 +13,6 @@
     #pragma GCC diagnostic pop
 #endif
 
-#include <stdint.h>
-
 //MDPL_RTLIB_ALLOCATION_TRACKER_AllocationTrackerStruct
 typedef struct
 {

@@ -10,10 +10,9 @@
 #define MDPL_SHORT_LIST_INITIAL_CAPACITY 256
 
 
-//to generate a specialisation of the tempate you have to make a header including the tempalte header and defining the two macros MDPL_GENERIC_TYPE_NAME_MACRO and MDPL_GENERIC_TYPE_MACRO
-//the same applies to the cpp file. the hpp and cpp files creates can be used as if they were not generic. MDPL_GENERIC_TYPE_MACRO is the type the list will store. 
-//MDPL_GENERIC_TYPE_NAME_MACRO is the namesapce the specialisation will be in. For clarity it is recomended that this name be associated with the type. If the instructions are followed the
-//code should compile with out error. If you get an something undefined error make sure that the two macros are defined before including both the hpp and cpp for a total of 4 hash defines.
+//to generate a specialisation of the tempate you have to make a header including the tempalte header and defining the macro MDPL_GENERIC_TYPE_MACRO
+//the same applies to the c file. the h and c files creates can be used as if they were not generic. MDPL_GENERIC_TYPE_MACRO is the type the list will store. 
+//If you get an something undefined error make sure that the macro is defined before including both the h and c for a total of 2 hash defines.
 
 //unless otherwise stated all instance of ShortList** refer to a pointer to a pointer and not an array. This is done as so that a function can return a pointer to the list.
 
@@ -65,6 +64,5 @@ uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, calculateN
 uint32_t MDPL_CONCAT(MDPL_STDLIB_SHORT_LIST, MDPL_GENERIC_TYPE_MACRO, trueSizeToUsableSize)(uint32_t size);
 
 #undef MDPL_GENERIC_TYPE_MACRO
-#undef MDPL_GENERIC_TYPE_NAME_MACRO
 
 #endif //SHORT_LIST_HEADER_GUARD

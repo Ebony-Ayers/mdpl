@@ -1,5 +1,6 @@
 set(compiler_source_files
   main.c
+  tokeniser.c
 )
 
 add_executable(mdpl_compiler ${compiler_source_files})

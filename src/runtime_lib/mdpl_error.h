@@ -2,9 +2,6 @@
 #define ERROR_HEADER_GUARD
 
 #include "../pch.h"
-#include "../common/mdpl_common.h"
-
-#include <stdint.h>
 
 typedef struct {
     const char* type;
