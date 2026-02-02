@@ -7,15 +7,63 @@
 
 #define FILE_NAME "tokeniser.c"
 
+static void setTerminalColorRed()     { printf("\x1b[31m"); }
+static void setTerminalColorGreen()   { printf("\x1b[32m"); }
+static void setTerminalColorYellow()  { printf("\x1b[33m"); }
+static void setTerminalColorBlue()    { printf("\x1b[34m"); }
+static void setTerminalColorMagenta() { printf("\x1b[35m"); }
+static void setTerminalColorCyan()    { printf("\x1b[36m"); }
+static void resetTerminalColor()      { printf("\x1b[39m"); }
+static void terminalUnderlineOn()     { printf("\x1b[4m");  }
+static void terminalUnderlineOff()    { printf("\x1b[24m"); }
+
 static void printToken(Token token)
 {
-    if(token.type == MDPL_COMPILER_TOKEN_TYPE_empty)
+    if(token.type == MDPL_COMPILER_TOKEN_TYPE_undefined)
     {
+        printf("Undefined token ");
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_unknown)
+    {
+        setTerminalColorRed();
         printf("%s ", token.data.str);
+        resetTerminalColor();
     }
     else if(token.type == MDPL_COMPILER_TOKEN_TYPE_symbol)
     {
+        setTerminalColorGreen();
         printf("%s ", symbolToString(token.data.symbol));
+        resetTerminalColor();
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_keyword)
+    {
+        setTerminalColorYellow();
+        printf("%s ", keywordToString(token.data.keyword));
+        resetTerminalColor();
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_type)
+    {
+        setTerminalColorBlue();
+        printf("%s ", typeToString(token.data.type));
+        resetTerminalColor();
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_number)
+    {
+        setTerminalColorMagenta();
+        printf("%s ", token.data.str);
+        resetTerminalColor();
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_string)
+    {
+        setTerminalColorCyan();
+        printf("%s ", token.data.str);
+        resetTerminalColor();
+    }
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_character)
+    {
+        setTerminalColorCyan();
+        printf("%s ", token.data.str);
+        resetTerminalColor();
     }
 }
 
@@ -46,25 +94,11 @@ int main(int argc, char* argv[])
         return error->exitCode;
     }
 
-    printf("\n================================ Tokens: ================================\n\n");
-    uint32_t previousLineNum = 0;
-    for(uint32_t i = 0; i < tokenListLength; i++)
-    {
-        Token token = tokenList[i];
-        if(token.lineNum != previousLineNum)
-        {
-            printf("\n");
-            previousLineNum = token.lineNum;
-        }
-        printToken(token);
-    }
-    printf("\n");
-
     printf("\n================================ Statments: ================================\n\n");
     for(uint32_t i = 0; i < statmentListLength; i++)
     {
         Statment statment = statmentList[i];
-        printf("%u [%u, %u]: ", i, statment.startTokenIndex, statment.endTokenIndex);
+        printf("l:%u s:%u [t:%u, t:%u]: ", tokenList[statment.startTokenIndex].lineNum, i, statment.startTokenIndex, statment.endTokenIndex);
         for(uint32_t j = statment.startTokenIndex; j < statment.endTokenIndex; j++)
         {
             printToken(tokenList[j]);
