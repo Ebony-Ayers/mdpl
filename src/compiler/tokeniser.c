@@ -345,7 +345,7 @@ MDPL_ERROR_Error* reallocateTokenList(Token** tokens, uint32_t count, uint32_t* 
     }
     return nullptr;
 }
-//increase the side of an array list of type Statment
+//increase the size of an array list of type Statment
 MDPL_ERROR_Error* reallocateStatmentList(Statment** statments, uint32_t count, uint32_t* capacity)
 {
     if (count >= *capacity)
@@ -359,6 +359,23 @@ MDPL_ERROR_Error* reallocateStatmentList(Statment** statments, uint32_t count, u
             return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "tokenise: failed to reallocate statment list");
         }
         *statments = newStatments;
+    }
+    return nullptr;
+}
+//increase the size of an array list of type Scope
+MDPL_ERROR_Error* reallocateScopeList(Scope** scopes, uint32_t count, uint32_t* capacity)
+{
+    if (count >= *capacity)
+    {
+        *capacity *= 2;
+        Scope* newScopes = (Scope*)realloc(*scopes, *capacity * sizeof(Scope));
+        if (newScopes == nullptr)
+        {
+            free(*scopes);
+            *scopes = nullptr;
+            return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "groupScopes: failed to reallocate scope list");
+        }
+        *scopes = newScopes;
     }
     return nullptr;
 }
@@ -817,7 +834,126 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
     *statmentListLength = statmentCount;
     return nullptr;
 }
-MDPL_ERROR_Error* groupScopes(char* str, const uint32_t length, Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList)
+MDPL_ERROR_Error* groupScopes(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList, uint32_t* scopeListLength)
 {
+    // Validate input parameters
+    if (tokenList == nullptr && tokenListLength > 0)
+    {
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: tokenList is null but tokenListLength is non-zero");
+    }
+    if (statmentList == nullptr && statmentListLength > 0)
+    {
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: statmentList is null but statmentListLength is non-zero");
+    }
+    if (scopeList == nullptr)
+    {
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: scopeList is null");
+    }
+    if (scopeListLength == nullptr)
+    {
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: scopeListLength is null");
+    }
+
+    // Allocate scope list
+    uint32_t scopeCapacity = 64;
+    uint32_t scopeCount = 0;
+    Scope* scopes = (Scope*)malloc(scopeCapacity * sizeof(Scope));
+    if (scopes == nullptr)
+    {
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "groupScopes: failed to allocate scope list");
+    }
+
+    // Stack to track open scope indices (for nested scopes)
+    uint32_t stackCapacity = 64;
+    uint32_t stackSize = 0;
+    uint32_t* scopeStack = (uint32_t*)malloc(stackCapacity * sizeof(uint32_t));
+    if (scopeStack == nullptr)
+    {
+        free(scopes);
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "groupScopes: failed to allocate scope stack");
+    }
+
+    // Iterate through tokens looking for scope delimiters
+    for (uint32_t i = 0; i < tokenListLength; i++)
+    {
+        if (tokenList[i].type == MDPL_COMPILER_TOKEN_TYPE_symbol)
+        {
+            if (tokenList[i].data.symbol == MDPL_COMPILER_SYMBOL_openCurlyBrace)
+            {
+                // Reallocate scope list if needed
+                MDPL_ERROR_Error* err = reallocateScopeList(&scopes, scopeCount, &scopeCapacity);
+                if (err != nullptr)
+                {
+                    free(scopeStack);
+                    return err;
+                }
+
+                // Initialize new scope
+                scopes[scopeCount].startTokenIndex = i;
+                scopes[scopeCount].endTokenIndex = 0; // Will be set when closing brace is found
+                scopes[scopeCount].startStatmentIndex = tokenList[i].statmentIndex;
+                scopes[scopeCount].endStatmentIndex = 0; // Will be set when closing brace is found
+
+                // Grow stack if needed
+                if (stackSize >= stackCapacity)
+                {
+                    stackCapacity *= 2;
+                    uint32_t* newStack = (uint32_t*)realloc(scopeStack, stackCapacity * sizeof(uint32_t));
+                    if (newStack == nullptr)
+                    {
+                        free(scopeStack);
+                        free(scopes);
+                        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "groupScopes: failed to reallocate scope stack");
+                    }
+                    scopeStack = newStack;
+                }
+
+                // Push scope index onto stack
+                scopeStack[stackSize] = scopeCount;
+                stackSize++;
+                scopeCount++;
+            }
+            else if (tokenList[i].data.symbol == MDPL_COMPILER_SYMBOL_closeCurlyBrace)
+            {
+                // Check for unmatched closing brace
+                if (stackSize == 0)
+                {
+                    free(scopeStack);
+                    free(scopes);
+                    return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: unmatched closing brace");
+                }
+
+                // Pop scope from stack and complete it
+                stackSize--;
+                uint32_t scopeIndex = scopeStack[stackSize];
+                scopes[scopeIndex].endTokenIndex = i + 1;
+                scopes[scopeIndex].endStatmentIndex = tokenList[i].statmentIndex + 1;
+
+                // Update deepestScopeIndex for statements in this scope
+                // Use 1-based indexing: 0 means not in any scope, 1+ is the scope depth
+                uint32_t currentDepth = stackSize + 1; // +1 because we already decremented stackSize
+                for (uint32_t j = scopes[scopeIndex].startStatmentIndex; j < scopes[scopeIndex].endStatmentIndex && j < statmentListLength; j++)
+                {
+                    // Only update if this scope is deeper than currently recorded
+                    if (currentDepth > statmentList[j].deepestScopeIndex)
+                    {
+                        statmentList[j].deepestScopeIndex = currentDepth;
+                    }
+                }
+            }
+        }
+    }
+
+    // Check for unclosed scopes
+    if (stackSize > 0)
+    {
+        free(scopeStack);
+        free(scopes);
+        return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_INVALID_ARGUMENT, "groupScopes: unclosed scope(s)");
+    }
+
+    free(scopeStack);
+    *scopeList = scopes;
+    *scopeListLength = scopeCount;
     return nullptr;
 }

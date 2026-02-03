@@ -93,6 +93,17 @@ int main(int argc, char* argv[])
         free(str);
         return error->exitCode;
     }
+    Scope* scopeList;
+    uint32_t scopeListLength;
+    error = groupScopes(tokenList, tokenListLength, statmentList, statmentListLength, &scopeList, &scopeListLength);
+    MDPL_PRINT_ERROR(error);
+    if(error != nullptr)
+    {
+        free(str);
+        free(tokenList);
+        free(statmentList);
+        return error->exitCode;
+    }
 
     printf("\n================================ Statments: ================================\n\n");
     for(uint32_t i = 0; i < statmentListLength; i++)
@@ -106,9 +117,17 @@ int main(int argc, char* argv[])
         printf("\n");
     }
 
+    printf("\n================================ Scopes: ================================\n\n");
+    for(uint32_t i = 0; i < scopeListLength; i++)
+    {
+        Scope scope = scopeList[i];
+        printf("scope:%u [statment:%u, statment:%u]\n", i, scope.startStatmentIndex, scope.endStatmentIndex);
+    }
+
     free(str);
     free(tokenList);
     free(statmentList);
+    free(scopeList);
 
     return 0;
 }

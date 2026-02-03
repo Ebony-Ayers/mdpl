@@ -194,10 +194,11 @@ typedef struct /*Scope*/
 
 MDPL_ERROR_Error* reallocateTokenList(Token** tokens, uint32_t count, uint32_t* capacity);
 MDPL_ERROR_Error* reallocateStatmentList(Statment** statments, uint32_t count, uint32_t* capacity);
+MDPL_ERROR_Error* reallocateScopeList(Scope** scopes, uint32_t count, uint32_t* capacity);
 MDPL_ERROR_Error* createStandardToken(Token** tokens, uint32_t* tokenCount, uint32_t* tokenCapacity, uint32_t statmentIndex, const char* str, uint32_t lineNum);
 
 MDPL_ERROR_Error* readFile(const char* fName, char** str, uint32_t* length);
 MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, uint32_t* tokenListLength, Statment** statmentList, uint32_t* statmentListLength);
-MDPL_ERROR_Error* groupScopes(char* str, const uint32_t length, Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList);
+MDPL_ERROR_Error* groupScopes(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList, uint32_t* scopeListLength);
 
 #endif //TOKENISER_HEADER_GUARD
