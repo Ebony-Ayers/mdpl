@@ -4,6 +4,7 @@
 #include "../runtime_lib/mdpl_error.h"
 
 #include "tokeniser.h"
+#include "parser.h"
 
 #define FILE_NAME "tokeniser.c"
 
@@ -123,6 +124,335 @@ int main(int argc, char* argv[])
         Scope scope = scopeList[i];
         printf("scope:%u [statment:%u, statment:%u]\n", i, scope.startStatmentIndex, scope.endStatmentIndex);
     }
+
+    AST ast;
+    error = generateAST(tokenList, tokenListLength, statmentList, statmentListLength, true, &ast);
+
+    printf("\n================================ AST: ================================\n\n");
+    printf("AST {\n");
+
+    //print public HeaderSegment
+    printf("\tpublic: HeaderSegment {\n");
+    printf("\t\tnumSignatures: %u\n", ast.public.numSignatures);
+    if(ast.public.signatures == nullptr)
+    {
+        printf("\t\tsignatures: nullptr\n");
+    }
+    else
+    {
+        printf("\t\tsignatures: [\n");
+        for(uint32_t i = 0; i < ast.public.numSignatures; i++)
+        {
+            FunctionSignature* sig = &ast.public.signatures[i];
+            printf("\t\t\t[%u] FunctionSignature {\n", i);
+            if(sig->name == nullptr)
+            {
+                printf("\t\t\t\tname: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\tname: \"%s\"\n", sig->name);
+            }
+            printf("\t\t\t\tnumInputs: %u\n", sig->numInputs);
+            if(sig->inputs == nullptr)
+            {
+                printf("\t\t\t\tinputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\tinputs: [\n");
+                for(uint32_t j = 0; j < sig->numInputs; j++)
+                {
+                    Parameter* param = &sig->inputs[j];
+                    printf("\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t]\n");
+            }
+            printf("\t\t\t\tnumOutputs: %u\n", sig->numOutputs);
+            if(sig->ouputs == nullptr)
+            {
+                printf("\t\t\t\touputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\touputs: [\n");
+                for(uint32_t j = 0; j < sig->numOutputs; j++)
+                {
+                    Parameter* param = &sig->ouputs[j];
+                    printf("\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t]\n");
+            }
+            printf("\t\t\t}\n");
+        }
+        printf("\t\t]\n");
+    }
+    printf("\t}\n");
+
+    //print protected HeaderSegment
+    printf("\tprotected: HeaderSegment {\n");
+    printf("\t\tnumSignatures: %u\n", ast.protected.numSignatures);
+    if(ast.protected.signatures == nullptr)
+    {
+        printf("\t\tsignatures: nullptr\n");
+    }
+    else
+    {
+        printf("\t\tsignatures: [\n");
+        for(uint32_t i = 0; i < ast.protected.numSignatures; i++)
+        {
+            FunctionSignature* sig = &ast.protected.signatures[i];
+            printf("\t\t\t[%u] FunctionSignature {\n", i);
+            if(sig->name == nullptr)
+            {
+                printf("\t\t\t\tname: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\tname: \"%s\"\n", sig->name);
+            }
+            printf("\t\t\t\tnumInputs: %u\n", sig->numInputs);
+            if(sig->inputs == nullptr)
+            {
+                printf("\t\t\t\tinputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\tinputs: [\n");
+                for(uint32_t j = 0; j < sig->numInputs; j++)
+                {
+                    Parameter* param = &sig->inputs[j];
+                    printf("\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t]\n");
+            }
+            printf("\t\t\t\tnumOutputs: %u\n", sig->numOutputs);
+            if(sig->ouputs == nullptr)
+            {
+                printf("\t\t\t\touputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\touputs: [\n");
+                for(uint32_t j = 0; j < sig->numOutputs; j++)
+                {
+                    Parameter* param = &sig->ouputs[j];
+                    printf("\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t]\n");
+            }
+            printf("\t\t\t}\n");
+        }
+        printf("\t\t]\n");
+    }
+    printf("\t}\n");
+
+    //print code CodeSegment
+    printf("\tcode: CodeSegment {\n");
+    printf("\t\tnumFunctions: %u\n", ast.code.numFunctions);
+    if(ast.code.functions == nullptr)
+    {
+        printf("\t\tfunctions: nullptr\n");
+    }
+    else
+    {
+        printf("\t\tfunctions: [\n");
+        for(uint32_t i = 0; i < ast.code.numFunctions; i++)
+        {
+            FunctionImplementation* func = &ast.code.functions[i];
+            printf("\t\t\t[%u] FunctionImplementation {\n", i);
+            printf("\t\t\t\tsignature: FunctionSignature {\n");
+            if(func->signature.name == nullptr)
+            {
+                printf("\t\t\t\t\tname: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\t\tname: \"%s\"\n", func->signature.name);
+            }
+            printf("\t\t\t\t\tnumInputs: %u\n", func->signature.numInputs);
+            if(func->signature.inputs == nullptr)
+            {
+                printf("\t\t\t\t\tinputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\t\tinputs: [\n");
+                for(uint32_t j = 0; j < func->signature.numInputs; j++)
+                {
+                    Parameter* param = &func->signature.inputs[j];
+                    printf("\t\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t\t]\n");
+            }
+            printf("\t\t\t\t\tnumOutputs: %u\n", func->signature.numOutputs);
+            if(func->signature.ouputs == nullptr)
+            {
+                printf("\t\t\t\t\touputs: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\t\touputs: [\n");
+                for(uint32_t j = 0; j < func->signature.numOutputs; j++)
+                {
+                    Parameter* param = &func->signature.ouputs[j];
+                    printf("\t\t\t\t\t\t[%u] Parameter {\n", j);
+                    printf("\t\t\t\t\t\t\ttype: Type {\n");
+                    if(param->type.baseType == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\t\tbaseType: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\t\tbaseType: \"%s\"\n", param->type.baseType);
+                    }
+                    printf("\t\t\t\t\t\t\t\tpointerDepth: %u\n", param->type.pointerDepth);
+                    printf("\t\t\t\t\t\t\t}\n");
+                    printf("\t\t\t\t\t\t\tqualifiers: %u\n", param->qualifiers);
+                    if(param->name == nullptr)
+                    {
+                        printf("\t\t\t\t\t\t\tname: nullptr\n");
+                    }
+                    else
+                    {
+                        printf("\t\t\t\t\t\t\tname: \"%s\"\n", param->name);
+                    }
+                    printf("\t\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t\t]\n");
+            }
+            printf("\t\t\t\t}\n");
+            printf("\t\t\t\tnumBlocks: %u\n", func->numBlocks);
+            if(func->blocks == nullptr)
+            {
+                printf("\t\t\t\tblocks: nullptr\n");
+            }
+            else
+            {
+                printf("\t\t\t\tblocks: [\n");
+                for(uint32_t j = 0; j < func->numBlocks; j++)
+                {
+                    Block* block = &func->blocks[j];
+                    printf("\t\t\t\t\t[%u] Block {\n", j);
+                    printf("\t\t\t\t\t\ttype: %u\n", block->type);
+                    printf("\t\t\t\t\t}\n");
+                }
+                printf("\t\t\t\t]\n");
+            }
+            printf("\t\t\t}\n");
+        }
+        printf("\t\t]\n");
+    }
+    printf("\t}\n");
+
+    printf("}\n");
+
+    freeAST(&ast);
 
     free(str);
     free(tokenList);
