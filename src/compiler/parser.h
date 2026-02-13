@@ -6,105 +6,92 @@
 #include "../runtime_lib/mdpl_error.h"
 
 #include "tokeniser.h"
+#include "symbol_table.h"
 
-typedef struct Expression Expression;
+#define MDPL_COMPILER_PARAMETER_QUALIFIERS_undefined   0
+#define MDPL_COMPILER_PARAMETER_QUALIFIERS_const       1
+#define MDPL_COMPILER_PARAMETER_QUALIFIERS_mut         2
+#define MDPL_COMPILER_PARAMETER_QUALIFIERS_ref         4
+#define MDPL_COMPILER_PARAMETER_QUALIFIERS_returnable  8
 
-typedef struct FunctionCall
+#if MDPL_COMPILER == MDPL_COMPILER_CLANG
+	__attribute__((packed))
+#elif MDPL_COMPILER == MDPL_COMPILER_GCC
+	__attribute__((packed))
+#elif MDPL_COMPILER == MDPL_COMPILER_MSVC
+	#pragma pack(push, 1)
+#elif MDPL_COMPILER == MDPL_COMPILER_INTEL
+	#pragma pack(1)
+#endif
+typedef struct Type
 {
-    const char* name;
-    Expression* parameters;
-    uint32_t numParameters;
-} FunctionCall;
+    Symbol name;
+    uint16_t pointerDepth;
+    uint16_t qualifiers;
+} Type;
+#if MDPL_COMPILER == MDPL_COMPILER_MSVC
+	#pragma pack(pop)
+#elif MDPL_COMPILER == MDPL_COMPILER_INTEL
+	#pragma pack()
+#endif
+
+typedef struct Literal
+{
+    Type type;
+    uint64_t value; //should reinterpret cast to appriorite type
+} Literal;
 
 #define MDPL_COMPILER_RPN_ELEMENT_TYPE_undefined  0
-#define MDPL_COMPILER_RPN_ELEMENT_TYPE_operator   1
-#define MDPL_COMPILER_RPN_ELEMENT_TYPE_literal    2
-#define MDPL_COMPILER_RPN_ELEMENT_TYPE_variable   3
-#define MDPL_COMPILER_RPN_ELEMENT_TYPE_function   4
-
-//ordered by precedence
-#define MDPL_COMPILER_RNP_ELEMENT_OPERATOR_undefined   0
-#define MDPL_COMPILER_RNP_ELEMENT_OPERATOR_assignment  1
+#define MDPL_COMPILER_RPN_ELEMENT_TYPE_literal    1
+#define MDPL_COMPILER_RPN_ELEMENT_TYPE_variable   2
+#define MDPL_COMPILER_RPN_ELEMENT_TYPE_function   3
+#define MDPL_COMPILER_RPN_ELEMENT_TYPE_operator   4
 
 typedef struct RPNElement
 {
     uint32_t type;
     union
     {
-        uint32_t operator;
-        const char* literalStr;
-        const char* variable;
-
-    } contents;
+        Literal literal;
+        Symbol variable;
+        int function; //TODO: implement functions calls
+        uint32_t symbol;
+    };
 } RPNElement;
 
-//a collection of unary operators, binary operators and functions calls that can be evaluiated in isolation
 typedef struct Expression
 {
+    bool isControlFlow;
     RPNElement* elements;
     uint32_t numElements;
+    //the following are unused if isControlFlow is false
+    uint32_t nextExpressionAtOriginalScope;
+    uint32_t expressionStartIndex;
+    uint32_t expressionEndIndex;
 } Expression;
 
-//individual cases within a switch statment
-typedef struct Case
+typedef struct Structure
 {
-    uint64_t key;
-    bool keySign;
-    Expression expression;
-} Case;
+    Type* types;
+    Symbol* names;
+    uint32_t numFields;
+} Structure;
 
-#define MDPL_COMPILER_BLOCK_TYPE_undefined  0
-#define MDPL_COMPILER_BLOCK_TYPE_code       1
-#define MDPL_COMPILER_BLOCK_TYPE_if         2
-#define MDPL_COMPILER_BLOCK_TYPE_for        3
-#define MDPL_COMPILER_BLOCK_TYPE_while      4
-#define MDPL_COMPILER_BLOCK_TYPE_switch     5
-
-//a block is a section of the code inside a scope
-//it can be either control flow of a series of expressions
-typedef struct Block
+typedef struct GlobalVariable
 {
-    uint32_t type;
-    union
-    {
-        struct
-        {
-            Expression* expressions;
-            uint32_t numExpressions;
-        };
-        struct Block* block;
-        struct
-        {
-            Case* cases;
-            uint32_t numCases;
-        };
-    } contents;
-} Block;
-
-typedef struct Type
-{
-    const char* baseType;
-    uint32_t pointerDepth;
-    //TODO:
-    //generic template
-    //generic specialisation
-} Type;
-
-#define MDPL_COMPILER_PARAMETER_QUALIFIERS_undefined  0
-#define MDPL_COMPILER_PARAMETER_QUALIFIERS_const      1
-#define MDPL_COMPILER_PARAMETER_QUALIFIERS_mut        2
-#define MDPL_COMPILER_PARAMETER_QUALIFIERS_ref        4
+    Symbol name;
+    Type type;
+} GlobalVariable;
 
 typedef struct Parameter
 {
     Type type;
-    uint32_t qualifiers;
-    const char* name;
+    Symbol name;
 } Parameter;
 
 typedef struct FunctionSignature
 {
-    const char* name;
+    Symbol name;
     Parameter* inputs;
     uint32_t numInputs;
     Parameter* ouputs;
@@ -114,8 +101,8 @@ typedef struct FunctionSignature
 typedef struct FunctionImplementation
 {
     FunctionSignature signature;
-    Block* blocks;
-    uint32_t numBlocks;
+    Expression* expressions;
+    uint32_t numExpressions;
 } FunctionImplementation;
 
 //equivilent of .h file
@@ -123,6 +110,14 @@ typedef struct HeaderSegment
 {
     FunctionSignature* signatures;
     uint32_t numSignatures;
+    //equivilent of #define
+    GlobalVariable* compileTimeGlobals;
+    uint32_t numCompileTimeGlobals;
+    //equivilent of globals
+    GlobalVariable* runtimeGlobals;
+    uint32_t numRuntimeGlobals;
+    Structure* structs;
+    uint32_t numStructs;
 } HeaderSegment;
 
 //equivilent of .c file
@@ -139,6 +134,7 @@ typedef struct AST {
     CodeSegment   code;
 } AST;
 
+//public:
 MDPL_ERROR_Error* generateAST(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, bool isHeader, AST* ast);
 MDPL_ERROR_Error* generateASTHeader(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, AST* ast);
 MDPL_ERROR_Error* generateASTCode(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, AST* ast);
@@ -147,5 +143,7 @@ MDPL_ERROR_Error* freeAST(AST* ast);
 
 MDPL_ERROR_Error* freeHeaderSegment(HeaderSegment* headerSegment);
 MDPL_ERROR_Error* freeCodeSegment(CodeSegment* codeSegment);
+
+//protected:
 
 #endif //PARSER_HEADER_GUARD

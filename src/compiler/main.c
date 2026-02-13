@@ -3,6 +3,7 @@
 #include "../runtime_lib/allocator.h"
 #include "../runtime_lib/mdpl_error.h"
 
+#include "symbol_table.h"
 #include "tokeniser.h"
 #include "parser.h"
 
@@ -18,7 +19,7 @@ static void resetTerminalColor()      { printf("\x1b[39m"); }
 static void terminalUnderlineOn()     { printf("\x1b[4m");  }
 static void terminalUnderlineOff()    { printf("\x1b[24m"); }
 
-static void printToken(Token token)
+static MDPL_ERROR_Error* printToken(SymbolTable* symbolTable, Token token)
 {
     if(token.type == MDPL_COMPILER_TOKEN_TYPE_undefined)
     {
@@ -30,22 +31,25 @@ static void printToken(Token token)
         printf("%s ", token.data.str);
         resetTerminalColor();
     }
-    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_symbol)
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_punctuation)
     {
         setTerminalColorGreen();
-        printf("%s ", symbolToString(token.data.symbol));
+        printf("%s ", punctuationToString(token.data.punctuation));
         resetTerminalColor();
     }
-    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_keyword)
+    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_symbol)
     {
-        setTerminalColorYellow();
-        printf("%s ", keywordToString(token.data.keyword));
-        resetTerminalColor();
-    }
-    else if(token.type == MDPL_COMPILER_TOKEN_TYPE_type)
-    {
-        setTerminalColorBlue();
-        printf("%s ", typeToString(token.data.type));
+        if(token.data.symbol <= MDPL_COMPILER_SYMBOL_HASH_NUM_PREDEFINED)
+        {
+            setTerminalColorYellow();
+        }
+        else
+        {
+            setTerminalColorBlue();
+        }
+        const char* str;
+        MDPL_RETERR(symbolToString(symbolTable, token.data.symbol, &str));
+        printf("%s ", str);
         resetTerminalColor();
     }
     else if(token.type == MDPL_COMPILER_TOKEN_TYPE_number)
@@ -66,6 +70,7 @@ static void printToken(Token token)
         printf("%s ", token.data.str);
         resetTerminalColor();
     }
+    return nullptr;
 }
 
 int main(int argc, char* argv[])
@@ -83,24 +88,35 @@ int main(int argc, char* argv[])
     error = readFile(argv[1], &str, &length);
     MDPL_PRINT_ERROR(error);
 
-    Token* tokenList;
-    uint32_t tokenListLength;
-    Statment* statmentList;
-    uint32_t statmentListLength;
-    error = tokenise(str, length, &tokenList, &tokenListLength, &statmentList, &statmentListLength);
+    SymbolTable symbolTable;
+    error = initialiseSymbolTable(&symbolTable);
     MDPL_PRINT_ERROR(error);
     if(error != nullptr)
     {
         free(str);
         return error->exitCode;
     }
-    Scope* scopeList;
-    uint32_t scopeListLength;
-    error = groupScopes(tokenList, tokenListLength, statmentList, statmentListLength, &scopeList, &scopeListLength);
+
+    Token* tokenList;
+    uint32_t tokenListLength;
+    Statment* statmentList;
+    uint32_t statmentListLength;
+    error = tokenise(str, length, &symbolTable, &tokenList, &tokenListLength, &statmentList, &statmentListLength, argv[1]);
     MDPL_PRINT_ERROR(error);
     if(error != nullptr)
     {
         free(str);
+        destroySymbolTable(&symbolTable);
+        return error->exitCode;
+    }
+    Scope* scopeList;
+    uint32_t scopeListLength;
+    error = groupScopes(&symbolTable, tokenList, tokenListLength, statmentList, statmentListLength, &scopeList, &scopeListLength);
+    MDPL_PRINT_ERROR(error);
+    if(error != nullptr)
+    {
+        free(str);
+        destroySymbolTable(&symbolTable);
         free(tokenList);
         free(statmentList);
         return error->exitCode;
@@ -113,7 +129,16 @@ int main(int argc, char* argv[])
         printf("l:%u s:%u [t:%u, t:%u]: ", tokenList[statment.startTokenIndex].lineNum, i, statment.startTokenIndex, statment.endTokenIndex);
         for(uint32_t j = statment.startTokenIndex; j < statment.endTokenIndex; j++)
         {
-            printToken(tokenList[j]);
+            error = printToken(&symbolTable, tokenList[j]);
+            MDPL_PRINT_ERROR(error);
+            if(error != nullptr)
+            {
+                free(str);
+                destroySymbolTable(&symbolTable);
+                free(tokenList);
+                free(statmentList);
+                return error->exitCode;
+            }
         }
         printf("\n");
     }
@@ -125,6 +150,7 @@ int main(int argc, char* argv[])
         printf("scope:%u [statment:%u, statment:%u]\n", i, scope.startStatmentIndex, scope.endStatmentIndex);
     }
 
+    /*
     AST ast;
     error = generateAST(tokenList, tokenListLength, statmentList, statmentListLength, true, &ast);
 
@@ -453,8 +479,10 @@ int main(int argc, char* argv[])
     printf("}\n");
 
     freeAST(&ast);
+    */
 
     free(str);
+    destroySymbolTable(&symbolTable);
     free(tokenList);
     free(statmentList);
     free(scopeList);

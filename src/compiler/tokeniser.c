@@ -1,330 +1,146 @@
 #include "tokeniser.h"
 #include "../common/system_headers.h"
 
-uint32_t stringToSingleSymbol(const char* s)
+uint32_t stringToSinglePunctuation(const char* s)
 {
     return (uint32_t)(*(uint8_t*)s);
 }
-uint32_t stringToDoubleSymbol(const char* s)
+uint32_t stringToDoublePunctuation(const char* s)
 {
     return (uint32_t)(*(uint16_t*)s);
 }
 
-bool isValidSingleSymbol(uint32_t const symbol)
+bool isValidSinglePunctuation(uint32_t const punctuation)
 {
-    switch (symbol)
+    switch (punctuation)
     {
-        // Single character symbols
-        case MDPL_COMPILER_SYMBOL_exclamation:              /*!*/
-        case MDPL_COMPILER_SYMBOL_hash:                     /*#*/
-        case MDPL_COMPILER_SYMBOL_dollar:                   /*$*/
-        case MDPL_COMPILER_SYMBOL_mod:                      /*%*/
-        case MDPL_COMPILER_SYMBOL_and:                      /*&*/
-        case MDPL_COMPILER_SYMBOL_openRoundBracket:         /*(*/
-        case MDPL_COMPILER_SYMBOL_closeRoundBracket:        /*)*/
-        case MDPL_COMPILER_SYMBOL_star:                     /***/
-        case MDPL_COMPILER_SYMBOL_plus:                     /*+*/
-        case MDPL_COMPILER_SYMBOL_comma:                    /*,*/
-        case MDPL_COMPILER_SYMBOL_minus:                    /*-*/
-        case MDPL_COMPILER_SYMBOL_dot:                      /*.*/
-        case MDPL_COMPILER_SYMBOL_frontSlash:               /*/*/
-        case MDPL_COMPILER_SYMBOL_colons:                   /*:*/
-        case MDPL_COMPILER_SYMBOL_lessThan:                 /*<*/
-        case MDPL_COMPILER_SYMBOL_equals:                   /*=*/
-        case MDPL_COMPILER_SYMBOL_greaterThan:              /*>*/
-        case MDPL_COMPILER_SYMBOL_question:                 /*?*/
-        case MDPL_COMPILER_SYMBOL_at:                       /*@*/
-        case MDPL_COMPILER_SYMBOL_openSquareBracket:        /*[*/
-        case MDPL_COMPILER_SYMBOL_closeSquareBracket:       /*]*/
-        case MDPL_COMPILER_SYMBOL_xor:                      /*^*/
-        case MDPL_COMPILER_SYMBOL_grave:                    /*`*/
-        case MDPL_COMPILER_SYMBOL_openCurlyBrace:           /*{*/
-        case MDPL_COMPILER_SYMBOL_or:                       /*|*/
-        case MDPL_COMPILER_SYMBOL_closeCurlyBrace:          /*}*/
-        case MDPL_COMPILER_SYMBOL_not:                      /*~*/
+        // Single character punctuations
+        case MDPL_COMPILER_PUNCTUATION_exclamation:              /*!*/
+        case MDPL_COMPILER_PUNCTUATION_hash:                     /*#*/
+        case MDPL_COMPILER_PUNCTUATION_dollar:                   /*$*/
+        case MDPL_COMPILER_PUNCTUATION_mod:                      /*%*/
+        case MDPL_COMPILER_PUNCTUATION_and:                      /*&*/
+        case MDPL_COMPILER_PUNCTUATION_openRoundBracket:         /*(*/
+        case MDPL_COMPILER_PUNCTUATION_closeRoundBracket:        /*)*/
+        case MDPL_COMPILER_PUNCTUATION_star:                     /***/
+        case MDPL_COMPILER_PUNCTUATION_plus:                     /*+*/
+        case MDPL_COMPILER_PUNCTUATION_comma:                    /*,*/
+        case MDPL_COMPILER_PUNCTUATION_minus:                    /*-*/
+        case MDPL_COMPILER_PUNCTUATION_dot:                      /*.*/
+        case MDPL_COMPILER_PUNCTUATION_frontSlash:               /*/*/
+        case MDPL_COMPILER_PUNCTUATION_colons:                   /*:*/
+        case MDPL_COMPILER_PUNCTUATION_lessThan:                 /*<*/
+        case MDPL_COMPILER_PUNCTUATION_equals:                   /*=*/
+        case MDPL_COMPILER_PUNCTUATION_greaterThan:              /*>*/
+        case MDPL_COMPILER_PUNCTUATION_question:                 /*?*/
+        case MDPL_COMPILER_PUNCTUATION_at:                       /*@*/
+        case MDPL_COMPILER_PUNCTUATION_openSquareBracket:        /*[*/
+        case MDPL_COMPILER_PUNCTUATION_closeSquareBracket:       /*]*/
+        case MDPL_COMPILER_PUNCTUATION_xor:                      /*^*/
+        case MDPL_COMPILER_PUNCTUATION_grave:                    /*`*/
+        case MDPL_COMPILER_PUNCTUATION_openCurlyBrace:           /*{*/
+        case MDPL_COMPILER_PUNCTUATION_or:                       /*|*/
+        case MDPL_COMPILER_PUNCTUATION_closeCurlyBrace:          /*}*/
+        case MDPL_COMPILER_PUNCTUATION_not:                      /*~*/
             return true;
         default:
             return false;
     }
 }
-bool isValidDoubleSymbol(uint32_t const symbol)
+bool isValidDoublePunctuation(uint32_t const punctuation)
 {
-    switch (symbol)
+    switch (punctuation)
     {
-        // Double character symbols
-        case MDPL_COMPILER_SYMBOL_doubleAnd:                /*&&*/
-        case MDPL_COMPILER_SYMBOL_exponent:                 /****/
-        case MDPL_COMPILER_SYMBOL_increment:                /*++*/
-        case MDPL_COMPILER_SYMBOL_decrement:                /*--*/
-        case MDPL_COMPILER_SYMBOL_doubleDot:                /*..*/
-        case MDPL_COMPILER_SYMBOL_doubleColons:             /*::*/
-        case MDPL_COMPILER_SYMBOL_shiftLeft:                /*<<*/
-        case MDPL_COMPILER_SYMBOL_doesNotEqual:             /*!=*/
-        case MDPL_COMPILER_SYMBOL_modEqual:                 /*%=*/
-        case MDPL_COMPILER_SYMBOL_andEqual:                 /*&=*/
-        case MDPL_COMPILER_SYMBOL_starEqual:                /**=*/
-        case MDPL_COMPILER_SYMBOL_plusEqual:                /*+=*/
-        case MDPL_COMPILER_SYMBOL_minusEqual:               /*-=*/
-        case MDPL_COMPILER_SYMBOL_lessEqual:                /*<=*/
-        case MDPL_COMPILER_SYMBOL_doubleEqual:              /*==*/
-        case MDPL_COMPILER_SYMBOL_greaterEqual:             /*>=*/
-        case MDPL_COMPILER_SYMBOL_notEqual:                 /*~=*/
-        case MDPL_COMPILER_SYMBOL_arrow:                    /*->*/
-        case MDPL_COMPILER_SYMBOL_shiftRight:               /*>>*/
-        case MDPL_COMPILER_SYMBOL_doubleOpenSquareBracket:  /*[[*/
-        case MDPL_COMPILER_SYMBOL_doubleCloseSquareBracket: /*]]*/
-        case MDPL_COMPILER_SYMBOL_doubleXor:                /*^^*/
-        case MDPL_COMPILER_SYMBOL_doubleOpenCurlyBrace:     /*{{*/
-        case MDPL_COMPILER_SYMBOL_doubleOR:                 /*||*/
-        case MDPL_COMPILER_SYMBOL_doubleCloseCurlyBrace:    /*}}*/
+        // Double character punctuations
+        case MDPL_COMPILER_PUNCTUATION_doubleAnd:                /*&&*/
+        case MDPL_COMPILER_PUNCTUATION_exponent:                 /****/
+        case MDPL_COMPILER_PUNCTUATION_increment:                /*++*/
+        case MDPL_COMPILER_PUNCTUATION_decrement:                /*--*/
+        case MDPL_COMPILER_PUNCTUATION_doubleDot:                /*..*/
+        case MDPL_COMPILER_PUNCTUATION_doubleColons:             /*::*/
+        case MDPL_COMPILER_PUNCTUATION_shiftLeft:                /*<<*/
+        case MDPL_COMPILER_PUNCTUATION_doesNotEqual:             /*!=*/
+        case MDPL_COMPILER_PUNCTUATION_modEqual:                 /*%=*/
+        case MDPL_COMPILER_PUNCTUATION_andEqual:                 /*&=*/
+        case MDPL_COMPILER_PUNCTUATION_starEqual:                /**=*/
+        case MDPL_COMPILER_PUNCTUATION_plusEqual:                /*+=*/
+        case MDPL_COMPILER_PUNCTUATION_minusEqual:               /*-=*/
+        case MDPL_COMPILER_PUNCTUATION_lessEqual:                /*<=*/
+        case MDPL_COMPILER_PUNCTUATION_doubleEqual:              /*==*/
+        case MDPL_COMPILER_PUNCTUATION_greaterEqual:             /*>=*/
+        case MDPL_COMPILER_PUNCTUATION_notEqual:                 /*~=*/
+        case MDPL_COMPILER_PUNCTUATION_arrow:                    /*->*/
+        case MDPL_COMPILER_PUNCTUATION_shiftRight:               /*>>*/
+        case MDPL_COMPILER_PUNCTUATION_doubleOpenSquareBracket:  /*[[*/
+        case MDPL_COMPILER_PUNCTUATION_doubleCloseSquareBracket: /*]]*/
+        case MDPL_COMPILER_PUNCTUATION_doubleXor:                /*^^*/
+        case MDPL_COMPILER_PUNCTUATION_doubleOpenCurlyBrace:     /*{{*/
+        case MDPL_COMPILER_PUNCTUATION_doubleOR:                 /*||*/
+        case MDPL_COMPILER_PUNCTUATION_doubleCloseCurlyBrace:    /*}}*/
             return true;
         default:
             return false;
     }
 }
-const char* symbolToString(uint32_t symbol)
+const char* punctuationToString(uint32_t punctuation)
 {
-    switch (symbol)
+    switch (punctuation)
     {
-        // Single character symbols
-        case MDPL_COMPILER_SYMBOL_exclamation:              return "!";
-        case MDPL_COMPILER_SYMBOL_hash:                     return "#";
-        case MDPL_COMPILER_SYMBOL_dollar:                   return "$";
-        case MDPL_COMPILER_SYMBOL_mod:                      return "%";
-        case MDPL_COMPILER_SYMBOL_and:                      return "&";
-        case MDPL_COMPILER_SYMBOL_openRoundBracket:         return "(";
-        case MDPL_COMPILER_SYMBOL_closeRoundBracket:        return ")";
-        case MDPL_COMPILER_SYMBOL_star:                     return "*";
-        case MDPL_COMPILER_SYMBOL_plus:                     return "+";
-        case MDPL_COMPILER_SYMBOL_comma:                    return ",";
-        case MDPL_COMPILER_SYMBOL_minus:                    return "-";
-        case MDPL_COMPILER_SYMBOL_dot:                      return ".";
-        case MDPL_COMPILER_SYMBOL_frontSlash:               return "/";
-        case MDPL_COMPILER_SYMBOL_colons:                   return ":";
-        case MDPL_COMPILER_SYMBOL_lessThan:                 return "<";
-        case MDPL_COMPILER_SYMBOL_equals:                   return "=";
-        case MDPL_COMPILER_SYMBOL_greaterThan:              return ">";
-        case MDPL_COMPILER_SYMBOL_question:                 return "?";
-        case MDPL_COMPILER_SYMBOL_at:                       return "@";
-        case MDPL_COMPILER_SYMBOL_openSquareBracket:        return "[";
-        case MDPL_COMPILER_SYMBOL_closeSquareBracket:       return "]";
-        case MDPL_COMPILER_SYMBOL_xor:                      return "^";
-        case MDPL_COMPILER_SYMBOL_grave:                    return "`";
-        case MDPL_COMPILER_SYMBOL_openCurlyBrace:           return "{";
-        case MDPL_COMPILER_SYMBOL_or:                       return "|";
-        case MDPL_COMPILER_SYMBOL_closeCurlyBrace:          return "}";
-        case MDPL_COMPILER_SYMBOL_not:                      return "~";
-        // Double character symbols
-        case MDPL_COMPILER_SYMBOL_doubleAnd:                return "&&";
-        case MDPL_COMPILER_SYMBOL_exponent:                 return "**";
-        case MDPL_COMPILER_SYMBOL_increment:                return "++";
-        case MDPL_COMPILER_SYMBOL_decrement:                return "--";
-        case MDPL_COMPILER_SYMBOL_doubleDot:                return "..";
-        case MDPL_COMPILER_SYMBOL_doubleColons:             return "::";
-        case MDPL_COMPILER_SYMBOL_shiftLeft:                return "<<";
-        case MDPL_COMPILER_SYMBOL_doesNotEqual:             return "!=";
-        case MDPL_COMPILER_SYMBOL_modEqual:                 return "%=";
-        case MDPL_COMPILER_SYMBOL_andEqual:                 return "&=";
-        case MDPL_COMPILER_SYMBOL_starEqual:                return "*=";
-        case MDPL_COMPILER_SYMBOL_plusEqual:                return "+=";
-        case MDPL_COMPILER_SYMBOL_minusEqual:               return "-=";
-        case MDPL_COMPILER_SYMBOL_lessEqual:                return "<=";
-        case MDPL_COMPILER_SYMBOL_doubleEqual:              return "==";
-        case MDPL_COMPILER_SYMBOL_greaterEqual:             return ">=";
-        case MDPL_COMPILER_SYMBOL_notEqual:                 return "~=";
-        case MDPL_COMPILER_SYMBOL_arrow:                    return "->";
-        case MDPL_COMPILER_SYMBOL_shiftRight:               return ">>";
-        case MDPL_COMPILER_SYMBOL_doubleOpenSquareBracket:  return "[[";
-        case MDPL_COMPILER_SYMBOL_doubleCloseSquareBracket: return "]]";
-        case MDPL_COMPILER_SYMBOL_doubleXor:                return "^^";
-        case MDPL_COMPILER_SYMBOL_doubleOpenCurlyBrace:     return "{{";
-        case MDPL_COMPILER_SYMBOL_doubleOR:                 return "||";
-        case MDPL_COMPILER_SYMBOL_doubleCloseCurlyBrace:    return "}}";
-        default:                                            return "Unrecognised_symbol";
-    }
-}
-
-uint32_t stringToKeyword(const char* s)
-{
-    if (strcmp(s, "namespace") == 0) return MDPL_COMPILER_KEYWORD_namespace;
-    if (strcmp(s, "public") == 0)    return MDPL_COMPILER_KEYWORD_public;
-    if (strcmp(s, "protected") == 0) return MDPL_COMPILER_KEYWORD_protected;
-    if (strcmp(s, "code") == 0)      return MDPL_COMPILER_KEYWORD_code;
-    if (strcmp(s, "fn") == 0)        return MDPL_COMPILER_KEYWORD_fn;
-    if (strcmp(s, "sub") == 0)       return MDPL_COMPILER_KEYWORD_sub;
-    if (strcmp(s, "ret") == 0)       return MDPL_COMPILER_KEYWORD_ret;
-    if (strcmp(s, "ref") == 0)       return MDPL_COMPILER_KEYWORD_ref;
-    if (strcmp(s, "generic") == 0)   return MDPL_COMPILER_KEYWORD_generic;
-    if (strcmp(s, "prop") == 0)      return MDPL_COMPILER_KEYWORD_prop;
-    if (strcmp(s, "catch") == 0)     return MDPL_COMPILER_KEYWORD_catch;
-    if (strcmp(s, "if") == 0)        return MDPL_COMPILER_KEYWORD_if;
-    if (strcmp(s, "elif") == 0)      return MDPL_COMPILER_KEYWORD_elif;
-    if (strcmp(s, "else") == 0)      return MDPL_COMPILER_KEYWORD_else;
-    if (strcmp(s, "for") == 0)       return MDPL_COMPILER_KEYWORD_for;
-    if (strcmp(s, "while") == 0)     return MDPL_COMPILER_KEYWORD_while;
-    if (strcmp(s, "from") == 0)      return MDPL_COMPILER_KEYWORD_from;
-    if (strcmp(s, "to") == 0)        return MDPL_COMPILER_KEYWORD_to;
-    if (strcmp(s, "step") == 0)      return MDPL_COMPILER_KEYWORD_step;
-    if (strcmp(s, "continue") == 0)  return MDPL_COMPILER_KEYWORD_continue;
-    if (strcmp(s, "break") == 0)     return MDPL_COMPILER_KEYWORD_break;
-    if (strcmp(s, "switch") == 0)    return MDPL_COMPILER_KEYWORD_switch;
-    if (strcmp(s, "case") == 0)      return MDPL_COMPILER_KEYWORD_case;
-    if (strcmp(s, "default") == 0)   return MDPL_COMPILER_KEYWORD_default;
-    if (strcmp(s, "let") == 0)       return MDPL_COMPILER_KEYWORD_let;
-    if (strcmp(s, "mut") == 0)       return MDPL_COMPILER_KEYWORD_mut;
-    if (strcmp(s, "auto") == 0)      return MDPL_COMPILER_KEYWORD_auto;
-    if (strcmp(s, "struct") == 0)    return MDPL_COMPILER_KEYWORD_struct;
-    if (strcmp(s, "enum") == 0)      return MDPL_COMPILER_KEYWORD_enum;
-    if (strcmp(s, "bitfield") == 0)  return MDPL_COMPILER_KEYWORD_bitfield;
-    if (strcmp(s, "using") == 0)     return MDPL_COMPILER_KEYWORD_using;
-    if (strcmp(s, "and") == 0)       return MDPL_COMPILER_KEYWORD_and;
-    if (strcmp(s, "or") == 0)        return MDPL_COMPILER_KEYWORD_or;
-    if (strcmp(s, "not") == 0)       return MDPL_COMPILER_KEYWORD_not;
-    if (strcmp(s, "true") == 0)      return MDPL_COMPILER_KEYWORD_true;
-    if (strcmp(s, "false") == 0)     return MDPL_COMPILER_KEYWORD_false;
-    if (strcmp(s, "sizeof") == 0)    return MDPL_COMPILER_KEYWORD_sizeof;
-    if (strcmp(s, "include") == 0)   return MDPL_COMPILER_KEYWORD_include;
-    // C keywords not used in mdpl
-    if (strcmp(s, "return") == 0)    return MDPL_COMPILER_KEYWORD_return;
-    if (strcmp(s, "static") == 0)    return MDPL_COMPILER_KEYWORD_static;
-    if (strcmp(s, "typedef") == 0)   return MDPL_COMPILER_KEYWORD_typedef;
-    if (strcmp(s, "const") == 0)     return MDPL_COMPILER_KEYWORD_const;
-    if (strcmp(s, "endif") == 0)     return MDPL_COMPILER_KEYWORD_endif;
-    if (strcmp(s, "define") == 0)    return MDPL_COMPILER_KEYWORD_define;
-    if (strcmp(s, "defined") == 0)   return MDPL_COMPILER_KEYWORD_defined;
-    if (strcmp(s, "undef") == 0)     return MDPL_COMPILER_KEYWORD_undef;
-    if (strcmp(s, "ifdef") == 0)     return MDPL_COMPILER_KEYWORD_ifdef;
-    if (strcmp(s, "ifndef") == 0)    return MDPL_COMPILER_KEYWORD_ifndef;
-    return MDPL_COMPILER_KEYWORD_undefined;
-}
-bool isValidKeyword(const uint32_t keyword)
-{
-    return keyword != MDPL_COMPILER_KEYWORD_undefined;
-}
-const char* keywordToString(const uint32_t keyword)
-{
-    switch (keyword)
-    {
-        case MDPL_COMPILER_KEYWORD_undefined:  return "Undefined_keyword";
-        case MDPL_COMPILER_KEYWORD_namespace:  return "namespace";
-        case MDPL_COMPILER_KEYWORD_public:     return "public";
-        case MDPL_COMPILER_KEYWORD_protected:  return "protected";
-        case MDPL_COMPILER_KEYWORD_code:       return "code";
-        case MDPL_COMPILER_KEYWORD_fn:         return "fn";
-        case MDPL_COMPILER_KEYWORD_sub:        return "sub";
-        case MDPL_COMPILER_KEYWORD_ret:        return "ret";
-        case MDPL_COMPILER_KEYWORD_ref:        return "ref";
-        case MDPL_COMPILER_KEYWORD_generic:    return "generic";
-        case MDPL_COMPILER_KEYWORD_prop:       return "prop";
-        case MDPL_COMPILER_KEYWORD_catch:      return "catch";
-        case MDPL_COMPILER_KEYWORD_if:         return "if";
-        case MDPL_COMPILER_KEYWORD_elif:       return "elif";
-        case MDPL_COMPILER_KEYWORD_else:       return "else";
-        case MDPL_COMPILER_KEYWORD_for:        return "for";
-        case MDPL_COMPILER_KEYWORD_while:      return "while";
-        case MDPL_COMPILER_KEYWORD_from:       return "from";
-        case MDPL_COMPILER_KEYWORD_to:         return "to";
-        case MDPL_COMPILER_KEYWORD_step:       return "step";
-        case MDPL_COMPILER_KEYWORD_continue:   return "continue";
-        case MDPL_COMPILER_KEYWORD_break:      return "break";
-        case MDPL_COMPILER_KEYWORD_switch:     return "switch";
-        case MDPL_COMPILER_KEYWORD_case:       return "case";
-        case MDPL_COMPILER_KEYWORD_default:    return "default";
-        case MDPL_COMPILER_KEYWORD_let:        return "let";
-        case MDPL_COMPILER_KEYWORD_mut:        return "mut";
-        case MDPL_COMPILER_KEYWORD_auto:       return "auto";
-        case MDPL_COMPILER_KEYWORD_struct:     return "struct";
-        case MDPL_COMPILER_KEYWORD_enum:       return "enum";
-        case MDPL_COMPILER_KEYWORD_bitfield:   return "bitfield";
-        case MDPL_COMPILER_KEYWORD_using:      return "using";
-        case MDPL_COMPILER_KEYWORD_and:        return "and";
-        case MDPL_COMPILER_KEYWORD_or:         return "or";
-        case MDPL_COMPILER_KEYWORD_not:        return "not";
-        case MDPL_COMPILER_KEYWORD_true:       return "true";
-        case MDPL_COMPILER_KEYWORD_false:      return "false";
-        case MDPL_COMPILER_KEYWORD_sizeof:     return "sizeof";
-        case MDPL_COMPILER_KEYWORD_include:    return "include";
-        // C keywords not used in mdpl
-        case MDPL_COMPILER_KEYWORD_return:     return "return";
-        case MDPL_COMPILER_KEYWORD_static:     return "static";
-        case MDPL_COMPILER_KEYWORD_typedef:    return "typedef";
-        case MDPL_COMPILER_KEYWORD_const:      return "const";
-        case MDPL_COMPILER_KEYWORD_endif:      return "endif";
-        case MDPL_COMPILER_KEYWORD_define:     return "define";
-        case MDPL_COMPILER_KEYWORD_defined:    return "defined";
-        case MDPL_COMPILER_KEYWORD_undef:      return "undef";
-        case MDPL_COMPILER_KEYWORD_ifdef:      return "ifdef";
-        case MDPL_COMPILER_KEYWORD_ifndef:     return "ifndef";
-        default:                               return "Unrecognised_keyword";
-    }
-}
-
-uint32_t stringToType(const char* s)
-{
-    if (strcmp(s, "byte") == 0)     return MDPL_COMPILER_TYPE_byte;
-    if (strcmp(s, "int8") == 0)     return MDPL_COMPILER_TYPE_int8;
-    if (strcmp(s, "uint8") == 0)    return MDPL_COMPILER_TYPE_uint8;
-    if (strcmp(s, "int16") == 0)    return MDPL_COMPILER_TYPE_int16;
-    if (strcmp(s, "uint16") == 0)   return MDPL_COMPILER_TYPE_uint16;
-    if (strcmp(s, "int32") == 0)    return MDPL_COMPILER_TYPE_int32;
-    if (strcmp(s, "uint32") == 0)   return MDPL_COMPILER_TYPE_uint32;
-    if (strcmp(s, "int64") == 0)    return MDPL_COMPILER_TYPE_int64;
-    if (strcmp(s, "uint64") == 0)   return MDPL_COMPILER_TYPE_uint64;
-    if (strcmp(s, "float32") == 0)  return MDPL_COMPILER_TYPE_float32;
-    if (strcmp(s, "float64") == 0)  return MDPL_COMPILER_TYPE_float64;
-    if (strcmp(s, "string") == 0)   return MDPL_COMPILER_TYPE_string;
-    if (strcmp(s, "bool") == 0)     return MDPL_COMPILER_TYPE_bool;
-    // C types not used in mdpl
-    if (strcmp(s, "int") == 0)      return MDPL_COMPILER_TYPE_int;
-    if (strcmp(s, "float") == 0)    return MDPL_COMPILER_TYPE_float;
-    if (strcmp(s, "double") == 0)   return MDPL_COMPILER_TYPE_double;
-    if (strcmp(s, "int8_t") == 0)   return MDPL_COMPILER_TYPE_int8_t;
-    if (strcmp(s, "uint8_t") == 0)  return MDPL_COMPILER_TYPE_uint8_t;
-    if (strcmp(s, "int16_t") == 0)  return MDPL_COMPILER_TYPE_int16_t;
-    if (strcmp(s, "uint16_t") == 0) return MDPL_COMPILER_TYPE_uint16_t;
-    if (strcmp(s, "int32_t") == 0)  return MDPL_COMPILER_TYPE_int32_t;
-    if (strcmp(s, "uint32_t") == 0) return MDPL_COMPILER_TYPE_uint32_t;
-    if (strcmp(s, "int64_t") == 0)  return MDPL_COMPILER_TYPE_int64_t;
-    if (strcmp(s, "uint64_t") == 0) return MDPL_COMPILER_TYPE_uint64_t;
-    if (strcmp(s, "size_t") == 0)   return MDPL_COMPILER_TYPE_size_t;
-    return MDPL_COMPILER_TYPE_undefined;
-}
-bool isValidType(const uint32_t type)
-{
-    return type != MDPL_COMPILER_TYPE_undefined;
-}
-const char* typeToString(const uint32_t type)
-{
-    switch (type)
-    {
-        case MDPL_COMPILER_TYPE_undefined: return "Undefined_type";
-        case MDPL_COMPILER_TYPE_byte:      return "byte";
-        case MDPL_COMPILER_TYPE_int8:      return "int8";
-        case MDPL_COMPILER_TYPE_uint8:     return "uint8";
-        case MDPL_COMPILER_TYPE_int16:     return "int16";
-        case MDPL_COMPILER_TYPE_uint16:    return "uint16";
-        case MDPL_COMPILER_TYPE_int32:     return "int32";
-        case MDPL_COMPILER_TYPE_uint32:    return "uint32";
-        case MDPL_COMPILER_TYPE_int64:     return "int64";
-        case MDPL_COMPILER_TYPE_uint64:    return "uint64";
-        case MDPL_COMPILER_TYPE_float32:   return "float32";
-        case MDPL_COMPILER_TYPE_float64:   return "float64";
-        case MDPL_COMPILER_TYPE_string:    return "string";
-        case MDPL_COMPILER_TYPE_bool:      return "bool";
-        // C types not used in mdpl
-        case MDPL_COMPILER_TYPE_int:       return "int";
-        case MDPL_COMPILER_TYPE_float:     return "float";
-        case MDPL_COMPILER_TYPE_double:    return "double";
-        case MDPL_COMPILER_TYPE_int8_t:    return "int8_t";
-        case MDPL_COMPILER_TYPE_uint8_t:   return "uint8_t";
-        case MDPL_COMPILER_TYPE_int16_t:   return "int16_t";
-        case MDPL_COMPILER_TYPE_uint16_t:  return "uint16_t";
-        case MDPL_COMPILER_TYPE_int32_t:   return "int32_t";
-        case MDPL_COMPILER_TYPE_uint32_t:  return "uint32_t";
-        case MDPL_COMPILER_TYPE_int64_t:   return "int64_t";
-        case MDPL_COMPILER_TYPE_uint64_t:  return "uint64_t";
-        case MDPL_COMPILER_TYPE_size_t:    return "size_t";
-        default:                           return "Unrecognised_type";
+        // Single character punctuations
+        case MDPL_COMPILER_PUNCTUATION_exclamation:              return "!";
+        case MDPL_COMPILER_PUNCTUATION_hash:                     return "#";
+        case MDPL_COMPILER_PUNCTUATION_dollar:                   return "$";
+        case MDPL_COMPILER_PUNCTUATION_mod:                      return "%";
+        case MDPL_COMPILER_PUNCTUATION_and:                      return "&";
+        case MDPL_COMPILER_PUNCTUATION_openRoundBracket:         return "(";
+        case MDPL_COMPILER_PUNCTUATION_closeRoundBracket:        return ")";
+        case MDPL_COMPILER_PUNCTUATION_star:                     return "*";
+        case MDPL_COMPILER_PUNCTUATION_plus:                     return "+";
+        case MDPL_COMPILER_PUNCTUATION_comma:                    return ",";
+        case MDPL_COMPILER_PUNCTUATION_minus:                    return "-";
+        case MDPL_COMPILER_PUNCTUATION_dot:                      return ".";
+        case MDPL_COMPILER_PUNCTUATION_frontSlash:               return "/";
+        case MDPL_COMPILER_PUNCTUATION_colons:                   return ":";
+        case MDPL_COMPILER_PUNCTUATION_lessThan:                 return "<";
+        case MDPL_COMPILER_PUNCTUATION_equals:                   return "=";
+        case MDPL_COMPILER_PUNCTUATION_greaterThan:              return ">";
+        case MDPL_COMPILER_PUNCTUATION_question:                 return "?";
+        case MDPL_COMPILER_PUNCTUATION_at:                       return "@";
+        case MDPL_COMPILER_PUNCTUATION_openSquareBracket:        return "[";
+        case MDPL_COMPILER_PUNCTUATION_closeSquareBracket:       return "]";
+        case MDPL_COMPILER_PUNCTUATION_xor:                      return "^";
+        case MDPL_COMPILER_PUNCTUATION_grave:                    return "`";
+        case MDPL_COMPILER_PUNCTUATION_openCurlyBrace:           return "{";
+        case MDPL_COMPILER_PUNCTUATION_or:                       return "|";
+        case MDPL_COMPILER_PUNCTUATION_closeCurlyBrace:          return "}";
+        case MDPL_COMPILER_PUNCTUATION_not:                      return "~";
+        // Double character punctuations
+        case MDPL_COMPILER_PUNCTUATION_doubleAnd:                return "&&";
+        case MDPL_COMPILER_PUNCTUATION_exponent:                 return "**";
+        case MDPL_COMPILER_PUNCTUATION_increment:                return "++";
+        case MDPL_COMPILER_PUNCTUATION_decrement:                return "--";
+        case MDPL_COMPILER_PUNCTUATION_doubleDot:                return "..";
+        case MDPL_COMPILER_PUNCTUATION_doubleColons:             return "::";
+        case MDPL_COMPILER_PUNCTUATION_shiftLeft:                return "<<";
+        case MDPL_COMPILER_PUNCTUATION_doesNotEqual:             return "!=";
+        case MDPL_COMPILER_PUNCTUATION_modEqual:                 return "%=";
+        case MDPL_COMPILER_PUNCTUATION_andEqual:                 return "&=";
+        case MDPL_COMPILER_PUNCTUATION_starEqual:                return "*=";
+        case MDPL_COMPILER_PUNCTUATION_plusEqual:                return "+=";
+        case MDPL_COMPILER_PUNCTUATION_minusEqual:               return "-=";
+        case MDPL_COMPILER_PUNCTUATION_lessEqual:                return "<=";
+        case MDPL_COMPILER_PUNCTUATION_doubleEqual:              return "==";
+        case MDPL_COMPILER_PUNCTUATION_greaterEqual:             return ">=";
+        case MDPL_COMPILER_PUNCTUATION_notEqual:                 return "~=";
+        case MDPL_COMPILER_PUNCTUATION_arrow:                    return "->";
+        case MDPL_COMPILER_PUNCTUATION_shiftRight:               return ">>";
+        case MDPL_COMPILER_PUNCTUATION_doubleOpenSquareBracket:  return "[[";
+        case MDPL_COMPILER_PUNCTUATION_doubleCloseSquareBracket: return "]]";
+        case MDPL_COMPILER_PUNCTUATION_doubleXor:                return "^^";
+        case MDPL_COMPILER_PUNCTUATION_doubleOpenCurlyBrace:     return "{{";
+        case MDPL_COMPILER_PUNCTUATION_doubleOR:                 return "||";
+        case MDPL_COMPILER_PUNCTUATION_doubleCloseCurlyBrace:    return "}}";
+        default:                                            return "Unrecognised_punctuation";
     }
 }
 
@@ -377,35 +193,6 @@ MDPL_ERROR_Error* reallocateScopeList(Scope** scopes, uint32_t count, uint32_t* 
         }
         *scopes = newScopes;
     }
-    return nullptr;
-}
-//create a token and add it to the token list, checking if it's a keyword or type
-MDPL_ERROR_Error* createStandardToken(Token** tokens, uint32_t* tokenCount, uint32_t* tokenCapacity, uint32_t statmentIndex, const char* str, uint32_t lineNum)
-{
-    MDPL_RETERR(reallocateTokenList(tokens, *tokenCount, tokenCapacity));
-    (*tokens)[*tokenCount].statmentIndex = statmentIndex;
-    (*tokens)[*tokenCount].lineNum = lineNum;
-
-    uint32_t keyword = stringToKeyword(str);
-    uint32_t type = stringToType(str);
-
-    if (isValidKeyword(keyword))
-    {
-        (*tokens)[*tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_keyword;
-        (*tokens)[*tokenCount].data.keyword = keyword;
-    }
-    else if (isValidType(type))
-    {
-        (*tokens)[*tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_type;
-        (*tokens)[*tokenCount].data.type = type;
-    }
-    else
-    {
-        (*tokens)[*tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_unknown;
-        (*tokens)[*tokenCount].data.str = str;
-    }
-
-    (*tokenCount)++;
     return nullptr;
 }
 
@@ -493,7 +280,7 @@ MDPL_ERROR_Error* readFile(const char* fName, char** str, uint32_t* length)
     return nullptr;
 }
 
-MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, uint32_t* tokenListLength, Statment** statmentList, uint32_t* statmentListLength)
+MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, SymbolTable* symbolTable, Token** tokenList, uint32_t* tokenListLength, Statment** statmentList, uint32_t* statmentListLength, const char* const fName)
 {
     // Validate input parameters
     if (str == nullptr && length > 0)
@@ -519,7 +306,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
 
     //allocate tokens list
     uint32_t tokenCapacity = 64;
-    uint32_t tokenCount = 0;
+    uint32_t numTokens = 0;
     Token* tokens = (Token*)malloc(tokenCapacity * sizeof(Token));
     if (tokens == nullptr)
     {
@@ -528,7 +315,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
 
     //allocate statments list
     uint32_t statmentCapacity = 64;
-    uint32_t statmentCount = 0;
+    uint32_t numStatments = 0;
     Statment* statments = (Statment*)malloc(statmentCapacity * sizeof(Statment));
     if (statments == nullptr)
     {
@@ -536,6 +323,317 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
         return MDPL_ERROR_TYPE_MSG(MDPL_ERROR_TYPE_ALLOCATION, "tokenise: failed to allocate statment list");
     }
 
+    //the tokeniser is an FSM with an initial state, the outer loop, and all other states come from and return to it in a star topology
+    //each other state is it's own loop withing the outer loop which lex an entire token
+    //it is safe to iterate up to i+1 == length as the string is null terminated
+    uint32_t lineNum = 1;
+    bool lastTokenWasComma = false;
+    uint32_t statmentStartTokenIndex = 0;
+    for (uint32_t i = 0; i < length; i++)
+    {
+        char c = str[i];
+        char cn = str[i+1];
+        uint32_t singlePunctuation = stringToSinglePunctuation(str + i);
+        uint32_t doublePunctuation = stringToDoublePunctuation(str + i);
+        //state: line comment
+        if((c == '/') && (cn == '/'))
+        {
+            i += 2;
+            for(; i < length; i++)
+            {
+                c = str[i];
+                if(c == '\n')
+                {
+                    str[i] = '\0';
+                    lineNum++;
+                    break;
+                }
+                else
+                {
+                    str[i] = '\0';
+                }
+            }
+        }
+        //state: block comment
+        else if((c == '/') && (cn == '*'))
+        {
+            i += 2;
+            for(; i < length; i++)
+            {
+                c = str[i];
+                cn = str[i+1];
+                if(c == '\n')
+                {
+                    lineNum++;
+                    str[i] = '\0';
+                }
+                else if((c == '*') && (cn == '/'))
+                {
+                    str[i] = '\0';
+                    str[i+1] = '\0';
+                    break;
+                }
+                else
+                {
+                    str[i] = '\0';
+                }
+            }
+            if(!((c == '*') && (cn == '/')))
+            {
+                printf("Syntax error: block comment is not termianted.\nLine: %u. File: %s\n\n", lineNum, fName);
+            }
+            i++;
+        }
+        //state: string literal
+        else if(c == '\"')
+        {
+            str[i] = '\0';
+            uint32_t startOfStringLiteral = i + 1;
+            for(; i < length; i++)
+            {
+                c = str[i];
+                if(c == '\n')
+                {
+                    lineNum++;
+                    //preserve new lines in string literals
+                }
+                else if(c == '\\')
+                {
+                    i++;
+                }
+                else if(c == '\"')
+                {
+                    str[i] = '\0';
+                    break;
+                }
+            }
+            if(c != '\"')
+            {
+                printf("Syntax error: string literal is not termianted.\nLine: %u. File: %s\n\n", lineNum, fName);
+            }
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_string;
+            tokens[numTokens].statmentIndex = numStatments;
+            tokens[numTokens].data.str = str + startOfStringLiteral;
+            tokens[numTokens].lineNum = lineNum;
+            numTokens++;
+            lastTokenWasComma = false;
+        }
+        //state: character literal
+        else if(c == '\'')
+        {
+            str[i] = '\0';
+            uint32_t startOfCharacterLiteral = i + 1;
+            for(; i < length; i++)
+            {
+                c = str[i];
+                if(c == '\n')
+                {
+                    lineNum++;
+                    printf("Syntax error: character literal contains new line.\nLine: %u. File: %s\n\n", lineNum, fName);
+                }
+                else if(c == '\\')
+                {
+                    i++;
+                }
+                else if(c == '\'')
+                {
+                    str[i] = '\0';
+                    break;
+                }
+
+            }
+            if(c != '\'')
+            {
+                printf("Syntax error: character literal is not termianted.\nLine: %u. File: %s\n\n", lineNum, fName);
+            }
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_character;
+            tokens[numTokens].statmentIndex = numStatments;
+            tokens[numTokens].data.str = str + startOfCharacterLiteral;
+            tokens[numTokens].lineNum = lineNum;
+            numTokens++;
+            lastTokenWasComma = false;
+        }
+        //state: whitespace
+        else if((c == ' ') || (c == '\t'))
+        {
+            str[i] = '\0';
+        }
+        //state: new line
+        else if(c == '\n')
+        {
+            if(!lastTokenWasComma)
+            {
+                MDPL_RETERR(reallocateStatmentList(&statments, numStatments, &statmentCapacity));
+                statments[numStatments].startTokenIndex = statmentStartTokenIndex;
+                statments[numStatments].endTokenIndex = numTokens;
+                statments[numStatments].deepestScopeIndex = 0;
+                numStatments++;
+                statmentStartTokenIndex = numTokens;
+            }
+            lineNum++;
+        }
+        //state: semi colon
+        else if(c == ';')
+        {
+            str[i] = '\0';
+            MDPL_RETERR(reallocateStatmentList(&statments, numStatments, &statmentCapacity));
+            statments[numStatments].startTokenIndex = statmentStartTokenIndex;
+            statments[numStatments].endTokenIndex = numTokens;
+            statments[numStatments].deepestScopeIndex = 0;
+            numStatments++;
+            statmentStartTokenIndex = numTokens;
+            lastTokenWasComma = false;
+        }
+        //state: double punctuation
+        else if(isValidDoublePunctuation(doublePunctuation))
+        {
+            str[i] = '\0';
+            str[i+1] = '\0';
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_punctuation;
+            tokens[numTokens].statmentIndex = numStatments;
+            tokens[numTokens].data.punctuation = doublePunctuation;
+            tokens[numTokens].lineNum = lineNum;
+            numTokens++;
+            lastTokenWasComma = false;
+            i++;
+        }
+        else if(isValidSinglePunctuation(singlePunctuation))
+        {
+            //state: negative number literal
+            if((singlePunctuation == MDPL_COMPILER_PUNCTUATION_minus) && ((cn >= '0') && (cn <= '9')))
+            {
+                uint32_t numDecimalPoint = 0;
+                uint32_t startOfNumberLiteral = i;
+                for(; i < length; i++)
+                {
+                    cn = str[i+1];
+                    if(cn == '.')
+                    {
+                        numDecimalPoint++;
+                    }
+                    else if((cn < '0') || (cn > '9'))
+                    {
+                        break;
+                    }
+                }
+                if(numDecimalPoint >= 2)
+                {
+                    printf("Syntax error: numeric literal contains multiple decimal points.\nLine: %u. File: %s\n\n", lineNum, fName);
+                }
+                else
+                {
+                    MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+                    tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_number;
+                    tokens[numTokens].statmentIndex = numStatments;
+                    tokens[numTokens].data.str = str + startOfNumberLiteral;
+                    tokens[numTokens].lineNum = lineNum;
+                    numTokens++;
+                    lastTokenWasComma = false;
+                }
+            }
+            //state: single punctuation
+            else
+            {
+                str[i] = '\0';
+                MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+                tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_punctuation;
+                tokens[numTokens].statmentIndex = numStatments;
+                tokens[numTokens].data.punctuation = singlePunctuation;
+                tokens[numTokens].lineNum = lineNum;
+                numTokens++;
+                lastTokenWasComma = c == ',';
+            }
+        }
+        //state: positive number literal
+        else if((c >= '0') && (c <= '9'))
+        {
+            uint32_t numDecimalPoint = 0;
+            uint32_t startOfNumberLiteral = i;
+            for(; i < length; i++)
+            {
+                cn = str[i+1];
+                if(cn == '.')
+                {
+                    numDecimalPoint++;
+                }
+                else if((cn < '0') || (cn > '9'))
+                {
+                    break;
+                }
+            }
+            if(numDecimalPoint >= 2)
+            {
+                printf("Syntax error: numeric literal contains multiple decimal points.\nLine: %u. File: %s\n\n", lineNum, fName);
+            }
+            else
+            {
+                MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+                tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_number;
+                tokens[numTokens].statmentIndex = numStatments;
+                tokens[numTokens].data.str = str + startOfNumberLiteral;
+                tokens[numTokens].lineNum = lineNum;
+                numTokens++;
+                lastTokenWasComma = false;
+            }
+        }
+        //state: symbol
+        else
+        {
+            uint32_t startOfSymbol = i;
+            for(; i < length; i++)
+            {
+                char cn = str[i+1];
+                uint32_t spn = stringToSinglePunctuation(str + i + 1);
+                if((cn == ' ') || (cn == '\t') || (cn == '\n') || (cn == '/') || (cn == '\"') || (cn == '\''))
+                {
+                    break;
+                }
+                else if(isValidSinglePunctuation(spn))
+                {
+                    break;
+                }
+            }
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_symbol;
+            tokens[numTokens].statmentIndex = numStatments;
+            tokens[numTokens].data.str = str + startOfSymbol;
+            tokens[numTokens].lineNum = lineNum;
+            numTokens++;
+            lastTokenWasComma = false;
+        }
+    }
+    //put any remaining tokens into a final statment
+    if(statmentStartTokenIndex < numTokens)                                                                                                                                                                                                                                                 
+    {                                                                                                                                                                                                                                                                                        
+        MDPL_RETERR(reallocateStatmentList(&statments, numStatments, &statmentCapacity));                                                                                                                                                                                                    
+        statments[numStatments].startTokenIndex = statmentStartTokenIndex;                                                                                                                                                                                                                   
+        statments[numStatments].endTokenIndex = numTokens;                                                                                                                                                                                                                                   
+        statments[numStatments].deepestScopeIndex = 0;                                                                                                                                                                                                                                       
+        numStatments++;                                                                                                                                                                                                                                                                      
+    }
+
+    //convert the symbol, current const char*, to the symbol type
+    for(uint32_t i = 0; i < numTokens; i++)
+    {
+        Token token = tokens[i];
+        if(token.type == MDPL_COMPILER_TOKEN_TYPE_symbol)
+        {
+            const char* const str = token.data.str;
+            Symbol symbol;
+            MDPL_RETERR(stringToSymbol(symbolTable, str, &symbol));
+            tokens[i].data.symbol = symbol;
+        }
+    }
+
+    *tokenList = tokens;                                                                                                                                                                                                                                                                     
+    *tokenListLength = numTokens;                                                                                                                                                                                                                                                            
+    *statmentList = statments;                                                                                                                                                                                                                                                               
+    *statmentListLength = numStatments;                                                                                                                                                                                                                                                      
+    return nullptr;
+    /*
     uint32_t lineCount = 1;
     uint32_t nextTokenStartIndex = 0;
     uint32_t statmentStartTokenIndex = 0;
@@ -550,21 +648,21 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             // Create token for content before the newline if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
                 lastTokenWasComma = false;
             }
 
             lineCount++;
 
             // End statement on newline if previous token wasn't a comma
-            if (!lastTokenWasComma && statmentStartTokenIndex < tokenCount)
+            if (!lastTokenWasComma && statmentStartTokenIndex < numTokens)
             {
                 MDPL_RETERR(reallocateStatmentList(&statments, statmentCount, &statmentCapacity));
                 statments[statmentCount].startTokenIndex = statmentStartTokenIndex;
-                statments[statmentCount].endTokenIndex = tokenCount;
+                statments[statmentCount].endTokenIndex = numTokens;
                 statments[statmentCount].deepestScopeIndex = 0;
                 statmentCount++;
-                statmentStartTokenIndex = tokenCount;
+                statmentStartTokenIndex = numTokens;
             }
 
             nextTokenStartIndex = i + 1;
@@ -589,12 +687,12 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
                     break;
                 }
             }
-            MDPL_RETERR(reallocateTokenList(&tokens, tokenCount, &tokenCapacity));
-            tokens[tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_number;
-            tokens[tokenCount].statmentIndex = statmentCount;
-            tokens[tokenCount].data.str = str + nextTokenStartIndex;
-            tokens[tokenCount].lineNum = lineCount;
-            tokenCount++;
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_number;
+            tokens[numTokens].statmentIndex = statmentCount;
+            tokens[numTokens].data.str = str + nextTokenStartIndex;
+            tokens[numTokens].lineNum = lineCount;
+            numTokens++;
             lastTokenWasComma = false;
             nextTokenStartIndex = i;
             i--; // Reprocess the character that ended the number
@@ -605,7 +703,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             // Create token for content before the string if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
             }
 
             str[i] = '\0';
@@ -619,12 +717,12 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
                 i++;
             }
             str[i] = '\0';
-            MDPL_RETERR(reallocateTokenList(&tokens, tokenCount, &tokenCapacity));
-            tokens[tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_string;
-            tokens[tokenCount].statmentIndex = statmentCount;
-            tokens[tokenCount].data.str = str + nextTokenStartIndex;
-            tokens[tokenCount].lineNum = lineCount;
-            tokenCount++;
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_string;
+            tokens[numTokens].statmentIndex = statmentCount;
+            tokens[numTokens].data.str = str + nextTokenStartIndex;
+            tokens[numTokens].lineNum = lineCount;
+            numTokens++;
             lastTokenWasComma = false;
             nextTokenStartIndex = i + 1;
         }
@@ -634,7 +732,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             // Create token for content before the string if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
             }
 
             str[i] = '\0';
@@ -662,12 +760,12 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
                 i++;
             }
             str[i] = '\0';
-            MDPL_RETERR(reallocateTokenList(&tokens, tokenCount, &tokenCapacity));
-            tokens[tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_character;
-            tokens[tokenCount].statmentIndex = statmentCount;
-            tokens[tokenCount].data.str = str + nextTokenStartIndex;
-            tokens[tokenCount].lineNum = lineCount;
-            tokenCount++;
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_character;
+            tokens[numTokens].statmentIndex = statmentCount;
+            tokens[numTokens].data.str = str + nextTokenStartIndex;
+            tokens[numTokens].lineNum = lineCount;
+            numTokens++;
             lastTokenWasComma = false;
             nextTokenStartIndex = i + 1;
         }
@@ -684,14 +782,14 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
                 lineCount++;
 
                 // End statement on newline if previous token wasn't a comma
-                if (!lastTokenWasComma && statmentStartTokenIndex < tokenCount)
+                if (!lastTokenWasComma && statmentStartTokenIndex < numTokens)
                 {
                     MDPL_RETERR(reallocateStatmentList(&statments, statmentCount, &statmentCapacity));
                     statments[statmentCount].startTokenIndex = statmentStartTokenIndex;
-                    statments[statmentCount].endTokenIndex = tokenCount;
+                    statments[statmentCount].endTokenIndex = numTokens;
                     statments[statmentCount].deepestScopeIndex = 0;
                     statmentCount++;
-                    statmentStartTokenIndex = tokenCount;
+                    statmentStartTokenIndex = numTokens;
                 }
 
                 nextTokenStartIndex = i + 1;
@@ -710,14 +808,14 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
                     lineCount++;
 
                     // End statement on newline if previous token wasn't a comma
-                    if (!lastTokenWasComma && statmentStartTokenIndex < tokenCount)
+                    if (!lastTokenWasComma && statmentStartTokenIndex < numTokens)
                     {
                         MDPL_RETERR(reallocateStatmentList(&statments, statmentCount, &statmentCapacity));
                         statments[statmentCount].startTokenIndex = statmentStartTokenIndex;
-                        statments[statmentCount].endTokenIndex = tokenCount;
+                        statments[statmentCount].endTokenIndex = numTokens;
                         statments[statmentCount].deepestScopeIndex = 0;
                         statmentCount++;
-                        statmentStartTokenIndex = tokenCount;
+                        statmentStartTokenIndex = numTokens;
                     }
 
                     nextTokenStartIndex = i + 1;
@@ -726,7 +824,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             }
             if (i + 1 < length)
             {
-                i++; // Skip past the closing */
+                i++; // Skip past the closing
             }
             nextTokenStartIndex = i + 1;
             continue;
@@ -738,7 +836,7 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             // Only create a token if there's actual content
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
                 lastTokenWasComma = false;
             }
 
@@ -751,62 +849,62 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
             // Create token for text before the semicolon if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
             }
 
             // End statement on semicolon
             MDPL_RETERR(reallocateStatmentList(&statments, statmentCount, &statmentCapacity));
             statments[statmentCount].startTokenIndex = statmentStartTokenIndex;
-            statments[statmentCount].endTokenIndex = tokenCount;
+            statments[statmentCount].endTokenIndex = numTokens;
             statments[statmentCount].deepestScopeIndex = 0;
             statmentCount++;
-            statmentStartTokenIndex = tokenCount;
+            statmentStartTokenIndex = numTokens;
             lastTokenWasComma = false;
 
             nextTokenStartIndex = i + 1;
         }
-        else if (i + 1 < length && isValidDoubleSymbol(stringToDoubleSymbol(&str[i])))
+        else if (i + 1 < length && isValidDoublePunctuation(stringToDoublePunctuation(&str[i])))
         {
-            uint32_t symbol = stringToDoubleSymbol(&str[i]);
+            uint32_t punctuation = stringToDoublePunctuation(&str[i]);
             str[i] = '\0';
             str[i + 1] = '\0';
 
-            // Create token for text before the symbol if any
+            // Create token for text before the punctuation if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
             }
 
-            MDPL_RETERR(reallocateTokenList(&tokens, tokenCount, &tokenCapacity));
-            tokens[tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_symbol;
-            tokens[tokenCount].statmentIndex = statmentCount;
-            tokens[tokenCount].data.symbol = symbol;
-            tokens[tokenCount].lineNum = lineCount;
-            tokenCount++;
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_punctuation;
+            tokens[numTokens].statmentIndex = statmentCount;
+            tokens[numTokens].data.punctuation = punctuation;
+            tokens[numTokens].lineNum = lineCount;
+            numTokens++;
             lastTokenWasComma = false;
 
             i++;
             nextTokenStartIndex = i + 1;
         }
-        else if (isValidSingleSymbol(stringToSingleSymbol(&str[i])))
+        else if (isValidSinglePunctuation(stringToSinglePunctuation(&str[i])))
         {
-            uint32_t symbol = stringToSingleSymbol(&str[i]);
+            uint32_t punctuation = stringToSinglePunctuation(&str[i]);
             str[i] = '\0';
 
-            // Create token for text before the symbol if any
+            // Create token for text before the punctuation if any
             if (nextTokenStartIndex < i)
             {
-                MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+                MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
             }
 
-            MDPL_RETERR(reallocateTokenList(&tokens, tokenCount, &tokenCapacity));
-            tokens[tokenCount].type = MDPL_COMPILER_TOKEN_TYPE_symbol;
-            tokens[tokenCount].statmentIndex = statmentCount;
-            tokens[tokenCount].data.symbol = symbol;
-            tokens[tokenCount].lineNum = lineCount;
-            tokenCount++;
+            MDPL_RETERR(reallocateTokenList(&tokens, numTokens, &tokenCapacity));
+            tokens[numTokens].type = MDPL_COMPILER_TOKEN_TYPE_punctuation;
+            tokens[numTokens].statmentIndex = statmentCount;
+            tokens[numTokens].data.punctuation = punctuation;
+            tokens[numTokens].lineNum = lineCount;
+            numTokens++;
 
-            lastTokenWasComma = (symbol == MDPL_COMPILER_SYMBOL_comma);
+            lastTokenWasComma = (punctuation == MDPL_COMPILER_PUNCTUATION_comma);
 
             nextTokenStartIndex = i + 1;
         }
@@ -815,26 +913,27 @@ MDPL_ERROR_Error* tokenise(char* str, const uint32_t length, Token** tokenList, 
     // Create token for any remaining text after the last delimiter
     if (nextTokenStartIndex < length && str[nextTokenStartIndex] != '\0')
     {
-        MDPL_RETERR(createStandardToken(&tokens, &tokenCount, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
+        MDPL_RETERR(createStandardToken(&tokens, &numTokens, &tokenCapacity, statmentCount, str + nextTokenStartIndex, lineCount));
     }
 
     // Create final statement if there are remaining tokens
-    if (statmentStartTokenIndex < tokenCount)
+    if (statmentStartTokenIndex < numTokens)
     {
         MDPL_RETERR(reallocateStatmentList(&statments, statmentCount, &statmentCapacity));
         statments[statmentCount].startTokenIndex = statmentStartTokenIndex;
-        statments[statmentCount].endTokenIndex = tokenCount;
+        statments[statmentCount].endTokenIndex = numTokens;
         statments[statmentCount].deepestScopeIndex = 0;
         statmentCount++;
     }
 
     *tokenList = tokens;
-    *tokenListLength = tokenCount;
+    *tokenListLength = numTokens;
     *statmentList = statments;
     *statmentListLength = statmentCount;
     return nullptr;
+    */
 }
-MDPL_ERROR_Error* groupScopes(Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList, uint32_t* scopeListLength)
+MDPL_ERROR_Error* groupScopes(SymbolTable* symbolTable, Token* tokenList, const uint32_t tokenListLength, Statment* statmentList, const uint32_t statmentListLength, Scope** scopeList, uint32_t* scopeListLength)
 {
     // Validate input parameters
     if (tokenList == nullptr && tokenListLength > 0)
@@ -876,9 +975,9 @@ MDPL_ERROR_Error* groupScopes(Token* tokenList, const uint32_t tokenListLength, 
     // Iterate through tokens looking for scope delimiters
     for (uint32_t i = 0; i < tokenListLength; i++)
     {
-        if (tokenList[i].type == MDPL_COMPILER_TOKEN_TYPE_symbol)
+        if (tokenList[i].type == MDPL_COMPILER_TOKEN_TYPE_punctuation)
         {
-            if (tokenList[i].data.symbol == MDPL_COMPILER_SYMBOL_openCurlyBrace)
+            if (tokenList[i].data.punctuation == MDPL_COMPILER_PUNCTUATION_openCurlyBrace)
             {
                 // Reallocate scope list if needed
                 MDPL_ERROR_Error* err = reallocateScopeList(&scopes, scopeCount, &scopeCapacity);
@@ -913,7 +1012,7 @@ MDPL_ERROR_Error* groupScopes(Token* tokenList, const uint32_t tokenListLength, 
                 stackSize++;
                 scopeCount++;
             }
-            else if (tokenList[i].data.symbol == MDPL_COMPILER_SYMBOL_closeCurlyBrace)
+            else if (tokenList[i].data.punctuation == MDPL_COMPILER_PUNCTUATION_closeCurlyBrace)
             {
                 // Check for unmatched closing brace
                 if (stackSize == 0)

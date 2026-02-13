@@ -21,15 +21,15 @@
 #define MDPL_COMPILER_INTEL 4
 #define MDPL_COMPILER_UNKNOWN 255
 #if defined(__clang__)
-	#define MDPL_COMPILER "clang"
+	#define MDPL_COMPILER MDPL_COMPILER_CLANG
 #elif defined(__GNUC__) || defined(__GNUG__)
-	#define MDPL_COMPILER "gcc"
+	#define MDPL_COMPILER MDPL_COMPILER_GCC
 #elif defined(_MSC_VER)
-	#define MDPL_COMPILER "msvc"
+	#define MDPL_COMPILER MDPL_COMPILER_MSVC
 #elif defined(__INTEL_LLVM_COMPILER)
-	#define MDPL_COMPILER "intel"
+	#define MDPL_COMPILER MDPL_COMPILER_INTEL
 #else
-	#define MDPL_COMPILER "unknown"
+	#define MDPL_COMPILER MDPL_COMPILER_UNKNOWN
 #endif
 
 
